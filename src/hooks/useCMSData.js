@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
-// Map context to views 
 const context = import.meta.env.VITE_APP_CONTEXT || 'base';
 
-// Logic: View names are now derived or can be fully overridden by Env Vars
-// This prevents "view_extended_..." strings from appearing in GitHub
 const viewMapping = {
     base: {
         projects: import.meta.env.VITE_VIEW_PROJECTS,
@@ -30,9 +27,9 @@ export function useCMSData(collectionPath) {
         async function fetchData() {
             setLoading(true);
             try {
-                // Determine the context (default to 'base')
+                
                 const context = import.meta.env.VITE_APP_CONTEXT || 'base';
-                const collection = collectionPath.split('/').pop(); // 'projects', 'experiences', etc.
+                const collection = collectionPath.split('/').pop(); 
                 
                 const tableName = viewMapping[context]?.[collection] || viewMapping.base[collection];
 
@@ -57,7 +54,6 @@ export function useCMSData(collectionPath) {
     return { data, loading, error };
 }
 
-// Helper to extract sortable date
 export function getSortDate(item) {
     const dateStr = item.start_date || item.date_badge;
     if (!dateStr) return new Date(0);

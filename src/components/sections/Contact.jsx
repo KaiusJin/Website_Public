@@ -5,8 +5,8 @@ export default function Contact({ isActive }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Since emailjs logic was defined outside in original script, 
-        // we can just trigger it if emailjs is available in window
+        
+        
         if (window.emailjs && formRef.current) {
             window.emailjs.sendForm('service_id', 'template_id', formRef.current)
                 .then(() => alert('Message Sent!'))

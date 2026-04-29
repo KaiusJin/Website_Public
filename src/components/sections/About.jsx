@@ -7,7 +7,7 @@ export default function About({ isActive }) {
     const sortedSkills = useMemo(() => {
         if (!skillsData || skillsData.length === 0) return [];
         
-        // Directly sort the category rows by their order
+        
         return [...skillsData].sort((a, b) => (parseInt(a.order) ?? 999) - (parseInt(b.order) ?? 999));
     }, [skillsData]);
 
@@ -15,7 +15,7 @@ export default function About({ isActive }) {
         <section id="about" className={isActive ? 'active' : ''}>
             <h1 className="gradient-text">Kaius Jin</h1>
             <div className="about-layout-grid">
-                {/* Profile Card */}
+                {}
                 <div className="info-card profile-card">
                     <h2><i className="fas fa-user-graduate"></i> Profile</h2>
                     <p>I am a <strong>2A Computer Science student</strong> at the <strong>University of Waterloo</strong>, pursuing a 
@@ -29,7 +29,7 @@ export default function About({ isActive }) {
                     </ul>
                 </div>
 
-                {/* Skills Card - Set to take full height on the right */}
+                {}
                 <div className="info-card skills-card">
                     <h2><i className="fas fa-layer-group"></i> Skills Stack</h2>
                     <div id="skills-container">
@@ -39,7 +39,7 @@ export default function About({ isActive }) {
                             <div key={i} style={{ marginBottom: '12px' }}>
                                 <h4 style={{ margin: '0 0 6px 0', color: '#a49687', fontSize: '0.82rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{c.category}</h4>
                                 <div className="skills-list">
-                                    {/* The inner 'skills' is an array of objects like {tag: '...'} */}
+                                    {}
                                     {(c.skills || []).map((s, j) => (
                                         <span key={j} className="skill-tag">{s.tag}</span>
                                     ))}
@@ -49,7 +49,7 @@ export default function About({ isActive }) {
                     </div>
                 </div>
 
-                {/* GitHub Card - Below Profile on the left */}
+                {}
                 <div className="info-card github-card">
                     <h2><i className="fab fa-github"></i> GitHub Contributions</h2>
                     <p style={{ marginBottom: '1rem', color: '#786657', fontSize: '0.9rem' }}>

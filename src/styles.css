@@ -1,14 +1,14 @@
-/* --- 1. 背景与全局设定 (Retro Ivory Light Mode) --- */
+
 body {
     margin: 0;
     min-height: 100vh;
     font-family: 'Inter', -apple-system, sans-serif;
     color: #4a3f35;
-    /* 复古深灰褐色，比纯黑更有温度和书卷气 */
+    
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
-    /* 护眼的淡黄/奶白色背景（羊皮纸风格） */
+    
     background-color: #fdf8eb;
 }
 
@@ -17,7 +17,6 @@ html, body {
     overflow-x: hidden;
 }
 
-/* 全局漂浮光斑（同欢迎页） */
 body::before,
 body::after {
     content: '';
@@ -29,7 +28,6 @@ body::after {
     animation: splashFloat 20s infinite alternate ease-in-out;
 }
 
-/* 落日橘光晕 */
 body::before {
     width: 600px;
     height: 600px;
@@ -38,7 +36,6 @@ body::before {
     left: -10%;
 }
 
-/* 墨蓝光晕 */
 body::after {
     width: 800px;
     height: 800px;
@@ -49,7 +46,6 @@ body::after {
     animation-delay: -5s;
 }
 
-/* 滚动条 - 采用复古暖色 */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -67,9 +63,6 @@ body::after {
     background: #d4c4a8;
 }
 
-
-
-/* 主加载动画 */
 #main-portfolio {
     transition: opacity 0.8s ease;
 }
@@ -78,7 +71,6 @@ body::after {
     opacity: 1 !important;
 }
 
-/* --- 2. 核心逻辑：显示与隐藏 --- */
 section {
     display: none;
     padding-top: 10px;
@@ -101,8 +93,6 @@ section.active {
     }
 }
 
-/* --- 3. 大容器 (透明框) --- */
-/* 放开了左右极大宽度的限制！解决边缘臃余空白！ */
 .glass {
     width: 95%;
     max-width: 1300px;
@@ -111,7 +101,6 @@ section.active {
     flex-direction: column;
 }
 
-/* --- 4. 导航条 (复古暖白胶囊) --- */
 nav {
     position: sticky;
     top: 25px;
@@ -131,7 +120,6 @@ nav {
     box-shadow: 0 15px 35px rgba(139, 90, 43, 0.08);
 }
 
-/* 顶部滑动模糊遮罩，让滑动内容如烟雾般消散 */
 .top-blur-mask {
     position: fixed;
     top: 0;
@@ -188,7 +176,7 @@ nav a:hover::after {
 }
 
 .gradient-text {
-    /* 强烈的复古感渐变：深咖啡色 -> 朱红色 */
+    
     background: linear-gradient(135deg, #2d1b11 0%, #264653 50%, #e76f51 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -199,7 +187,6 @@ nav a:hover::after {
     margin-top: 5px;
 }
 
-/* 子弹点 */
 .card-bullets {
     padding-left: 20px;
     margin: 15px 0 0 0;
@@ -216,8 +203,6 @@ nav a:hover::after {
     margin-bottom: 0;
 }
 
-/* --- 5. 卡片与网格系统 --- */
-/* --- 5.1 手风琴折叠表 (Accordion List) --- */
 .resume-list {
     display: flex;
     flex-direction: column;
@@ -240,7 +225,6 @@ nav a:hover::after {
     border: 1px solid rgba(234, 222, 203, 0.5);
 }
 
-/* 消除原生的三角箭头 */
 .resume-summary {
     display: flex;
     align-items: center;
@@ -450,7 +434,7 @@ nav a:hover::after {
 .info-card,
 .award-card {
     background: #ffffff;
-    /* 卡片用纯白在淡黄底色上依然非常清晰干净，且显质感 */
+    
     border: 1px solid #eadecb;
     border-radius: 20px;
     padding: 30px;
@@ -461,7 +445,6 @@ nav a:hover::after {
     box-shadow: 0 4px 6px -1px rgba(139, 90, 43, 0.04), 0 2px 4px -1px rgba(139, 90, 43, 0.02);
 }
 
-/* 悬浮阴影变化，顶部高亮复古橙 */
 .info-card:hover,
 .award-card:hover {
     transform: translateY(-8px);
@@ -508,7 +491,6 @@ nav a:hover::after {
     align-items: flex-start;
 }
 
-/* --- Awards --- */
 .award-card {
     gap: 16px;
 }
@@ -560,7 +542,6 @@ nav a:hover::after {
     box-shadow: 0 4px 12px rgba(231, 111, 81, 0.2);
 }
 
-/* --- Technical Skills 标签 --- */
 .skills-list {
     display: flex;
     flex-wrap: wrap;
@@ -580,7 +561,7 @@ nav a:hover::after {
 }
 
 .skill-tag:hover {
-    /* 悬浮复古变色！ */
+    
     background: #e76f51;
     color: #ffffff;
     border-color: #e76f51;
@@ -588,7 +569,6 @@ nav a:hover::after {
     box-shadow: 0 10px 20px rgba(231, 111, 81, 0.25);
 }
 
-/* GitHub 按钮 */
 .card-actions {
     margin-top: auto;
     padding-top: 24px;
@@ -617,7 +597,6 @@ nav a:hover::after {
     box-shadow: 0 10px 25px rgba(45, 27, 17, 0.2);
 }
 
-/* --- 8. Contact 页面 --- */
 .contact-container {
     display: flex;
     gap: 60px;
@@ -641,7 +620,7 @@ nav a:hover::after {
     width: 50px;
     text-align: center;
     color: #e76f51;
-    /* 燃橙色 */
+    
 }
 
 .contact-text span {
@@ -732,7 +711,6 @@ footer {
     margin-top: auto;
 }
 
-/* 专门针对 About 页面的非滚动瀑布流布局 (将最高 Skills 栏锁定右侧) */
 @media (min-width: 1001px) {
     #about .card-grid {
         display: grid;
@@ -747,25 +725,25 @@ footer {
         border-radius: 20px;
     }
 
-    /* Skills Stack */
+    
     #about .info-card:nth-child(1) {
         grid-column: 1;
         grid-row: 1;
     }
 
-    /* Profile */
+    
     #about .info-card:nth-child(3) {
         grid-column: 1;
         grid-row: 2;
     }
 
-    /* Education */
+    
     #about .info-card:nth-child(4) {
         grid-column: 1;
         grid-row: 3;
     }
 
-    /* Involvement */
+    
 }
 
 @media (max-width: 1000px) {
@@ -796,7 +774,7 @@ footer {
 .profile-card { grid-area: profile; }
 .skills-card { 
     grid-area: skills; 
-    height: 100%; /* 让技能栈填满右侧 */
+    height: 100%; 
 }
 .github-card { 
     grid-area: github;
@@ -816,11 +794,10 @@ footer {
 .github-chart-wrapper img {
     max-width: 100%;
     height: auto;
-    /* 调整颜色，使其更契合复古主题 */
+    
     filter: saturate(0.8) brightness(1.05) contrast(0.9);
 }
 
-/* 适配移动端：改为单栏 */
 @media (max-width: 1100px) {
     .about-layout-grid {
         grid-template-columns: 1fr;
@@ -835,7 +812,6 @@ footer {
     }
 }
 
-/* --- 8. Contact 页面 --- */
 .contact-container {
     display: flex;
     gap: 60px;

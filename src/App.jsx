@@ -10,7 +10,7 @@ function App() {
   const [activeSection, setActiveSection] = useState('about');
 
   useEffect(() => {
-    // 防止 VIP 域名被搜索引擎抓取
+    
     if (import.meta.env.VITE_APP_CONTEXT === 'extended') {
       const meta = document.createElement('meta');
       meta.name = "robots";

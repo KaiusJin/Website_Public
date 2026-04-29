@@ -21,7 +21,7 @@ export default function Projects({ isActive }) {
         let end = item.is_present ? 'Present' : item.end_date;
         
         if (!start && item.date_badge) {
-            // Robust splitting for various dash formats
+            
             if (item.date_badge.includes('-')) {
                 const parts = item.date_badge.split('-').map(s => s.trim());
                 start = parts[0];
