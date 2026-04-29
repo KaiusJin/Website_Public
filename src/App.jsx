@@ -6,7 +6,7 @@ import About from './components/sections/About';
 import Projects from './components/sections/Projects';
 import Experience from './components/sections/Experience';
 import Awards from './components/sections/Awards';
-import Activity from './components/sections/Activity';
+import Awards from './components/sections/Awards';
 import Contact from './components/sections/Contact';
 
 function App() {
@@ -56,7 +56,6 @@ function App() {
             <Projects isActive={activeSection === 'project'} />
             <Experience isActive={activeSection === 'experience'} />
             <Awards isActive={activeSection === 'awards'} />
-            <Activity isActive={activeSection === 'activity'} />
             <Contact isActive={activeSection === 'contact'} />
           </main>
         </div>

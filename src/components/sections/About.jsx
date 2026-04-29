@@ -49,6 +49,23 @@ export default function About({ isActive }) {
                     </div>
                 </div>
             </div>
+
+            {/* GitHub Activity Section */}
+            <div className="github-activity-section" style={{ marginTop: '2rem' }}>
+                <div className="info-card">
+                    <h2><i className="fab fa-github"></i> GitHub Contributions</h2>
+                    <p style={{ marginBottom: '1.5rem', color: '#786657', fontSize: '0.9rem' }}>
+                        A visual footprint of my open-source activities and project commits.
+                    </p>
+                    <div style={{ background: 'rgba(255,255,255,0.05)', padding: '1.2rem', borderRadius: '1rem', overflow: 'hidden', border: '1px solid rgba(120, 102, 87, 0.2)' }}>
+                        <img 
+                            src="https://ghchart.rshah.org/e76f51/KaiusJin" 
+                            alt="Kaius Jin's GitHub Chart" 
+                            style={{ width: '100%', filter: 'invert(0.1) brightness(1.1)' }}
+                        />
+                    </div>
+                </div>
+            </div>
         </section>
     );
 }

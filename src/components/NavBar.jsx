@@ -12,7 +12,6 @@ export default function NavBar({ activePage, setActivePage, openPreferences }) {
             <a role="button" tabIndex="0" className={activePage === 'project' ? 'active' : ''} onClick={() => handleNav('project')}>Project</a>
             <a role="button" tabIndex="0" className={activePage === 'experience' ? 'active' : ''} onClick={() => handleNav('experience')}>Experience</a>
             <a role="button" tabIndex="0" className={activePage === 'awards' ? 'active' : ''} onClick={() => handleNav('awards')}>Awards & Certifications</a>
-            {/* <a role="button" tabIndex="0" className={activePage === 'activity' ? 'active' : ''} onClick={() => handleNav('activity')}>Activity</a> */}
             <a role="button" tabIndex="0" className={activePage === 'contact' ? 'active' : ''} onClick={() => handleNav('contact')}>Contact</a>
             <a role="button" tabIndex="0" id="open-preferences" style={{ cursor: 'pointer', marginLeft: '10px', color: '#e76f51' }} onClick={openPreferences}>
                 <i className="fas fa-redo"></i> Welcome Screen
