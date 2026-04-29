@@ -1,19 +1,23 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
-// Map context to views for complete "invisibility" of the secret domain
-const tableMapping = {
+// Map context to views 
+const context = import.meta.env.VITE_APP_CONTEXT || 'base';
+
+// Logic: View names are now derived or can be fully overridden by Env Vars
+// This prevents "view_extended_..." strings from appearing in GitHub
+const viewMapping = {
     base: {
-        projects: 'view_public_projects',
-        experiences: 'view_public_experiences',
-        awards: 'view_public_awards',
-        skills: 'view_public_skills'
+        projects: import.meta.env.VITE_VIEW_PROJECTS,
+        experiences: import.meta.env.VITE_VIEW_EXPERIENCES,
+        awards: import.meta.env.VITE_VIEW_AWARDS,
+        skills: import.meta.env.VITE_VIEW_SKILLS
     },
     extended: {
-        projects: 'view_extended_projects',
-        experiences: 'view_extended_experiences',
-        awards: 'view_extended_awards',
-        skills: 'view_extended_skills'
+        projects: import.meta.env.VITE_VIEW_PROJECTS_EXT,
+        experiences: import.meta.env.VITE_VIEW_EXPERIENCES_EXT,
+        awards: import.meta.env.VITE_VIEW_AWARDS_EXT,
+        skills: import.meta.env.VITE_VIEW_SKILLS_EXT
     }
 };
 
@@ -30,7 +34,7 @@ export function useCMSData(collectionPath) {
                 const context = import.meta.env.VITE_APP_CONTEXT || 'base';
                 const collection = collectionPath.split('/').pop(); // 'projects', 'experiences', etc.
                 
-                const tableName = tableMapping[context]?.[collection] || tableMapping.base[collection];
+                const tableName = viewMapping[context]?.[collection] || viewMapping.base[collection];
 
                 const { data: items, error: supabaseError } = await supabase
                     .from(tableName)
