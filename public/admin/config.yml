@@ -1,0 +1,97 @@
+backend:
+  name: github
+  repo: KaiusJin/Website
+  branch: main
+  base_url: https://github-oauth-worker.kaixuan-jin.workers.dev
+  site_domain: kaiusjin.com
+  # Note: The worker handles the handshake, and Decap CMS handles the Git commits
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+collections:
+  - name: "projects"
+    label: "Projects"
+    folder: "data/projects"
+    create: true
+    slug: "{{year}}-{{slug}}"
+    format: "json"
+    extension: "json"
+    fields:
+      - {label: "Project Title", name: "title", widget: "string"}
+      - {label: "Start Date", name: "start_date", widget: "string", hint: "e.g. Nov 2023"}
+      - {label: "End Date", name: "end_date", widget: "string", hint: "e.g. Dec 2023 (Leave empty if Present)", required: false}
+      - {label: "Is Present?", name: "is_present", widget: "boolean", default: false}
+      - label: "Bullet Points"
+        name: "bullets"
+        widget: "list"
+        fields:
+          - label: "Bullet Text"
+            name: "text"
+            widget: "text"
+      - {label: "Tech Stack (Tags)", name: "skills", widget: "list", fields: [{label: "Tag", name: "tag", widget: "string"}]}
+      - {label: "GitHub Link", name: "github_link", widget: "string", required: false}
+      - {label: "Visibility", name: "visibility", widget: "select", options: ["public", "v_only"], default: "public"}
+      - {label: "Display Order", name: "order", widget: "number", default: 100, hint: "Smaller numbers appear first"}
+
+  - name: "experiences"
+    label: "Work Experiences"
+    folder: "data/experiences"
+    create: true
+    slug: "{{year}}-{{slug}}"
+    format: "json"
+    extension: "json"
+    fields:
+      - {label: "Company/Organization", name: "title", widget: "string"}
+      - {label: "Start Date", name: "start_date", widget: "string", hint: "e.g. Jan 2024"}
+      - {label: "End Date", name: "end_date", widget: "string", hint: "e.g. Present (or leave empty and check 'Is Present')", required: false}
+      - {label: "Is Present?", name: "is_present", widget: "boolean", default: false}
+      - {label: "Role Title", name: "role", widget: "string"}
+      - {label: "Role Icon (FontAwesome)", name: "role_icon", widget: "string", default: "fas fa-users-cog"}
+      - label: "Bullet Points"
+        name: "bullets"
+        widget: "list"
+        fields:
+          - label: "Bullet Text"
+            name: "text"
+            widget: "text"
+      - {label: "External Link URL", name: "link", widget: "string", required: false}
+      - {label: "External Link Text", name: "link_text", widget: "string", required: false, default: "Visit Official Website"}
+      - {label: "Visibility", name: "visibility", widget: "select", options: ["public", "v_only"], default: "public"}
+      - {label: "Display Order", name: "order", widget: "number", default: 100, hint: "Smaller numbers appear first"}
+
+  - name: "awards"
+    label: "Honors, Awards & Certs"
+    folder: "data/awards"
+    create: true
+    slug: "{{year}}-{{slug}}"
+    format: "json"
+    extension: "json"
+    fields:
+      - {label: "Award/Cert Title", name: "title", widget: "string"}
+      - {label: "Organization", name: "organization", widget: "string"}
+      - {label: "Year", name: "year", widget: "string"}
+      - {label: "Description", name: "description", widget: "text", required: false}
+      - label: "Bullet Points"
+        name: "bullets"
+        widget: "list"
+        required: false
+        fields:
+          - label: "Bullet Text"
+            name: "text"
+            widget: "text"
+      - {label: "Certificate/Evidence Link", name: "cert_link", widget: "string", required: false}
+      - {label: "Visibility", name: "visibility", widget: "select", options: ["public", "v_only"], default: "public"}
+      - {label: "Display Order", name: "order", widget: "number", default: 100, hint: "Smaller numbers appear first"}
+
+  - name: "skills"
+    label: "Skills Stack"
+    folder: "data/skills"
+    create: true
+    slug: "{{category_slug}}"
+    format: "json"
+    extension: "json"
+    fields:
+      - {label: "Category Name", name: "category", widget: "string"}
+      - {label: "Category Slug", name: "category_slug", widget: "string"}
+      - {label: "Skills List", name: "skills", widget: "list", fields: [{label: "Skill", name: "tag", widget: "string"}]}

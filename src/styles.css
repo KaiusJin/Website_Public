@@ -1,0 +1,1405 @@
+/* --- 1. 背景与全局设定 (Retro Ivory Light Mode) --- */
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: #4a3f35;
+    /* 复古深灰褐色，比纯黑更有温度和书卷气 */
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    /* 护眼的淡黄/奶白色背景（羊皮纸风格） */
+    background-color: #fdf8eb;
+}
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* 全局漂浮光斑（同欢迎页） */
+body::before,
+body::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: -1;
+    pointer-events: none;
+    animation: splashFloat 20s infinite alternate ease-in-out;
+}
+
+/* 落日橘光晕 */
+body::before {
+    width: 600px;
+    height: 600px;
+    background: rgba(231, 111, 81, 0.12);
+    top: -15%;
+    left: -10%;
+}
+
+/* 墨蓝光晕 */
+body::after {
+    width: 800px;
+    height: 800px;
+    background: rgba(38, 70, 83, 0.08);
+    bottom: -20%;
+    right: -15%;
+    animation-duration: 25s;
+    animation-delay: -5s;
+}
+
+/* 滚动条 - 采用复古暖色 */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #e6dcc8;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #d4c4a8;
+}
+
+/* --- 0. Landing Splash Screen --- */
+#landing-splash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #fdf8eb;
+    /* 极简暖色底板 */
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    overflow: hidden;
+    /* 防止动态光晕的滚动条溢出 */
+}
+
+/* 核心灵魂：赋予背景微动效，极其温柔的隐隐流动光斑 */
+#landing-splash::before,
+#landing-splash::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    /* 让边界彻底柔化 */
+    z-index: -1;
+    pointer-events: none;
+    /* 防止遮挡鼠标点击事件 */
+    animation: splashFloat 20s infinite alternate ease-in-out;
+}
+
+/* 巨型复古落日橘光晕 */
+#landing-splash::before {
+    width: 600px;
+    height: 600px;
+    background: rgba(231, 111, 81, 0.12);
+    top: -15%;
+    left: -10%;
+}
+
+/* 巨型复古墨蓝光晕 */
+#landing-splash::after {
+    width: 800px;
+    height: 800px;
+    background: rgba(38, 70, 83, 0.08);
+    bottom: -20%;
+    right: -15%;
+    animation-duration: 25s;
+    animation-delay: -5s;
+}
+
+/* 极其舒缓的对角线漂移，让页面产生“呼吸感” */
+@keyframes splashFloat {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(250px, 150px) scale(1.2) rotate(45deg);
+    }
+}
+
+#landing-splash.fade-out {
+    opacity: 0;
+    transform: scale(1.05);
+    pointer-events: none;
+}
+
+.landing-content {
+    text-align: center;
+    animation: slideFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    /* Only apply width 100% on mobile so desktop can auto-center */
+}
+
+.landing-warning-box {
+    font-size: 0.92rem;
+    color: #d35400;
+    max-width: 700px;
+    margin: 0 auto 20px;
+    line-height: 1.6;
+    background: rgba(231, 111, 81, 0.1);
+    padding: 14px 24px;
+    border-radius: 12px;
+    text-align: left;
+    box-sizing: border-box;
+    width: 90%;
+}
+
+/* 多语言欢迎词容器 */
+.greeting-text {
+    display: block;
+    color: #e76f51; /* 燃橙色高亮 */
+    text-align: center;
+    height: 1.2em; /* 绝对固定高度，无论是哪国语言，都强制占用同样的三维物理空间，彻底消灭下方选项卡的跳动 */
+    line-height: 1.2em;
+    transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    white-space: nowrap;
+}
+
+/* 欢迎词退出动画状态 */
+.greeting-fade {
+    opacity: 0;
+}
+
+.landing-content h1 {
+    font-size: 4.8rem;
+    color: #2d1b11;
+    margin: 0 0 10px 0;
+    letter-spacing: -0.02em;
+    font-weight: 800;
+    /* 给大标题增加微弱的重力阴影，增加质感 */
+    text-shadow: 0 10px 30px rgba(45, 27, 17, 0.15);
+}
+
+.landing-content p {
+    font-size: 1.3rem;
+    color: #786657;
+    margin: 0 0 50px 0;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.landing-options {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.explore-btn {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 1);
+    box-shadow: 0 15px 35px rgba(139, 90, 43, 0.05), inset 0 2px 2px rgba(255, 255, 255, 1);
+    padding: 25px 60px;
+    border-radius: 50px;
+    color: #5c4738;
+    font-size: 1.4rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    border: 2px solid transparent;
+}
+
+.explore-btn i {
+    font-size: 1.8rem;
+    color: #e76f51;
+    transition: 0.4s;
+}
+
+.explore-btn:hover {
+    background: #ffffff;
+    border-color: #e76f51;
+    color: #e76f51;
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(231, 111, 81, 0.18);
+}
+
+.explore-btn:hover i {
+    transform: rotate(15deg) scale(1.2);
+}
+
+/* 主加载动画 */
+#main-portfolio {
+    transition: opacity 0.8s ease;
+}
+
+#main-portfolio.fade-in {
+    opacity: 1 !important;
+}
+
+/* --- 2. 核心逻辑：显示与隐藏 --- */
+section {
+    display: none;
+    padding-top: 10px;
+    animation: slideFade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+section.active {
+    display: block;
+}
+
+@keyframes slideFade {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- 3. 大容器 (透明框) --- */
+/* 放开了左右极大宽度的限制！解决边缘臃余空白！ */
+.glass {
+    width: 95%;
+    max-width: 1300px;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- 4. 导航条 (复古暖白胶囊) --- */
+nav {
+    position: sticky;
+    top: 25px;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 35px;
+    gap: 30px;
+    margin: 0 auto 20px auto;
+    width: fit-content;
+    background: rgba(253, 248, 235, 0.85);
+    backdrop-filter: blur(20px) saturate(200%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    border: 1px solid rgba(139, 90, 43, 0.1);
+    border-radius: 50px;
+    box-shadow: 0 15px 35px rgba(139, 90, 43, 0.08);
+}
+
+/* 顶部滑动模糊遮罩，让滑动内容如烟雾般消散 */
+.top-blur-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 160px;
+    background: transparent;
+    pointer-events: none;
+    z-index: 990;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%);
+}
+
+nav a {
+    color: #786657;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: 0.3s;
+    position: relative;
+    padding: 6px 4px;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #e76f51 0%, #f4a261 100%);
+    transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transform: translateX(-50%);
+    border-radius: 3px;
+}
+
+nav a.active,
+nav a:hover {
+    color: #2d1b11;
+}
+
+nav a.active::after,
+nav a:hover::after {
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(231, 111, 81, 0.4);
+}
+
+.content {
+    flex: 1;
+    padding: 0 20px 80px 20px;
+}
+
+.gradient-text {
+    /* 强烈的复古感渐变：深咖啡色 -> 朱红色 */
+    background: linear-gradient(135deg, #2d1b11 0%, #264653 50%, #e76f51 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 4.2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+    margin-top: 5px;
+}
+
+/* 子弹点 */
+.card-bullets {
+    padding-left: 20px;
+    margin: 15px 0 0 0;
+}
+
+.card-bullets li {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #5c4738;
+}
+
+.card-bullets li:last-child {
+    margin-bottom: 0;
+}
+
+/* --- 5. 卡片与网格系统 --- */
+/* --- 5.1 手风琴折叠表 (Accordion List) --- */
+.resume-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.resume-accordion {
+    background: transparent;
+    border-bottom: 1px solid #eadecb;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    overflow: hidden;
+}
+
+.resume-accordion[open] {
+    background: #ffffff;
+    border-bottom-color: transparent;
+    box-shadow: 0 15px 35px -10px rgba(139, 90, 43, 0.08);
+    margin-bottom: 15px;
+    border: 1px solid rgba(234, 222, 203, 0.5);
+}
+
+/* 消除原生的三角箭头 */
+.resume-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 20px;
+    cursor: pointer;
+    list-style: none;
+    outline: none;
+    transition: 0.3s;
+}
+
+.resume-summary::-webkit-details-marker {
+    display: none;
+}
+
+.resume-summary:hover {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+}
+
+.rs-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 0 0 420px;
+}
+
+.toggle-icon {
+    font-size: 1rem;
+    color: #a49687;
+    transition: 0.3s;
+    width: 20px;
+    text-align: center;
+}
+
+.resume-accordion[open] .toggle-icon {
+    transform: rotate(90deg);
+    color: #e76f51;
+}
+
+.rs-left h3 {
+    font-size: 1.15rem;
+    color: #2d1b11;
+    margin: 0;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.rs-date {
+    flex: 0 0 180px;
+    display: flex;
+    justify-content: center;
+    padding-right: 20px;
+}
+
+.rs-date .year-badge {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+}
+
+.year-badge.double-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    text-align: center;
+    line-height: 1.2;
+    padding: 8px 14px;
+    white-space: nowrap;
+}
+
+.year-badge.one-line {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    padding: 6px 16px;
+}
+
+.rs-middle {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    margin-left: 40px;
+}
+
+.rs-middle h2 {
+    color: #4a3f35;
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.rs-middle h2 i {
+    color: #e76f51;
+    font-size: 1.25rem;
+}
+
+.rs-right {
+    flex: 0 0 auto;
+    text-align: right;
+}
+
+.click-hint {
+    font-size: 0.85rem;
+    color: #a49687;
+    font-weight: 800;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.resume-summary:hover .click-hint {
+    opacity: 1;
+    transform: translateX(-5px);
+    color: #e76f51;
+}
+
+.resume-details {
+    padding: 5px 30px 25px 75px;
+    animation: fadeInDown 0.3s ease-out forwards;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.resume-accordion .card-bullets {
+    margin: 0;
+    padding-left: 20px;
+    border-left: 2px solid #eadecb;
+}
+
+.resume-accordion .card-bullets li {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #5c4738;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.resume-accordion .card-bullets li:last-child {
+    margin-bottom: 0;
+}
+
+.resume-actions {
+    margin-top: 20px;
+    padding-left: 0;
+}
+
+.resume-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: rgba(231, 111, 81, 0.08);
+    color: #e76f51;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    border: 1px solid transparent;
+}
+
+.resume-link-btn:hover {
+    background: #e76f51;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(231, 111, 81, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.resume-link-btn i {
+    font-size: 0.85rem;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 24px;
+}
+
+#awards-container {
+    display: block;
+    column-count: 2;
+    column-gap: 24px;
+}
+
+#awards-container .award-card {
+    break-inside: avoid;
+    margin-bottom: 24px;
+}
+
+.info-card,
+.award-card {
+    background: #ffffff;
+    /* 卡片用纯白在淡黄底色上依然非常清晰干净，且显质感 */
+    border: 1px solid #eadecb;
+    border-radius: 20px;
+    padding: 30px;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 4px 6px -1px rgba(139, 90, 43, 0.04), 0 2px 4px -1px rgba(139, 90, 43, 0.02);
+}
+
+/* 悬浮阴影变化，顶部高亮复古橙 */
+.info-card:hover,
+.award-card:hover {
+    transform: translateY(-8px);
+    border-color: #d4c4a8;
+    border-top: 3px solid #e76f51;
+    box-shadow: 0 25px 50px -12px rgba(231, 111, 81, 0.15);
+}
+
+.info-card h3 {
+    font-size: 1.55rem;
+    color: #2d1b11;
+    margin: 0 0 12px 0;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+
+.info-card h2 {
+    color: #4a3f35;
+    margin-bottom: 16px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-card h2 i {
+    color: #e76f51;
+}
+
+.year-badge {
+    background: #fdf2ed;
+    color: #e76f51;
+    border: 1px solid #fad3c5;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* --- Awards --- */
+.award-card {
+    gap: 16px;
+}
+
+.award-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.award-header h3 {
+    font-size: 1.4rem;
+    margin: 0;
+    font-weight: 800;
+    color: #2d1b11;
+}
+
+.award-full-name {
+    color: #786657;
+    font-size: 0.95rem;
+    margin: 0 0 10px 0;
+    font-weight: 500;
+}
+
+.award-actions {
+    margin-top: 15px;
+}
+
+.cert-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    background: rgba(231, 111, 81, 0.1);
+    color: #e76f51;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    border: 1px solid rgba(231, 111, 81, 0.2);
+    width: fit-content;
+}
+
+.cert-link-btn:hover {
+    background: #e76f51;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(231, 111, 81, 0.2);
+}
+
+/* --- Technical Skills 标签 --- */
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.skill-tag {
+    background: #fdf8eb;
+    border: 1px solid #eadecb;
+    color: #5c4738;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.skill-tag:hover {
+    /* 悬浮复古变色！ */
+    background: #e76f51;
+    color: #ffffff;
+    border-color: #e76f51;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(231, 111, 81, 0.25);
+}
+
+/* GitHub 按钮 */
+.card-actions {
+    margin-top: auto;
+    padding-top: 24px;
+}
+
+.github-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: #f6eedf;
+    border: 1px solid #eadecb;
+    color: #4a3f35;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.github-btn:hover {
+    background: #2d1b11;
+    color: #ffffff;
+    border-color: #2d1b11;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(45, 27, 17, 0.2);
+}
+
+/* --- 7. 活动时间轴与 GitHub 贡献图 (Activity & Metrics) --- */
+.activity-layout {
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
+}
+
+.activity-left {
+    flex: 1.2;
+}
+
+.activity-right {
+    flex: 1;
+    position: sticky;
+    top: 120px; /* 滚动时固定在右侧 */
+}
+
+.github-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(139, 90, 43, 0.08); /* 暖色浅阴影 */
+    border: 1px solid rgba(234, 222, 203, 0.6);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.github-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(139, 90, 43, 0.12);
+}
+
+.github-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.35rem;
+    color: #2d1b11;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+}
+
+.github-card h3 i {
+    color: #e76f51; /* 燃橙色 */
+    font-size: 1.5rem;
+}
+
+.github-desc {
+    color: #a49687;
+    margin: 0 0 25px 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.github-chart-container {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.github-chart-container img {
+    width: 100%;
+    height: auto;
+    mix-blend-mode: multiply; /* 让原本白底图自然融入微暖背景 */
+}
+
+/* 模拟的原生 LeetCode 数据卡片 */
+.leetcode-mock {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 10px 0;
+}
+
+.lc-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    /* 模拟题库总比例分布 */
+    background: conic-gradient(
+        #2cbb5d 0% 12%,      /* Easy */
+        #ffc01e 12% 35%,     /* Med */
+        #ef4743 35% 40%,     /* Hard */
+        #f0ece4 40% 100%     /* 未做 */
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lc-inner {
+    width: 125px;
+    height: 125px;
+    background: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.lc-count {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+}
+
+.lc-big {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #262626;
+}
+
+.lc-small {
+    font-size: 0.9rem;
+    color: #8c8c8c;
+    font-weight: 500;
+}
+
+.lc-solved {
+    font-size: 0.95rem;
+    color: #595959;
+    font-weight: 500;
+    margin-top: -5px;
+}
+
+.lc-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.lc-stat-box {
+    background: #fdfaf6;
+    border: 1px solid #f2eadf;
+    border-radius: 8px;
+    padding: 8px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 90px;
+}
+
+.lc-easy { color: #2cbb5d; font-weight: 600; font-size: 0.9rem; margin-bottom: 2px; }
+.lc-med  { color: #ffc01e; font-weight: 600; font-size: 0.9rem; margin-bottom: 2px; }
+.lc-hard { color: #ef4743; font-weight: 600; font-size: 0.9rem; margin-bottom: 2px; }
+
+.lc-num {
+    color: #262626;
+    font-weight: 700;
+    font-size: 1rem;
+}
+.lc-tot {
+    color: #8c8c8c;
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+/* 移动端适配 */
+@media (max-width: 900px) {
+    .activity-layout {
+        flex-direction: column;
+    }
+    .activity-right {
+        position: static;
+        width: 100%;
+        margin-top: 20px;
+    }
+}
+
+.timeline-container {
+    position: relative;
+    max-width: 800px;
+    margin: 0; /* 取消原本的全局居中，让其自动左对齐到标题文本 */
+    padding: 20px 0;
+}
+
+.timeline-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 4px; /* 对齐到字母 'H' 中左侧主干的大致视觉垂直处 */
+    width: 2px;
+    height: 100%;
+    background: #eadecb;
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 50px; /* 调整卡片向左侧边距，贴近时间轴 */
+    margin-bottom: 40px;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -20px; /* 让 50px 宽度的圆圈绝对居中于 left: 4px 的竖线 (4 - 24) = -20 */
+    top: 0;
+    width: 50px;
+    height: 50px;
+    background: #ffffff;
+    border: 2px solid #e76f51;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 5px 15px rgba(231, 111, 81, 0.15);
+    z-index: 1;
+}
+
+.timeline-dot i {
+    color: #e76f51;
+    font-size: 1.2rem;
+}
+
+.timeline-content {
+    background: #ffffff;
+    padding: 20px 25px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(139, 90, 43, 0.05);
+    border: 1px solid rgba(234, 222, 203, 0.4);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.timeline-content:hover {
+    transform: translateX(10px);
+    box-shadow: 0 15px 35px rgba(231, 111, 81, 0.1);
+    border-color: rgba(231, 111, 81, 0.3);
+}
+
+.timeline-content h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.25rem;
+    color: #2d1b11;
+    font-weight: 800;
+}
+
+.timeline-content p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #a49687;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* --- 8. Contact 页面 --- */
+.contact-container {
+    display: flex;
+    gap: 60px;
+}
+
+.contact-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.contact-big-item {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.contact-big-item i {
+    font-size: 2.5rem;
+    width: 50px;
+    text-align: center;
+    color: #e76f51;
+    /* 燃橙色 */
+}
+
+.contact-text span {
+    display: block;
+    font-size: 0.85rem;
+    color: #786657;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.contact-text a {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #2d1b11;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.contact-text a:hover {
+    color: #f4a261;
+}
+
+.contact-right {
+    flex: 1.5;
+}
+
+.contact-right form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.contact-right input,
+.contact-right textarea {
+    background: #ffffff;
+    border: 2px solid #eadecb;
+    border-radius: 12px;
+    padding: 18px;
+    color: #2d1b11;
+    font-size: 1.05rem;
+    font-weight: 500;
+    transition: 0.3s;
+    font-family: inherit;
+}
+
+.contact-right input::placeholder,
+.contact-right textarea::placeholder {
+    color: #a49687;
+    font-weight: 400;
+}
+
+.contact-right input:focus,
+.contact-right textarea:focus {
+    outline: none;
+    border-color: #e76f51;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(231, 111, 81, 0.1);
+}
+
+.contact-right button {
+    background: linear-gradient(135deg, #e76f51 0%, #f4a261 100%);
+    color: #ffffff;
+    border: none;
+    padding: 18px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 1.15rem;
+    cursor: pointer;
+    transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    margin-top: 10px;
+    box-shadow: 0 10px 25px rgba(231, 111, 81, 0.3);
+}
+
+.contact-right button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(231, 111, 81, 0.4);
+    background: linear-gradient(135deg, #d35400 0%, #e76f51 100%);
+}
+
+footer {
+    padding: 15px 24px 20px 24px;
+    color: #786657;
+    font-size: 0.9rem;
+    text-align: center;
+    border-top: 1px solid #eadecb;
+    margin-top: auto;
+}
+
+/* 专门针对 About 页面的非滚动瀑布流布局 (将最高 Skills 栏锁定右侧) */
+@media (min-width: 1001px) {
+    #about .card-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.25fr;
+        grid-template-rows: auto auto auto;
+        align-items: start;
+    }
+
+    #about .info-card:nth-child(2) {
+        grid-column: 2;
+        grid-row: 1 / span 3;
+        border-radius: 20px;
+    }
+
+    /* Skills Stack */
+    #about .info-card:nth-child(1) {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    /* Profile */
+    #about .info-card:nth-child(3) {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    /* Education */
+    #about .info-card:nth-child(4) {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+    /* Involvement */
+}
+
+@media (max-width: 1000px) {
+    .contact-container {
+        flex-direction: column;
+    }
+
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #awards-container {
+        column-count: 1;
+    }
+
+    .resume-summary {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .rs-left {
+        flex: none;
+        width: 100%;
+    }
+
+    .rs-middle {
+        margin-left: 40px;
+    }
+
+    .rs-right {
+        display: none;
+    }
+
+    .resume-details {
+        padding: 0 20px 20px 40px;
+    }
+
+    nav {
+        width: 90%;
+        padding: 10px 15px;
+        border-radius: 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .content {
+        padding: 15px;
+    }
+
+    .landing-options {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .explore-btn {
+        width: 100%;
+        max-width: 400px;
+        min-width: 0;
+    }
+}
+
+/* =======================================================
+   8. 极致的移动端适配 (Mobile Native Responsive UI)
+======================================================= */
+@media (max-width: 800px) {
+    /* 核心骨架改为上下独立排布 */
+    .glass {
+        display: block;
+        width: 100%;
+    }
+
+    /* 侧边导航栏变形为原生顶栏水平滑动菜单 */
+    nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        box-sizing: border-box; /* 核心修复：防止物理内边距撑破 100% 宽度 */
+        height: auto;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        flex-wrap: nowrap; /* 强制覆盖 1000px 设定，防止断行 */
+        padding: 15px 20px;
+        overflow-x: auto;
+        white-space: nowrap;
+        background: rgba(253, 248, 235, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 4px 20px rgba(139, 90, 43, 0.05);
+        border: none;
+        border-radius: 0;
+        z-index: 9999;
+        /* 移除原生滚动条但保留功能 */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    nav a {
+        font-size: 0.95rem;
+        padding: 8px 0;
+    }
+
+    nav::after {
+        display: none; 
+    }
+
+    /* 主内容区脱离 margin-left 束缚，向下避开导航栏 */
+    .content {
+        margin-left: 0;
+        margin-top: 50px;
+        padding: 40px 20px 80px 20px;
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* 开屏页文字缩小保证不截断，并增加内边距防止所有元素贴边 */
+    .landing-content {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0 20px;
+    }
+
+    .landing-warning-box {
+        width: 100%;
+        font-size: 0.85rem;
+    }
+
+    .landing-content h1 {
+        font-size: 2.2rem;
+    }
+    
+    .greeting-text {
+        font-size: 2.4rem;
+        width: 100% !important; /* 解除宽度限死，让其自适应换行或占满 */
+        text-align: center;
+        height: auto; 
+        white-space: normal;
+        word-break: break-all;
+    }
+
+    .landing-content p {
+        font-size: 1.1rem;
+        padding: 0 10px;
+    }
+
+    /* 简历时间轴卡片左边距压缩缩减留白 */
+    .timeline-item {
+        padding-left: 40px; 
+    }
+
+    /* 修复 resume-summary 变 column 后导致 date 被垂直拉伸 180px 的灾难 Bug */
+    .rs-date {
+        flex: none; /* 彻底清除 flex-basis: 180px */
+        width: auto;
+        padding-right: 0;
+        margin-left: 40px; /* 缩进对齐标题 */
+        margin-bottom: 5px;
+        justify-content: flex-start; /* 胶囊块靠左对齐 */
+    }
+    
+    .rs-middle {
+        margin-left: 40px;
+        margin-top: 5px;
+    }
+
+    /* LeetCode Mock 卡片兼容极窄屏幕 */
+    .leetcode-mock {
+        flex-direction: column;
+        gap: 25px;
+    }
+    
+    .lc-stats {
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .lc-stat-box {
+        padding: 8px 10px;
+        min-width: 0;
+        flex: 1;
+    }
+    
+    /* 缩小各个标题的梯度 */
+    .gradient-text {
+        font-size: 2.2rem;
+    }
+
+    /* --- 解决手机端开屏按钮体验 --- */
+    .explore-btn {
+        touch-action: pan-y;
+        padding: 15px 20px; /* 缩减横向内边距防止窄屏挤压 */
+        font-size: 1.2rem;
+    }
+
+    .explore-btn:hover {
+        transform: none; 
+        box-shadow: 0 15px 35px rgba(139, 90, 43, 0.05), inset 0 2px 2px rgba(255, 255, 255, 1);
+    }
+
+    .explore-btn:active {
+        transform: scale(0.96) translateY(2px); 
+        background: #ffffff;
+        border-color: #e76f51;
+        color: #e76f51;
+        transition: 0.1s;
+    }
+    
+    .explore-btn:active i {
+        color: #264653;
+        transform: scale(1.1);
+        transition: 0.1s;
+    }
+}
