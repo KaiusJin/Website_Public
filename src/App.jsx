@@ -9,6 +9,17 @@ import Contact from './components/sections/Contact';
 function App() {
   const [activeSection, setActiveSection] = useState('about');
 
+  useEffect(() => {
+    // 防止 VIP 域名被搜索引擎抓取
+    if (import.meta.env.VITE_APP_CONTEXT === 'extended') {
+      const meta = document.createElement('meta');
+      meta.name = "robots";
+      meta.content = "noindex, nofollow";
+      document.head.appendChild(meta);
+      console.log("SEO Indexing disabled for VIP context.");
+    }
+  }, []);
+
   return (
     <>
       <div className="glass fade-in" id="main-portfolio" style={{ display: 'flex', flexDirection: 'column', opacity: 1 }}>
