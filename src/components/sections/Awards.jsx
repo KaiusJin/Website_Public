@@ -7,21 +7,10 @@ export default function Awards({ isActive }) {
     const filteredAwards = useMemo(() => {
         if (!awardsData || awardsData.length === 0) return [];
         
-        // Filter by visibility
-        const visibleAwards = awardsData;
-
-        const awardOrder = ["Lan Wong Chu", "President", "Euclid"];
-        return [...visibleAwards].sort((a, b) => {
-            const orderA = parseInt(a.order) || 100;
-            const orderB = parseInt(b.order) || 100;
-            if (orderA !== orderB) return orderA - orderB;
-
-            let idxA = awardOrder.findIndex(p => (a.title || "").toLowerCase().includes(p.toLowerCase()));
-            let idxB = awardOrder.findIndex(p => (b.title || "").toLowerCase().includes(p.toLowerCase()));
-            if (idxA !== -1 && idxB !== -1) return idxA - idxB;
-            if (idxA !== -1) return -1;
-            if (idxB !== -1) return 1;
-            return 0;
+        return [...awardsData].sort((a, b) => {
+            const orderA = parseInt(a.order) ?? 999;
+            const orderB = parseInt(b.order) ?? 999;
+            return orderA - orderB;
         });
     }, [awardsData]);
 

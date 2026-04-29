@@ -6,20 +6,29 @@ export default function About({ isActive }) {
 
     const sortedSkills = useMemo(() => {
         if (!skillsData || skillsData.length === 0) return [];
-        const skillOrder = ["Language", "Framework", "Tool"];
-        return [...skillsData].sort((a, b) => {
-            let idxA = skillOrder.findIndex(p => (a.category || "").toLowerCase().includes(p.toLowerCase()));
-            let idxB = skillOrder.findIndex(p => (b.category || "").toLowerCase().includes(p.toLowerCase()));
-            if (idxA !== -1 && idxB !== -1) return idxA - idxB;
-            return 0;
+        
+        // 1. First, sort all skills by their individual order
+        const sorted = [...skillsData].sort((a, b) => (parseInt(a.order) ?? 999) - (parseInt(b.order) ?? 999));
+        
+        // 2. Group them by category while maintaining the order discovered above
+        const groups = [];
+        sorted.forEach(skill => {
+            let group = groups.find(g => g.category === skill.category);
+            if (!group) {
+                group = { category: skill.category, skills: [] };
+                groups.push(group);
+            }
+            group.skills.push(skill);
         });
+        return groups;
     }, [skillsData]);
 
     return (
         <section id="about" className={isActive ? 'active' : ''}>
             <h1 className="gradient-text">Kaius Jin</h1>
-            <div className="card-grid">
-                <div className="info-card">
+            <div className="about-layout-grid">
+                {/* Profile Card */}
+                <div className="info-card profile-card">
                     <h2><i className="fas fa-user-graduate"></i> Profile</h2>
                     <p>I am a <strong>2A Computer Science student</strong> at the <strong>University of Waterloo</strong>, pursuing a 
                         <span style={{ color: '#e76f51', fontWeight: 600 }}> Bachelor of Honors Computer Science</span> with a 
@@ -31,7 +40,9 @@ export default function About({ isActive }) {
                         <li>Grade: 92.8</li>
                     </ul>
                 </div>
-                <div className="info-card">
+
+                {/* Skills Card - Set to take full height on the right */}
+                <div className="info-card skills-card">
                     <h2><i className="fas fa-layer-group"></i> Skills Stack</h2>
                     <div id="skills-container">
                         {loading && <p style={{ color: '#786657' }}>Loading Skills...</p>}
@@ -48,20 +59,17 @@ export default function About({ isActive }) {
                         ))}
                     </div>
                 </div>
-            </div>
 
-            {/* GitHub Activity Section */}
-            <div className="github-activity-section" style={{ marginTop: '2rem' }}>
-                <div className="info-card">
+                {/* GitHub Card - Below Profile on the left */}
+                <div className="info-card github-card">
                     <h2><i className="fab fa-github"></i> GitHub Contributions</h2>
-                    <p style={{ marginBottom: '1.5rem', color: '#786657', fontSize: '0.9rem' }}>
-                        A visual footprint of my open-source activities and project commits.
+                    <p style={{ marginBottom: '1rem', color: '#786657', fontSize: '0.9rem' }}>
+                        Open-source activities and project commits.
                     </p>
-                    <div style={{ background: 'rgba(255,255,255,0.05)', padding: '1.2rem', borderRadius: '1rem', overflow: 'hidden', border: '1px solid rgba(120, 102, 87, 0.2)' }}>
+                    <div className="github-chart-wrapper">
                         <img 
                             src="https://ghchart.rshah.org/e76f51/KaiusJin" 
                             alt="Kaius Jin's GitHub Chart" 
-                            style={{ width: '100%', filter: 'invert(0.1) brightness(1.1)' }}
                         />
                     </div>
                 </div>

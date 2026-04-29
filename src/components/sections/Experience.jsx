@@ -9,8 +9,8 @@ export default function Experience({ isActive }) {
 
         return experiencesData
             .sort((a, b) => {
-                const orderA = parseInt(a.order) || 100;
-                const orderB = parseInt(b.order) || 100;
+                const orderA = parseInt(a.order) ?? 999;
+                const orderB = parseInt(b.order) ?? 999;
                 if (orderA !== orderB) return orderA - orderB;
                 return getSortDate(b) - getSortDate(a);
             });

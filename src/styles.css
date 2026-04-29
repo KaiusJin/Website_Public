@@ -67,174 +67,7 @@ body::after {
     background: #d4c4a8;
 }
 
-/* --- 0. Landing Splash Screen --- */
-#landing-splash {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: #fdf8eb;
-    /* 极简暖色底板 */
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-    overflow: hidden;
-    /* 防止动态光晕的滚动条溢出 */
-}
 
-/* 核心灵魂：赋予背景微动效，极其温柔的隐隐流动光斑 */
-#landing-splash::before,
-#landing-splash::after {
-    content: '';
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(100px);
-    /* 让边界彻底柔化 */
-    z-index: -1;
-    pointer-events: none;
-    /* 防止遮挡鼠标点击事件 */
-    animation: splashFloat 20s infinite alternate ease-in-out;
-}
-
-/* 巨型复古落日橘光晕 */
-#landing-splash::before {
-    width: 600px;
-    height: 600px;
-    background: rgba(231, 111, 81, 0.12);
-    top: -15%;
-    left: -10%;
-}
-
-/* 巨型复古墨蓝光晕 */
-#landing-splash::after {
-    width: 800px;
-    height: 800px;
-    background: rgba(38, 70, 83, 0.08);
-    bottom: -20%;
-    right: -15%;
-    animation-duration: 25s;
-    animation-delay: -5s;
-}
-
-/* 极其舒缓的对角线漂移，让页面产生“呼吸感” */
-@keyframes splashFloat {
-    0% {
-        transform: translate(0, 0) scale(1) rotate(0deg);
-    }
-
-    100% {
-        transform: translate(250px, 150px) scale(1.2) rotate(45deg);
-    }
-}
-
-#landing-splash.fade-out {
-    opacity: 0;
-    transform: scale(1.05);
-    pointer-events: none;
-}
-
-.landing-content {
-    text-align: center;
-    animation: slideFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-    /* Only apply width 100% on mobile so desktop can auto-center */
-}
-
-.landing-warning-box {
-    font-size: 0.92rem;
-    color: #d35400;
-    max-width: 700px;
-    margin: 0 auto 20px;
-    line-height: 1.6;
-    background: rgba(231, 111, 81, 0.1);
-    padding: 14px 24px;
-    border-radius: 12px;
-    text-align: left;
-    box-sizing: border-box;
-    width: 90%;
-}
-
-/* 多语言欢迎词容器 */
-.greeting-text {
-    display: block;
-    color: #e76f51; /* 燃橙色高亮 */
-    text-align: center;
-    height: 1.2em; /* 绝对固定高度，无论是哪国语言，都强制占用同样的三维物理空间，彻底消灭下方选项卡的跳动 */
-    line-height: 1.2em;
-    transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-    white-space: nowrap;
-}
-
-/* 欢迎词退出动画状态 */
-.greeting-fade {
-    opacity: 0;
-}
-
-.landing-content h1 {
-    font-size: 4.8rem;
-    color: #2d1b11;
-    margin: 0 0 10px 0;
-    letter-spacing: -0.02em;
-    font-weight: 800;
-    /* 给大标题增加微弱的重力阴影，增加质感 */
-    text-shadow: 0 10px 30px rgba(45, 27, 17, 0.15);
-}
-
-.landing-content p {
-    font-size: 1.3rem;
-    color: #786657;
-    margin: 0 0 50px 0;
-    letter-spacing: 0.5px;
-    font-weight: 500;
-}
-
-.landing-options {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.explore-btn {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 1);
-    box-shadow: 0 15px 35px rgba(139, 90, 43, 0.05), inset 0 2px 2px rgba(255, 255, 255, 1);
-    padding: 25px 60px;
-    border-radius: 50px;
-    color: #5c4738;
-    font-size: 1.4rem;
-    font-weight: 800;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-    border: 2px solid transparent;
-}
-
-.explore-btn i {
-    font-size: 1.8rem;
-    color: #e76f51;
-    transition: 0.4s;
-}
-
-.explore-btn:hover {
-    background: #ffffff;
-    border-color: #e76f51;
-    color: #e76f51;
-    transform: translateY(-8px) scale(1.05);
-    box-shadow: 0 20px 40px rgba(231, 111, 81, 0.18);
-}
-
-.explore-btn:hover i {
-    transform: rotate(15deg) scale(1.2);
-}
 
 /* 主加载动画 */
 #main-portfolio {
@@ -947,210 +780,163 @@ footer {
     #awards-container {
         column-count: 1;
     }
+}
 
-    .resume-summary {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
+.about-layout-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    grid-template-areas: 
+        "profile skills"
+        "github skills";
+    gap: 24px;
+    align-items: start;
+    margin-top: 20px;
+}
+
+.profile-card { grid-area: profile; }
+.skills-card { 
+    grid-area: skills; 
+    height: 100%; /* 让技能栈填满右侧 */
+}
+.github-card { 
+    grid-area: github;
+    align-self: start; 
+}
+
+.github-chart-wrapper {
+    background: rgba(255, 255, 255, 0.4);
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(120, 102, 87, 0.1);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.github-chart-wrapper img {
+    max-width: 100%;
+    height: auto;
+    /* 调整颜色，使其更契合复古主题 */
+    filter: saturate(0.8) brightness(1.05) contrast(0.9);
+}
+
+/* 适配移动端：改为单栏 */
+@media (max-width: 1100px) {
+    .about-layout-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+            "profile"
+            "skills"
+            "github";
     }
-
-    .rs-left {
-        flex: none;
-        width: 100%;
-    }
-
-    .rs-middle {
-        margin-left: 40px;
-    }
-
-    .rs-right {
-        display: none;
-    }
-
-    .resume-details {
-        padding: 0 20px 20px 40px;
-    }
-
-    nav {
-        width: 90%;
-        padding: 10px 15px;
-        border-radius: 20px;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-
-    .content {
-        padding: 15px;
-    }
-
-    .landing-options {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .explore-btn {
-        width: 100%;
-        max-width: 400px;
-        min-width: 0;
+    
+    .skills-card {
+        height: auto;
     }
 }
 
-/* =======================================================
-   8. 极致的移动端适配 (Mobile Native Responsive UI)
-======================================================= */
-@media (max-width: 800px) {
-    /* 核心骨架改为上下独立排布 */
-    .glass {
-        display: block;
-        width: 100%;
-    }
+/* --- 8. Contact 页面 --- */
+.contact-container {
+    display: flex;
+    gap: 60px;
+}
 
-    /* 侧边导航栏变形为原生顶栏水平滑动菜单 */
-    nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        box-sizing: border-box; /* 核心修复：防止物理内边距撑破 100% 宽度 */
-        height: auto;
-        flex-direction: row;
-        align-items: center;
-        justify-content: flex-start;
-        flex-wrap: nowrap; /* 强制覆盖 1000px 设定，防止断行 */
-        padding: 15px 20px;
-        overflow-x: auto;
-        white-space: nowrap;
-        background: rgba(253, 248, 235, 0.95);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        box-shadow: 0 4px 20px rgba(139, 90, 43, 0.05);
-        border: none;
-        border-radius: 0;
-        z-index: 9999;
-        /* 移除原生滚动条但保留功能 */
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-    
-    nav::-webkit-scrollbar {
-        display: none;
-    }
+.contact-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
 
-    nav a {
-        font-size: 0.95rem;
-        padding: 8px 0;
-    }
+.contact-big-item {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
 
-    nav::after {
-        display: none; 
-    }
+.contact-big-item i {
+    font-size: 2.5rem;
+    width: 50px;
+    text-align: center;
+    color: #e76f51;
+}
 
-    /* 主内容区脱离 margin-left 束缚，向下避开导航栏 */
-    .content {
-        margin-left: 0;
-        margin-top: 50px;
-        padding: 40px 20px 80px 20px;
-        max-width: 100%;
-        width: 100%;
-        box-sizing: border-box;
-    }
+.contact-text span {
+    display: block;
+    font-size: 0.85rem;
+    color: #786657;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
 
-    /* 开屏页文字缩小保证不截断，并增加内边距防止所有元素贴边 */
-    .landing-content {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 0 20px;
-    }
+.contact-text a {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #2d1b11;
+    text-decoration: none;
+    transition: 0.3s;
+}
 
-    .landing-warning-box {
-        width: 100%;
-        font-size: 0.85rem;
-    }
+.contact-text a:hover {
+    color: #f4a261;
+}
 
-    .landing-content h1 {
-        font-size: 2.2rem;
-    }
-    
-    .greeting-text {
-        font-size: 2.4rem;
-        width: 100% !important; /* 解除宽度限死，让其自适应换行或占满 */
-        text-align: center;
-        height: auto; 
-        white-space: normal;
-        word-break: break-all;
-    }
+.contact-right {
+    flex: 1.5;
+}
 
-    .landing-content p {
-        font-size: 1.1rem;
-        padding: 0 10px;
-    }
+.contact-right form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
 
-    /* 简历时间轴卡片左边距压缩缩减留白 */
-    .timeline-item {
-        padding-left: 40px; 
-    }
+.contact-right input,
+.contact-right textarea {
+    background: #ffffff;
+    border: 2px solid #eadecb;
+    border-radius: 12px;
+    padding: 18px;
+    color: #2d1b11;
+    font-size: 1.05rem;
+    font-weight: 500;
+    transition: 0.3s;
+    font-family: inherit;
+}
 
-    /* 修复 resume-summary 变 column 后导致 date 被垂直拉伸 180px 的灾难 Bug */
-    .rs-date {
-        flex: none; /* 彻底清除 flex-basis: 180px */
-        width: auto;
-        padding-right: 0;
-        margin-left: 40px; /* 缩进对齐标题 */
-        margin-bottom: 5px;
-        justify-content: flex-start; /* 胶囊块靠左对齐 */
-    }
-    
-    .rs-middle {
-        margin-left: 40px;
-        margin-top: 5px;
-    }
+.contact-right input:focus,
+.contact-right textarea:focus {
+    outline: none;
+    border-color: #e76f51;
+    box-shadow: 0 0 0 4px rgba(231, 111, 81, 0.1);
+}
 
-    /* LeetCode Mock 卡片兼容极窄屏幕 */
-    .leetcode-mock {
-        flex-direction: column;
-        gap: 25px;
-    }
-    
-    .lc-stats {
-        flex-direction: row;
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .lc-stat-box {
-        padding: 8px 10px;
-        min-width: 0;
-        flex: 1;
-    }
-    
-    /* 缩小各个标题的梯度 */
-    .gradient-text {
-        font-size: 2.2rem;
-    }
+.contact-right button {
+    background: linear-gradient(135deg, #e76f51 0%, #f4a261 100%);
+    color: #ffffff;
+    border: none;
+    padding: 18px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 1.15rem;
+    cursor: pointer;
+    transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    margin-top: 10px;
+    box-shadow: 0 10px 25px rgba(231, 111, 81, 0.3);
+}
 
-    /* --- 解决手机端开屏按钮体验 --- */
-    .explore-btn {
-        touch-action: pan-y;
-        padding: 15px 20px; /* 缩减横向内边距防止窄屏挤压 */
-        font-size: 1.2rem;
-    }
+.contact-right button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(231, 111, 81, 0.4);
+}
 
-    .explore-btn:hover {
-        transform: none; 
-        box-shadow: 0 15px 35px rgba(139, 90, 43, 0.05), inset 0 2px 2px rgba(255, 255, 255, 1);
-    }
-
-    .explore-btn:active {
-        transform: scale(0.96) translateY(2px); 
-        background: #ffffff;
-        border-color: #e76f51;
-        color: #e76f51;
-        transition: 0.1s;
-    }
-    
-    .explore-btn:active i {
-        color: #264653;
-        transform: scale(1.1);
-        transition: 0.1s;
-    }
+footer {
+    padding: 30px 24px;
+    color: #786657;
+    font-size: 0.9rem;
+    text-align: center;
+    border-top: 1px solid #eadecb;
+    margin-top: 60px;
 }
