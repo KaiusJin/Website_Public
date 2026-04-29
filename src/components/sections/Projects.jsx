@@ -66,10 +66,10 @@ export default function Projects({ isActive }) {
                                 <span key={j} className="skill-tag">{s.tag}</span>
                             ))}
                         </div>
-                        {p.github_link && (
+                        {(p.github_link || p.link) && (
                             <div className="card-actions">
-                                <a href={p.github_link} target="_blank" rel="noopener noreferrer" className="github-btn">
-                                    <i className="fab fa-github"></i> GitHub Repo
+                                <a href={p.github_link || p.link} target="_blank" rel="noopener noreferrer" className="github-btn">
+                                    <i className="fab fa-github"></i> {p.link_text || 'View on GitHub'}
                                 </a>
                             </div>
                         )}
