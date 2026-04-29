@@ -73,7 +73,7 @@ export default function Projects({ isActive }) {
                                 </a>
                             )}
                             {p.link && (
-                                <a href={p.link} target="_blank" rel="noopener noreferrer" className="github-btn" style={{ background: 'linear-gradient(135deg, #264653 0%, #2a9d8f 100%)' }}>
+                                <a href={p.link} target="_blank" rel="noopener noreferrer" className="github-btn">
                                     <i className="fas fa-external-link-alt"></i> {p.link_text || 'Visit Website'}
                                 </a>
                             )}
