@@ -7,20 +7,8 @@ export default function About({ isActive }) {
     const sortedSkills = useMemo(() => {
         if (!skillsData || skillsData.length === 0) return [];
         
-        // 1. First, sort all skills by their individual order
-        const sorted = [...skillsData].sort((a, b) => (parseInt(a.order) ?? 999) - (parseInt(b.order) ?? 999));
-        
-        // 2. Group them by category while maintaining the order discovered above
-        const groups = [];
-        sorted.forEach(skill => {
-            let group = groups.find(g => g.category === skill.category);
-            if (!group) {
-                group = { category: skill.category, skills: [] };
-                groups.push(group);
-            }
-            group.skills.push(skill);
-        });
-        return groups;
+        // Directly sort the category rows by their order
+        return [...skillsData].sort((a, b) => (parseInt(a.order) ?? 999) - (parseInt(b.order) ?? 999));
     }, [skillsData]);
 
     return (
@@ -51,6 +39,7 @@ export default function About({ isActive }) {
                             <div key={i} style={{ marginBottom: '12px' }}>
                                 <h4 style={{ margin: '0 0 6px 0', color: '#a49687', fontSize: '0.82rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{c.category}</h4>
                                 <div className="skills-list">
+                                    {/* The inner 'skills' is an array of objects like {tag: '...'} */}
                                     {(c.skills || []).map((s, j) => (
                                         <span key={j} className="skill-tag">{s.tag}</span>
                                     ))}
