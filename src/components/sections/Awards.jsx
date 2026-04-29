@@ -44,10 +44,10 @@ export default function Awards({ isActive }) {
                                     ))}
                                 </ul>
                             )}                            
-                            {a.cert_link && (
+                            {(a.link || a.cert_link) && (
                                 <div className="award-actions">
-                                    <a href={a.cert_link} target="_blank" rel="noopener noreferrer" className="cert-link-btn">
-                                        <i className="fas fa-certificate"></i> View Certificate
+                                    <a href={a.link || a.cert_link} target="_blank" rel="noopener noreferrer" className="cert-link-btn">
+                                        <i className="fas fa-certificate"></i> {a.link_text || 'View Certificate'}
                                     </a>
                                 </div>
                             )}
