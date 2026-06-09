@@ -144,18 +144,20 @@ function App() {
       )}
 
       <footer className="site-footer">
-        <div className="webring-widget" aria-label="Waterloo CS Webring">
-          <a href="https://cs.uwatering.com/#https://kaiusjin.com?nav=prev" aria-label="Previous Waterloo CS Webring site">
-            ←
-          </a>
-          <a href="https://cs.uwatering.com/#https://kaiusjin.com" target="_blank" rel="noopener noreferrer" aria-label="Waterloo CS Webring">
-            <img src="https://cs.uwatering.com/icon.black.svg" alt="CS Webring" />
-          </a>
-          <a href="https://cs.uwatering.com/#https://kaiusjin.com?nav=next" aria-label="Next Waterloo CS Webring site">
-            →
-          </a>
+        <div className="site-footer-inner">
+          <p>© 2026 Kaius Jin. Built at Waterloo.</p>
+          <div className="webring-widget" aria-label="Waterloo CS Webring">
+            <a href="https://cs.uwatering.com/#https://kaiusjin.com?nav=prev" aria-label="Previous Waterloo CS Webring site">
+              ←
+            </a>
+            <a href="https://cs.uwatering.com/#https://kaiusjin.com" target="_blank" rel="noopener noreferrer" aria-label="Waterloo CS Webring">
+              <img src="https://cs.uwatering.com/icon.black.svg" alt="CS Webring" />
+            </a>
+            <a href="https://cs.uwatering.com/#https://kaiusjin.com?nav=next" aria-label="Next Waterloo CS Webring site">
+              →
+            </a>
+          </div>
         </div>
-        <p>© 2026 Kaius Jin. Built at Waterloo.</p>
       </footer>
     </div>
   );

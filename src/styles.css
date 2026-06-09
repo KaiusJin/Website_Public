@@ -1065,19 +1065,22 @@ section:last-of-type {
   padding: 28px 24px;
   font-size: 0.85rem;
   color: var(--text-secondary);
-  text-align: center;
   margin-top: 12px;
   background-color: var(--bg-page);
   width: 100%;
 }
 
-.site-footer p {
+.site-footer-inner {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
+  justify-content: space-between;
+  gap: 24px;
   max-width: var(--max-width);
   margin: 0 auto;
+}
+
+.site-footer p {
+  margin: 0;
 }
 
 .site-footer i {
@@ -1089,7 +1092,7 @@ section:last-of-type {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin: 0 auto 10px;
+  margin: 0;
 }
 
 .webring-widget a {
@@ -1253,6 +1256,13 @@ section:last-of-type {
 
   .site-footer {
     padding: 22px 18px;
+  }
+
+  .site-footer-inner {
+    flex-direction: column-reverse;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
   }
 }
 
