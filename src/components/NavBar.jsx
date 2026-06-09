@@ -1,18 +1,59 @@
 import React from 'react';
 
-export default function NavBar({ activePage, setActivePage }) {
-    const handleNav = (page) => {
-        setActivePage(page);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+export default function NavBar({ activeSection }) {
+  const navItems = [
+    { label: 'About', id: 'about' },
+    { label: 'Skills', id: 'skills' },
+    { label: 'Projects', id: 'project' },
+    { label: 'Experience', id: 'experience' },
+    { label: 'Awards', id: 'awards' },
+    { label: 'Contact', id: 'contact' }
+  ];
 
-    return (
-        <nav role="navigation" aria-label="Main Navigation">
-            <a role="button" tabIndex="0" className={activePage === 'about' ? 'active' : ''} onClick={() => handleNav('about')}>About Me</a>
-            <a role="button" tabIndex="0" className={activePage === 'project' ? 'active' : ''} onClick={() => handleNav('project')}>Project</a>
-            <a role="button" tabIndex="0" className={activePage === 'experience' ? 'active' : ''} onClick={() => handleNav('experience')}>Experience</a>
-            <a role="button" tabIndex="0" className={activePage === 'awards' ? 'active' : ''} onClick={() => handleNav('awards')}>Awards & Certifications</a>
-            <a role="button" tabIndex="0" className={activePage === 'contact' ? 'active' : ''} onClick={() => handleNav('contact')}>Contact</a>
-        </nav>
-    );
+  const handleNavClick = (e, id) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      const navbar = document.querySelector('.navbar-container');
+      const navbarHeight = navbar ? navbar.offsetHeight : 60;
+      const offset = navbarHeight + 32; // Dynamic offset with clean margin
+
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  return (
+    <nav className="navbar-container" role="navigation" aria-label="Main Navigation">
+      <div className="navbar-content">
+        <a
+          href="#hero"
+          onClick={(e) => handleNavClick(e, 'hero')}
+          className="navbar-logo"
+        >
+          Kaius <span>Jin</span>
+        </a>
+
+        <div className="navbar-links">
+          {navItems.map((item) => (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              className={activeSection === item.id ? 'active' : ''}
+              onClick={(e) => handleNavClick(e, item.id)}
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </nav>
+  );
 }

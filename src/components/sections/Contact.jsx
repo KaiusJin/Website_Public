@@ -1,63 +1,94 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
-export default function Contact({ isActive }) {
-    const formRef = useRef(null);
+const contactSlogans = [
+  'I turn scattered signals into working systems.',
+  'I build software that survives real users.',
+  'I make AI feel sharp, useful, and fast.',
+  'I connect algorithms with human problems.'
+];
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        
-        
-        if (window.emailjs && formRef.current) {
-            window.emailjs.sendForm('service_id', 'template_id', formRef.current)
-                .then(() => alert('Message Sent!'))
-                .catch((err) => console.error(err));
-        }
-    };
+export default function Contact() {
+  const [activeSlogan, setActiveSlogan] = useState(0);
 
-    return (
-        <section id="contact" className={isActive ? 'active' : ''}>
-            <h1 className="gradient-text">Let's Connect</h1>
-            <div className="contact-container">
-                <div className="contact-left">
-                    <div className="contact-big-item">
-                        <i className="fas fa-envelope"></i>
-                        <div className="contact-text">
-                            <span>Email</span>
-                            <a href="mailto:kaius.jin@outlook.com">kaius.jin@outlook.com</a>
-                        </div>
-                    </div>
-                    <div className="contact-big-item">
-                        <i className="fab fa-github"></i>
-                        <div className="contact-text">
-                            <span>GitHub</span>
-                            <a href="https://github.com/KaiusJin" target="_blank" rel="noopener noreferrer">github.com/KaiusJin</a>
-                        </div>
-                    </div>
-                    <div className="contact-big-item">
-                        <i className="fab fa-linkedin"></i>
-                        <div className="contact-text">
-                            <span>LinkedIn</span>
-                            <a href="https://www.linkedin.com/in/kaixuan-jin/" target="_blank" rel="noopener noreferrer">in/kaixuan-jin</a>
-                        </div>
-                    </div>
-                    <div className="contact-big-item">
-                        <i className="fas fa-laptop-code"></i>
-                        <div className="contact-text">
-                            <span>Devpost</span>
-                            <a href="https://devpost.com/kaixuan-jin?ref_content=user-portfolio&ref_feature=portfolio&ref_medium=global-nav" target="_blank" rel="noopener noreferrer">devpost.com/kaixuan-jin</a>
-                        </div>
-                    </div>
-                </div>
-                <div className="contact-right">
-                    <form id="contact-form" ref={formRef} onSubmit={handleSubmit}>
-                        <input type="text" name="from_name" placeholder="Name" required />
-                        <input type="email" name="from_email" placeholder="Email" required />
-                        <textarea name="message" placeholder="Message" rows="5" required></textarea>
-                        <div className="g-recaptcha" data-sitekey="6LdjJNArAAAAAAc9QzBoXlZItuKErs9P2pjqF5Pl"></div>
-                        <button type="submit">Send Message</button>
-                    </form>
-                </div>
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveSlogan((current) => (current + 1) % contactSlogans.length);
+    }, 3200);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
+  return (
+    <section id="contact" className="contact-section">
+      <div className="contact-layout">
+        <div className="contact-left-panel">
+          <h2 className="section-title">
+            <i className="fas fa-paper-plane" style={{ color: 'var(--accent)' }}></i> Contact Me
+          </h2>
+
+          <div className="contact-info-list">
+            {/* Email Item */}
+            <div className="contact-info-item">
+              <div className="contact-info-icon-badge">
+                <i className="fas fa-envelope"></i>
+              </div>
+              <div className="contact-info-details">
+                <span className="contact-info-label">EMAIL</span>
+                <a href="mailto:kaius.jin@outlook.com" className="contact-info-value-link">
+                  kaius.jin@outlook.com
+                </a>
+              </div>
             </div>
-        </section>
-    );
+
+            {/* Location Item */}
+            <div className="contact-info-item">
+              <div className="contact-info-icon-badge">
+                <i className="fas fa-map-marker-alt"></i>
+              </div>
+              <div className="contact-info-details">
+                <span className="contact-info-label">LOCATION</span>
+                <span className="contact-info-value-text">
+                  Waterloo, ON, Canada
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Minimalist Social Links */}
+          <div className="contact-social-row">
+            <a
+              href="https://github.com/KaiusJin"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="GitHub"
+            >
+              <i className="fab fa-github"></i>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/kaixuan-jin/"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="LinkedIn"
+            >
+              <i className="fab fa-linkedin"></i>
+            </a>
+            <a
+              href="https://devpost.com/kaixuan-jin?ref_content=user-portfolio&ref_feature=portfolio&ref_medium=global-nav"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Devpost"
+            >
+              <i className="fas fa-laptop-code"></i>
+            </a>
+          </div>
+        </div>
+
+        <div className="contact-slogan-panel" aria-live="polite">
+          <div key={activeSlogan} className="contact-slogan-text">
+            {contactSlogans[activeSlogan]}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }

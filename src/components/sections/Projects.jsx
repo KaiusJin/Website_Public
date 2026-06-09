@@ -1,86 +1,49 @@
 import React, { useMemo } from 'react';
 import { useCMSData, getSortDate } from '../../hooks/useCMSData';
+import ProjectRow from './ProjectRow';
 
-export default function Projects({ isActive }) {
-    const { data: projectsData, loading } = useCMSData('data/projects');
+export default function Projects({ onViewAll }) {
+  const { data: projectsData, loading } = useCMSData('data/projects');
 
-    const filteredProjects = useMemo(() => {
-        if (!projectsData) return [];
+  const filteredProjects = useMemo(() => {
+    if (!projectsData) return [];
 
-        return projectsData
-            .sort((a, b) => {
-                const orderA = parseInt(a.order) ?? 999;
-                const orderB = parseInt(b.order) ?? 999;
-                if (orderA !== orderB) return orderA - orderB;
-                return getSortDate(b) - getSortDate(a);
-            });
-    }, [projectsData]);
+    return projectsData
+      .sort((a, b) => {
+        const orderA = parseInt(a.order) ?? 999;
+        const orderB = parseInt(b.order) ?? 999;
+        if (orderA !== orderB) return orderA - orderB;
+        return getSortDate(b) - getSortDate(a);
+      });
+  }, [projectsData]);
 
-    const formatDateBadge = (item) => {
-        let start = item.start_date;
-        let end = item.is_present ? 'Present' : item.end_date;
-        
-        if (!start && item.date_badge) {
-            
-            if (item.date_badge.includes('-')) {
-                const parts = item.date_badge.split('-').map(s => s.trim());
-                start = parts[0];
-                end = end || parts[1];
-            } else {
-                start = item.date_badge;
-            }
-        }
+  // Only display the first 2 projects as featured on the home page
+  const featuredProjects = useMemo(() => {
+    return filteredProjects.slice(0, 2);
+  }, [filteredProjects]);
 
-        return (
-            <span className={`year-badge ${end ? 'double-line' : 'one-line'}`}>
-                <span>{start || ''}</span>
-                {end && (
-                    <>
-                        <span style={{ display: 'block', width: '100%', textAlign: 'center' }}>-</span>
-                        <span>{end}</span>
-                    </>
-                )}
-            </span>
-        );
-    };
+  return (
+    <section id="project" className="projects-section-container">
+      <h2 className="section-title">
+        <i className="fas fa-laptop-code" style={{ color: 'var(--accent)' }}></i> Projects
+      </h2>
 
-    return (
-        <section id="project" className={isActive ? 'active' : ''}>
-            <h1 className="gradient-text">Projects</h1>
-            <div className="card-grid" id="projects-container">
-                {loading && <p style={{ color: '#786657' }}>Loading Projects...</p>}
-                {!loading && filteredProjects.length === 0 && <p style={{ color: '#786657' }}>No projects found.</p>}
-                {filteredProjects.map((p, i) => (
-                    <div key={i} className="info-card project-card">
-                        <div className="card-header">
-                            <h3>{p.title}</h3>
-                            {formatDateBadge(p)}
-                        </div>
-                        <ul className="card-bullets">
-                            {(p.bullets || []).map((b, j) => (
-                                <li key={j}>{b.text}</li>
-                            ))}
-                        </ul>
-                        <div className="skills-list" style={{ marginTop: '20px' }}>
-                            {(p.skills || []).map((s, j) => (
-                                <span key={j} className="skill-tag">{s.tag}</span>
-                            ))}
-                        </div>
-                        <div className="card-actions">
-                            {p.github_link && (
-                                <a href={p.github_link} target="_blank" rel="noopener noreferrer" className="github-btn" style={{ marginRight: '10px' }}>
-                                    <i className="fab fa-github"></i> GitHub Repo
-                                </a>
-                            )}
-                            {p.link && (
-                                <a href={p.link} target="_blank" rel="noopener noreferrer" className="github-btn">
-                                    <i className="fas fa-external-link-alt"></i> {p.link_text || 'Visit Website'}
-                                </a>
-                            )}
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </section>
-    );
+      {loading && <p style={{ color: 'var(--text-secondary)' }}>Loading Projects...</p>}
+      {!loading && featuredProjects.length === 0 && <p style={{ color: 'var(--text-secondary)' }}>No projects found.</p>}
+
+      <div className="projects-list-wrapper">
+        {featuredProjects.map((p, i) => (
+          <ProjectRow key={p.id || i} project={p} index={i} />
+        ))}
+      </div>
+
+      {!loading && filteredProjects.length > 2 && (
+        <div className="view-all-projects-footer">
+          <button onClick={onViewAll} className="view-all-projects-link">
+            View All Projects <i className="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      )}
+    </section>
+  );
 }
