@@ -1082,6 +1082,45 @@ section:last-of-type {
   color: #f43f5e;
 }
 
+.webring-widget {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 auto 10px;
+}
+
+.webring-widget a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+}
+
+.webring-widget a:hover {
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.webring-widget img {
+  display: block;
+  width: 24px;
+  height: auto;
+  opacity: 0.82;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.webring-widget a:hover img {
+  opacity: 1;
+  transform: scale(1.06);
+}
+
 /* Responsive Breakpoints */
 @media (max-width: 1024px) {
   .hero-title {
