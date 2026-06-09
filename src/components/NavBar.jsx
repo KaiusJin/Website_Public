@@ -1,4 +1,5 @@
 import React from 'react';
+import { scrollToElementWithOffset } from '../utils/smoothScroll';
 
 export default function NavBar({ activeSection }) {
   const navItems = [
@@ -12,22 +13,10 @@ export default function NavBar({ activeSection }) {
 
   const handleNavClick = (e, id) => {
     e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      const navbar = document.querySelector('.navbar-container');
-      const navbarHeight = navbar ? navbar.offsetHeight : 60;
-      const offset = navbarHeight + 32; // Dynamic offset with clean margin
+    const navbar = document.querySelector('.navbar-container');
+    const navbarHeight = navbar ? navbar.offsetHeight : 60;
 
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
+    scrollToElementWithOffset(id, navbarHeight + 32);
   };
 
   return (

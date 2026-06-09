@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { scrollToElementWithOffset } from '../../utils/smoothScroll';
 
 export default function Hero() {
   const greetings = [
@@ -25,19 +26,7 @@ export default function Hero() {
   }, []);
 
   const handleScrollTo = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 92;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
+    scrollToElementWithOffset(id, 92);
   };
 
   const currentGreeting = greetings[currentIndex];

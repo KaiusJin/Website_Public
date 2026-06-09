@@ -41,7 +41,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 body {
@@ -361,7 +361,9 @@ section:last-of-type {
 .hero-tags span:not(:last-child)::after {
   content: '•';
   margin-left: 12px;
-  color: var(--border-color);
+  color: #94a3b8;
+  font-size: 0.95rem;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.32);
 }
 
 .hero-actions {
