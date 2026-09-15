@@ -1,0 +1,861 @@
+{
+  "mode": "Built-in image_gen edits, followed by local registration and stitching",
+  "sourceSize": [
+    2172,
+    724
+  ],
+  "nativePanelSize": [
+    1254,
+    1254
+  ],
+  "outputSize": [
+    3762,
+    1254
+  ],
+  "processing": [
+    "Four square crops per scene, with source x offsets 0, 483, 965, 1448 and 724-pixel crop width.",
+    "SIFT matches and RANSAC affine alignment against the original reference crop.",
+    "Low-frequency color/exposure correction against the shared source (Gaussian sigma 32 output pixels), retaining generated fine detail.",
+    "Minimum-error vertical seams and 20-pixel feathered overlap.",
+    "Export WebP quality 96, method 6."
+  ],
+  "layering": "Prompts distinguish foreground material details, middle-distance architecture and distant atmosphere. Outputs are flattened full backgrounds; existing runtime light-parallax layers remain. No new transparent layers were generated.",
+  "superResolution": "Not required. Each native generated panel is 1254 square despite requesting 2048 square. Output uses their native scale, with no enlargement after stitching.",
+  "scenes": [
+    {
+      "id": "cottage",
+      "source": "public/journey/regions/cottage-v2.webp",
+      "output": "public/journey/regions/cottage-hd.webp",
+      "outputBytes": 1772244,
+      "panels": [
+        {
+          "name": "cottage",
+          "index": 0,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 1 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Golden late-afternoon countryside with a cozy ivy-covered stone witch cottage, mossy slate roof, open wooden door and warm windows; lake valley, distant hilltop castle, mountain ridges, fence and flowers. Refine stone masonry, slate edges, wood grain, iron lanterns, leaves and petals, distant castle windows and lake reflections.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-a43ecc94-3551-4a96-b1d6-fd7f90ba4ead.png",
+          "mode": "Built-in image_gen edit"
+        },
+        {
+          "name": "cottage",
+          "index": 1,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 2 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Golden late-afternoon countryside with a cozy ivy-covered stone witch cottage, mossy slate roof, open wooden door and warm windows; lake valley, distant hilltop castle, mountain ridges, fence and flowers. Refine stone masonry, slate edges, wood grain, iron lanterns, leaves and petals, distant castle windows and lake reflections.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-c17d7d78-e02b-443d-ae60-7b45a8399f36.png",
+          "mode": "Built-in image_gen edit"
+        },
+        {
+          "name": "cottage",
+          "index": 2,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 3 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Golden late-afternoon countryside with a cozy ivy-covered stone witch cottage, mossy slate roof, open wooden door and warm windows; lake valley, distant hilltop castle, mountain ridges, fence and flowers. Refine stone masonry, slate edges, wood grain, iron lanterns, leaves and petals, distant castle windows and lake reflections.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-3359dfcd-1842-48c5-9cd3-408f7f64a9ab.png",
+          "mode": "Built-in image_gen edit"
+        },
+        {
+          "name": "cottage",
+          "index": 3,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 4 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Golden late-afternoon countryside with a cozy ivy-covered stone witch cottage, mossy slate roof, open wooden door and warm windows; lake valley, distant hilltop castle, mountain ridges, fence and flowers. Refine stone masonry, slate edges, wood grain, iron lanterns, leaves and petals, distant castle windows and lake reflections.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-1df915ba-f8c7-43b4-87a4-8bdce874142f.png",
+          "mode": "Built-in image_gen edit"
+        }
+      ],
+      "registration": {
+        "size": [
+          3762,
+          1254
+        ],
+        "panels": [
+          {
+            "panel": 0,
+            "matches": 2889,
+            "inliers": 2857,
+            "medianRegistrationErrorReferencePixels": 0.7569186841908101,
+            "transform": [
+              [
+                1.000363915055932,
+                1.3945215588564958e-05,
+                0.08691089667411234
+              ],
+              [
+                0.00010571466659637308,
+                1.0000432114881377,
+                0.05892469943330525
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          {
+            "panel": 1,
+            "matches": 2169,
+            "inliers": 2145,
+            "medianRegistrationErrorReferencePixels": 0.8231475364660631,
+            "transform": [
+              [
+                1.0000078836966515,
+                -0.000443573672855795,
+                0.07964564831928556
+              ],
+              [
+                -0.00040746239758523647,
+                0.9998768032762768,
+                0.11611576239909027
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "overlapPixels": 417,
+            "exposureCorrectionRGB": [
+              0.3545684814453125,
+              0.11822509765625,
+              -0.690948486328125
+            ],
+            "seamRange": [
+              262,
+              391
+            ]
+          },
+          {
+            "panel": 2,
+            "matches": 1741,
+            "inliers": 1718,
+            "medianRegistrationErrorReferencePixels": 0.8314823182436253,
+            "transform": [
+              [
+                1.0003072434926097,
+                -3.753985740779594e-05,
+                -0.18007308492536822
+              ],
+              [
+                -0.0001445071120008778,
+                0.9998896094410215,
+                0.09136547582727417
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "overlapPixels": 420,
+            "exposureCorrectionRGB": [
+              0.2291412353515625,
+              0.1872711181640625,
+              -0.690948486328125
+            ],
+            "seamRange": [
+              37,
+              223
+            ]
+          },
+          {
+            "panel": 3,
+            "matches": 2564,
+            "inliers": 2542,
+            "medianRegistrationErrorReferencePixels": 0.7629216571472294,
+            "transform": [
+              [
+                0.9999057330367074,
+                -0.000627416943970351,
+                0.16425803946958695
+              ],
+              [
+                0.00010083607137707043,
+                0.9997395063847665,
+                -0.03976064156705661
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "overlapPixels": 417,
+            "exposureCorrectionRGB": [
+              0.129241943359375,
+              0.2266845703125,
+              -0.91552734375
+            ],
+            "seamRange": [
+              154,
+              389
+            ]
+          }
+        ]
+      },
+      "localStitchScript": ".local/cottage-hd/stitch.py"
+    },
+    {
+      "id": "meadow",
+      "source": "public/journey/regions/meadow-v2.webp",
+      "output": "public/journey/regions/meadow-hd.webp",
+      "outputBytes": 1815222,
+      "panels": [
+        {
+          "name": "meadow",
+          "index": 0,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 1 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Bright blue daytime sky with sunlit white clouds over a green meadow and blue mountain lake. A wooden sign and fence on the left, large leafy oak on the right, distant bridges and a hilltop town. Refine bark, branching leaves, meadow flowers, fence joints, cliff strata, bridge arches, roof silhouettes and mountain snow ridges.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-f63395a0-3634-4ed4-983c-eaa45c85bddb.png",
+          "mode": "Built-in image_gen edit"
+        },
+        {
+          "name": "meadow",
+          "index": 1,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 2 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Bright blue daytime sky with sunlit white clouds over a green meadow and blue mountain lake. A wooden sign and fence on the left, large leafy oak on the right, distant bridges and a hilltop town. Refine bark, branching leaves, meadow flowers, fence joints, cliff strata, bridge arches, roof silhouettes and mountain snow ridges.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-04687199-dec9-4e1b-960e-8faf66004d15.png",
+          "mode": "Built-in image_gen edit"
+        },
+        {
+          "name": "meadow",
+          "index": 2,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 3 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Bright blue daytime sky with sunlit white clouds over a green meadow and blue mountain lake. A wooden sign and fence on the left, large leafy oak on the right, distant bridges and a hilltop town. Refine bark, branching leaves, meadow flowers, fence joints, cliff strata, bridge arches, roof silhouettes and mountain snow ridges.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-c87bd555-11d6-48c6-912f-83284822e92c.png",
+          "mode": "Built-in image_gen edit"
+        },
+        {
+          "name": "meadow",
+          "index": 3,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 4 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Bright blue daytime sky with sunlit white clouds over a green meadow and blue mountain lake. A wooden sign and fence on the left, large leafy oak on the right, distant bridges and a hilltop town. Refine bark, branching leaves, meadow flowers, fence joints, cliff strata, bridge arches, roof silhouettes and mountain snow ridges.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-84a59718-5b0d-4f04-96ea-2e271bbdbb52.png",
+          "mode": "Built-in image_gen edit"
+        }
+      ],
+      "registration": {
+        "size": [
+          3762,
+          1254
+        ],
+        "panels": [
+          {
+            "panel": 0,
+            "matches": 2671,
+            "inliers": 2628,
+            "medianRegistrationErrorReferencePixels": 0.7933601014516453,
+            "transform": [
+              [
+                1.0000170677483906,
+                3.598119720424004e-05,
+                -0.12608668503361287
+              ],
+              [
+                -0.0004002520626942557,
+                0.9998196763289021,
+                0.06571646792446018
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          {
+            "panel": 1,
+            "matches": 1685,
+            "inliers": 1647,
+            "medianRegistrationErrorReferencePixels": 0.691120829098116,
+            "transform": [
+              [
+                1.000417326429676,
+                0.00021898123473771354,
+                -0.5429274180107768
+              ],
+              [
+                -0.0005611864416741422,
+                0.9991790635831053,
+                0.38863080416604134
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "overlapPixels": 417,
+            "exposureCorrectionRGB": [
+              -0.0408172607421875,
+              -0.2712860107421875,
+              -0.13348388671875
+            ],
+            "seamRange": [
+              129,
+              388
+            ]
+          },
+          {
+            "panel": 2,
+            "matches": 2390,
+            "inliers": 2353,
+            "medianRegistrationErrorReferencePixels": 0.7636242897541937,
+            "transform": [
+              [
+                1.00002698824613,
+                0.00014263198400729833,
+                -0.16522068040234217
+              ],
+              [
+                3.8158401852471136e-05,
+                0.9994868622676049,
+                0.08361681493113338
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "overlapPixels": 420,
+            "exposureCorrectionRGB": [
+              -0.0408172607421875,
+              -0.37947845458984375,
+              -0.27761077880859375
+            ],
+            "seamRange": [
+              119,
+              288
+            ]
+          },
+          {
+            "panel": 3,
+            "matches": 3426,
+            "inliers": 3387,
+            "medianRegistrationErrorReferencePixels": 0.7112518796862441,
+            "transform": [
+              [
+                0.9999563334153361,
+                -0.0003880561084552588,
+                -0.08080619859157423
+              ],
+              [
+                9.128492372662847e-05,
+                0.9995296023203778,
+                0.07493011091668222
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "overlapPixels": 417,
+            "exposureCorrectionRGB": [
+              -0.6382102966308594,
+              -0.42281341552734375,
+              0.29665374755859375
+            ],
+            "seamRange": [
+              27,
+              391
+            ]
+          }
+        ]
+      },
+      "localStitchScript": ".local/meadow-hd/stitch.py"
+    },
+    {
+      "id": "town",
+      "source": "public/journey/regions/town-v2.webp",
+      "output": "public/journey/regions/town-hd.webp",
+      "outputBytes": 1774684,
+      "panels": [
+        {
+          "name": "town",
+          "index": 0,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 1 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Warm storybook medieval town with half-timbered houses, terracotta roof tiles, green shutters, amber shop windows, striped awnings, ivy and flowers; stone arch and balustrade framing a distant castle and lake. Refine roof tiles, carved masonry, timber joints, glass mullions, wrought iron lamps, individual leaves and petals, and distant roof shapes.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-f33b4b70-f4b6-4c19-a40a-4b3fbd089c06.png",
+          "mode": "Built-in image_gen edit"
+        },
+        {
+          "name": "town",
+          "index": 1,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 2 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Warm storybook medieval town with half-timbered houses, terracotta roof tiles, green shutters, amber shop windows, striped awnings, ivy and flowers; stone arch and balustrade framing a distant castle and lake. Refine roof tiles, carved masonry, timber joints, glass mullions, wrought iron lamps, individual leaves and petals, and distant roof shapes.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-de6fcd2d-4a30-4f81-99f7-59f78ccbf22d.png",
+          "mode": "Built-in image_gen edit"
+        },
+        {
+          "name": "town",
+          "index": 2,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 3 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Warm storybook medieval town with half-timbered houses, terracotta roof tiles, green shutters, amber shop windows, striped awnings, ivy and flowers; stone arch and balustrade framing a distant castle and lake. Refine roof tiles, carved masonry, timber joints, glass mullions, wrought iron lamps, individual leaves and petals, and distant roof shapes.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-160540dd-8fff-4f4b-9201-3fc66cc70332.png",
+          "mode": "Built-in image_gen edit"
+        },
+        {
+          "name": "town",
+          "index": 3,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 4 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Warm storybook medieval town with half-timbered houses, terracotta roof tiles, green shutters, amber shop windows, striped awnings, ivy and flowers; stone arch and balustrade framing a distant castle and lake. Refine roof tiles, carved masonry, timber joints, glass mullions, wrought iron lamps, individual leaves and petals, and distant roof shapes.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-09839b70-6052-4f47-a58c-bddb752e7058.png",
+          "mode": "Built-in image_gen edit"
+        }
+      ],
+      "registration": {
+        "size": [
+          3762,
+          1254
+        ],
+        "panels": [
+          {
+            "panel": 0,
+            "matches": 3843,
+            "inliers": 3791,
+            "medianRegistrationErrorReferencePixels": 0.7928769584042894,
+            "transform": [
+              [
+                1.0001220298298859,
+                -5.9578550593571506e-05,
+                -0.1916049043052226
+              ],
+              [
+                -0.0004806855956564193,
+                1.000085456629992,
+                0.06906199142946434
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          {
+            "panel": 1,
+            "matches": 2828,
+            "inliers": 2783,
+            "medianRegistrationErrorReferencePixels": 0.8616146475166392,
+            "transform": [
+              [
+                0.9999954179269283,
+                -2.485050952374667e-05,
+                0.0499337987735089
+              ],
+              [
+                -4.00605485085979e-05,
+                0.9996268787692824,
+                0.162201615211643
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "overlapPixels": 417,
+            "exposureCorrectionRGB": [
+              0.0,
+              -0.27391815185546875,
+              -0.4001274108886719
+            ],
+            "seamRange": [
+              55,
+              389
+            ]
+          },
+          {
+            "panel": 2,
+            "matches": 2339,
+            "inliers": 2295,
+            "medianRegistrationErrorReferencePixels": 0.9217891408530765,
+            "transform": [
+              [
+                0.9999219086298112,
+                -5.184462965546357e-05,
+                0.0030283890207556396
+              ],
+              [
+                -0.00013424234133674746,
+                0.9999394379645136,
+                0.03909847714294301
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "overlapPixels": 420,
+            "exposureCorrectionRGB": [
+              0.0,
+              -0.32277679443359375,
+              -0.6437225341796875
+            ],
+            "seamRange": [
+              94,
+              326
+            ]
+          },
+          {
+            "panel": 3,
+            "matches": 3317,
+            "inliers": 3269,
+            "medianRegistrationErrorReferencePixels": 0.7904591489060725,
+            "transform": [
+              [
+                0.9995445999248622,
+                5.746237383405485e-07,
+                0.09720671595874819
+              ],
+              [
+                -0.00030407597881237886,
+                1.0001525205823474,
+                0.0029503996958624157
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "overlapPixels": 417,
+            "exposureCorrectionRGB": [
+              0.0,
+              -0.10821533203125,
+              0.2928619384765625
+            ],
+            "seamRange": [
+              25,
+              379
+            ]
+          }
+        ]
+      },
+      "localStitchScript": ".local/town-hd/stitch.py"
+    },
+    {
+      "id": "lake",
+      "source": "public/journey/regions/lake-v2.webp",
+      "output": "public/journey/regions/lake-hd.webp",
+      "outputBytes": 1780452,
+      "panels": [
+        {
+          "name": "lake",
+          "index": 0,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 1 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Quiet indigo and lavender night lake with crescent moon, stars, willow on the left and wooden lantern gazebo on the right, distant mountain castles and waterfalls. Refine willow leaves, reeds, dock joinery, roof shingles, lantern frames, castle spires, cliff edges and thin water reflections. Keep original calm night exposure, soft low mist and atmospheric distance. Do not brighten it to daylight.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-e6e9e7a4-1c18-4a48-9a2c-298abe7b89fd.png",
+          "mode": "Built-in image_gen edit"
+        },
+        {
+          "name": "lake",
+          "index": 1,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 2 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Quiet indigo and lavender night lake with crescent moon, stars, willow on the left and wooden lantern gazebo on the right, distant mountain castles and waterfalls. Refine willow leaves, reeds, dock joinery, roof shingles, lantern frames, castle spires, cliff edges and thin water reflections. Keep original calm night exposure, soft low mist and atmospheric distance. Do not brighten it to daylight.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-ae57dd39-7a57-4e44-afbf-ffd09119b309.png",
+          "mode": "Built-in image_gen edit"
+        },
+        {
+          "name": "lake",
+          "index": 2,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 3 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Quiet indigo and lavender night lake with crescent moon, stars, willow on the left and wooden lantern gazebo on the right, distant mountain castles and waterfalls. Refine willow leaves, reeds, dock joinery, roof shingles, lantern frames, castle spires, cliff edges and thin water reflections. Keep original calm night exposure, soft low mist and atmospheric distance. Do not brighten it to daylight.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-a9484168-4a83-4051-8102-09707a2f4f46.png",
+          "mode": "Built-in image_gen edit"
+        },
+        {
+          "name": "lake",
+          "index": 3,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 4 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Quiet indigo and lavender night lake with crescent moon, stars, willow on the left and wooden lantern gazebo on the right, distant mountain castles and waterfalls. Refine willow leaves, reeds, dock joinery, roof shingles, lantern frames, castle spires, cliff edges and thin water reflections. Keep original calm night exposure, soft low mist and atmospheric distance. Do not brighten it to daylight.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-1c6267dd-e7c7-44f6-a964-6277a72c7428.png",
+          "mode": "Built-in image_gen edit"
+        }
+      ],
+      "registration": {
+        "size": [
+          3762,
+          1254
+        ],
+        "panels": [
+          {
+            "panel": 0,
+            "matches": 2587,
+            "inliers": 2567,
+            "medianRegistrationErrorReferencePixels": 0.7139873920693429,
+            "transform": [
+              [
+                1.0001736965882153,
+                0.00015345795120008448,
+                -0.214968619527383
+              ],
+              [
+                3.931334458560964e-05,
+                1.0003634067157139,
+                0.06670762757983084
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          {
+            "panel": 1,
+            "matches": 1739,
+            "inliers": 1715,
+            "medianRegistrationErrorReferencePixels": 0.8085654919209788,
+            "transform": [
+              [
+                1.000103299110706,
+                -0.00046632431588991904,
+                0.0062611773078629085
+              ],
+              [
+                -3.7611202266121735e-05,
+                0.9999962436929082,
+                -0.11447077676723438
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "overlapPixels": 417,
+            "exposureCorrectionRGB": [
+              1.7470741271972656,
+              0.6727523803710938,
+              0.182830810546875
+            ],
+            "seamRange": [
+              74,
+              287
+            ]
+          },
+          {
+            "panel": 2,
+            "matches": 1757,
+            "inliers": 1741,
+            "medianRegistrationErrorReferencePixels": 0.8297627440431262,
+            "transform": [
+              [
+                0.9999099087286087,
+                6.817139194818053e-05,
+                -0.14224204178776745
+              ],
+              [
+                -6.004376054070961e-05,
+                1.0000209605455903,
+                -0.16327019223678008
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "overlapPixels": 420,
+            "exposureCorrectionRGB": [
+              1.1250648498535156,
+              0.19691848754882812,
+              -0.15799713134765625
+            ],
+            "seamRange": [
+              78,
+              385
+            ]
+          },
+          {
+            "panel": 3,
+            "matches": 2153,
+            "inliers": 2126,
+            "medianRegistrationErrorReferencePixels": 0.6892161933738653,
+            "transform": [
+              [
+                0.9996798951122768,
+                0.00015045963618737955,
+                -0.27860617648315156
+              ],
+              [
+                -6.940797599503962e-05,
+                0.9998523823625315,
+                -0.1382000447443943
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "overlapPixels": 417,
+            "exposureCorrectionRGB": [
+              1.4676284790039062,
+              0.3720855712890625,
+              -0.1714630126953125
+            ],
+            "seamRange": [
+              105,
+              391
+            ]
+          }
+        ]
+      },
+      "localStitchScript": ".local/lake-hd/stitch.py"
+    },
+    {
+      "id": "station",
+      "source": "public/journey/regions/station-v2.webp",
+      "output": "public/journey/regions/station-hd.webp",
+      "outputBytes": 1646104,
+      "panels": [
+        {
+          "name": "station",
+          "index": 0,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 1 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Dreamlike moonlit sky station with an elegant brass and glass pavilion, benches, telescope, red postbox and lamps, floating castle islands, waterfalls, silver crescent and starry blue sky. Refine pavilion ironwork and glass roof ribs, benches and brass instruments, paving, flowers, distant Gothic spires and fine waterfall strands. Preserve the original deep blue night and small warm lamp glows.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-250a33c7-c008-458a-8399-895d66c61bf4.png",
+          "mode": "Built-in image_gen edit"
+        },
+        {
+          "name": "station",
+          "index": 1,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 2 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Dreamlike moonlit sky station with an elegant brass and glass pavilion, benches, telescope, red postbox and lamps, floating castle islands, waterfalls, silver crescent and starry blue sky. Refine pavilion ironwork and glass roof ribs, benches and brass instruments, paving, flowers, distant Gothic spires and fine waterfall strands. Preserve the original deep blue night and small warm lamp glows.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-3f906cc8-7065-4183-9333-b8f94b360d67.png",
+          "mode": "Built-in image_gen edit"
+        },
+        {
+          "name": "station",
+          "index": 2,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 3 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Dreamlike moonlit sky station with an elegant brass and glass pavilion, benches, telescope, red postbox and lamps, floating castle islands, waterfalls, silver crescent and starry blue sky. Refine pavilion ironwork and glass roof ribs, benches and brass instruments, paving, flowers, distant Gothic spires and fine waterfall strands. Preserve the original deep blue night and small warm lamp glows.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-37ecaec1-f9cd-4bd5-a805-69be5cf4f2d9.png",
+          "mode": "Built-in image_gen edit"
+        },
+        {
+          "name": "station",
+          "index": 3,
+          "prompt": "Use case: precise-object-edit.\nAsset type: high-detail reconstruction of panel 4 of FOUR OVERLAPPING PANELS of an existing panoramic fantasy game background.\nInput image: edit target. Preserve this EXACT square crop, all object positions, silhouettes, framing, perspective, ground height and light direction. No camera movement, no zoom, no redesigned architecture.\nScene and detail priorities: Dreamlike moonlit sky station with an elegant brass and glass pavilion, benches, telescope, red postbox and lamps, floating castle islands, waterfalls, silver crescent and starry blue sky. Refine pavilion ironwork and glass roof ribs, benches and brass instruments, paving, flowers, distant Gothic spires and fine waterfall strands. Preserve the original deep blue night and small warm lamp glows.\nStyle: retain the input's luminous hand-painted anime fantasy look and precise original palette. Increase coherent painted detail inside existing shapes. Treat near foreground, middle scenery and far atmosphere distinctly: crisp nearby material detail, clear architectural contours in middle distance, delicate far scenery retaining atmospheric perspective. Preserve smooth sky gradients and every existing cloud contour.\nStitching constraints: retain all boundary positions and the content within the outer 20% of both side edges exactly, including crossing branches, mountains, clouds, roads and bridges. Keep the narrow lower path and generous upper sky/headroom unchanged.\nAvoid added people, characters, text, labels, borders, watermark, invented objects, oversized foreground, blur, crunchy sharpening halos, noisy texture, extra glow or extra fog. Do not add or move stars, moons, lamps, windows or ornaments. Match original exposure.\nOutput one square high-resolution panel, prefer 2048x2048 or larger.",
+          "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-150007d3-a423-4f28-81e8-229f645dfb08.png",
+          "mode": "Built-in image_gen edit"
+        }
+      ],
+      "registration": {
+        "size": [
+          3762,
+          1254
+        ],
+        "panels": [
+          {
+            "panel": 0,
+            "matches": 2269,
+            "inliers": 2234,
+            "medianRegistrationErrorReferencePixels": 0.8492389029612161,
+            "transform": [
+              [
+                0.9998124347907943,
+                8.400134469249935e-05,
+                -0.08449699356145857
+              ],
+              [
+                -0.00018427884610788868,
+                1.0002368737429914,
+                -0.1156901753679449
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          {
+            "panel": 1,
+            "matches": 1696,
+            "inliers": 1671,
+            "medianRegistrationErrorReferencePixels": 0.7704907375584927,
+            "transform": [
+              [
+                0.99989037777986,
+                0.000456513891760958,
+                -0.4130450108809782
+              ],
+              [
+                -9.011575648319282e-05,
+                1.0001197034365519,
+                0.2100174269688182
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "overlapPixels": 417,
+            "exposureCorrectionRGB": [
+              0.22094154357910156,
+              0.22376251220703125,
+              0.09894561767578125
+            ],
+            "seamRange": [
+              111,
+              374
+            ]
+          },
+          {
+            "panel": 2,
+            "matches": 1602,
+            "inliers": 1570,
+            "medianRegistrationErrorReferencePixels": 0.7766666317670626,
+            "transform": [
+              [
+                0.9999105205255207,
+                -6.224273011000681e-05,
+                -0.13263568458785358
+              ],
+              [
+                -7.528846088925488e-05,
+                1.0000420001308894,
+                -0.028173939471685117
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "overlapPixels": 420,
+            "exposureCorrectionRGB": [
+              0.6070060729980469,
+              0.4914703369140625,
+              0.0439453125
+            ],
+            "seamRange": [
+              25,
+              320
+            ]
+          },
+          {
+            "panel": 3,
+            "matches": 1536,
+            "inliers": 1500,
+            "medianRegistrationErrorReferencePixels": 0.8319953379207856,
+            "transform": [
+              [
+                0.9997539371305997,
+                8.778063519221656e-05,
+                -0.05535168950552816
+              ],
+              [
+                -0.00016553468259265387,
+                1.000018842223343,
+                -0.09347648423039345
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "overlapPixels": 417,
+            "exposureCorrectionRGB": [
+              0.46817970275878906,
+              0.3543415069580078,
+              0.00433349609375
+            ],
+            "seamRange": [
+              25,
+              387
+            ]
+          }
+        ]
+      },
+      "localStitchScript": ".local/station-hd/stitch.py"
+    }
+  ]
+}
