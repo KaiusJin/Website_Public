@@ -63,6 +63,7 @@ export default function Hero() {
       </div>
       
       <div className="hero-actions">
+        <a href="/journey" className="btn btn-secondary">Explore my journey <i className="fas fa-moon" /></a>
         <button 
           onClick={() => handleScrollTo('project')} 
           className="btn btn-primary"

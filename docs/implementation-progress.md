@@ -24,3 +24,13 @@ Each stage is committed once per affected repository after its checks. This log 
 - Production migration and administrator authorization require access to Supabase's management surface. Local `.env` only contains browser anon credentials.
 - No personal photos, diary entries, music selections or resume file supplied yet. Implement editing/display with honest empty states and publish only actual supplied content.
 - Actual image model version is not selectable via the built-in tool. Generated assets use built-in image generation; do not claim a specific version.
+
+## Stage 2 — complete journey implementation
+
+- Seven generated, production WebP region illustrations and a 12-frame transparent character atlas saved under `public/journey/` (about 4 MB total).
+- Built-in generation prompts and reference source recorded in `asset-generation.json`; no claim of a selectable model version.
+- Independent lazy `/journey` entry; classic `/` preserves its existing application and adds an exploration link.
+- Keyboard and virtual joystick, single jump, free broom flight/landing, seven-region navigation, modal reading and EN/中文 UI implemented.
+- Public records read from Supabase; sparse descriptions are preserved rather than invented. Skill display can derive technologies from actual published projects.
+- Browser verified: rendered cottage, meadow and library, flight mode activation, travel map, and real project records in the library. Initial input handling issue fixed by consolidating browser key events into the shared input bridge.
+- `npm run build` passed; `node --test tests/journey.test.mjs` passed 8 cases. Full device and publishing checks remain Stage 4.
