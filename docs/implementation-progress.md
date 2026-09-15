@@ -44,3 +44,15 @@ Each stage is committed once per affected repository after its checks. This log 
 - Admin now has profile, journal, scenes, media, bilingual editing, preview, draft save and publish interfaces; build and 3 validation tests passed.
 - Public preview uses origin/source/token-checked in-memory messages; no auth credentials are shared. Missing optional CMS tables remain compatible with the current live database.
 - **User requested pausing database work. No online migration, live Admin publication or production deployment is claimed.** These remain intentionally deferred; source is ready for a later coordinated rollout.
+
+## Stage 4 — original artwork, transitions and motion
+
+- Original seven region images and original witch atlas preserved byte-for-byte. The experimental separated-building artwork was rejected by the user and is not included in the application.
+- Camera bounds stop each image at its own edges. A short fade moves to the next outdoor location; both travel directions work. Library is an indoor branch reached from a town hotspot, with a return to its entry position. Flying cannot activate the entrance until landing.
+- Automatic outdoor transitions carry movement intent and momentum through the fade. Map travel and indoor entry reset to a safe grounded state.
+- Added progressive acceleration, ground braking, air control, two-axis flight coasting, gradual landing and velocity-aware camera following. Removed the instant takeoff position jump. Character presentation is independent from its collision body, and the existing walking frames follow traveled distance.
+- Joystick caches its bounds and updates its knob without React renders; touch actions begin on contact. Hotspot positions follow the camera on each render frame while other HUD state is sampled less frequently.
+- Browser checks before the user's request to reduce browser control: original cottage and library artwork, library entry/exit, exact town return coordinate, entry disabled during flight and restored after landing, a responsive 844×390 frame, and joystick movement. These are desktop browser checks, not real iPhone/iPad/Android tests.
+- Unit tests: 16 pass, including 30/60/120 Hz inertia equivalence, acceleration/coasting, reversal, route boundaries and grounded entry. Both application builds passed. No claim of a measured production frame-rate guarantee.
+- User selected light parallax after initially deferring it: full backgrounds remain unchanged; small procedural cloud/mist/foreground-leaf layers and particles move at different speeds. Indoor cloud/foliage layers are disabled. Light parallax is enabled by default; the user requested removal of the reduced-motion settings switch. No additional background image download is required.
+- Database work remains deferred. No production migration/deployment was executed. Further browser control was minimized as requested.

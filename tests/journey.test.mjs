@@ -35,3 +35,45 @@ test('seven chapters are continuous and every displayed UI key has both language
 test('empty skill table can display only technologies evidenced in public records',()=>{
  assert.deepEqual(deriveSkills([{skills:[{tag:'Python'},{tag:'Java'}]}],[{skills:[{tag:'Python'}]}]),['Python','Java']);
 });
+
+import {neighboringRegion,arrivalPosition,LIBRARY_DOOR_X,canEnterLibrary} from '../src/journey/game/travel.js';
+test('outdoor route passes the library building without entering the indoor room',()=>{
+ assert.equal(neighboringRegion(2,1),4);assert.equal(neighboringRegion(4,-1),2);assert.equal(neighboringRegion(3,1),null);assert.equal(neighboringRegion(0,-1),null);assert.equal(neighboringRegion(6,1),null);
+});
+test('crossing a chapter boundary lands inside its destination and away from the trigger',()=>{
+ for(const index of [0,1,2,4,5,6])for(const dir of [-1,1]){const x=arrivalPosition(index,dir);assert.ok(x>index*REGION_WIDTH+115&&x<(index+1)*REGION_WIDTH-115);}
+});
+test('library entrance requires proximity and landing',()=>{
+ assert.equal(canEnterLibrary(LIBRARY_DOOR_X,637,'walking',637),true);
+ assert.equal(canEnterLibrary(LIBRARY_DOOR_X,637,'flying',637),false);
+ assert.equal(canEnterLibrary(LIBRARY_DOOR_X,500,'walking',637),false);
+ assert.equal(canEnterLibrary(LIBRARY_DOOR_X-400,637,'walking',637),false);
+});
+
+import {damp,motionVelocity,cameraFollow} from '../src/journey/game/motion.js';
+test('movement accelerates progressively and coasts after release',()=>{
+ let v={x:0,y:0};v=motionVelocity(v,{x:1,y:0},'walking',true,1/60);assert.ok(v.x>0&&v.x<80);
+ for(let i=0;i<40;i++)v=motionVelocity(v,{x:1,y:0},'walking',true,1/60);
+ assert.ok(v.x>260&&v.x<=270);
+ const coast=motionVelocity(v,{x:0,y:0},'walking',true,1/60);assert.ok(coast.x>0&&coast.x<v.x);
+ const flight=motionVelocity({x:480,y:-200},{x:0,y:0},'flying',false,1/60);assert.ok(flight.x>440&&flight.y<0);
+});
+test('inertia has the same response at 30, 60 and 120 FPS',()=>{
+ const result=fps=>{let v=0;for(let i=0;i<fps;i++)v=damp(v,480,4.8,1/fps);return v;};
+ assert.ok(Math.abs(result(30)-result(120))<.001);assert.ok(Math.abs(result(60)-result(120))<.001);
+});
+test('direction reversal decelerates before moving the other way; camera remains bounded',()=>{
+ const v=motionVelocity({x:270,y:0},{x:-1,y:0},'walking',true,1/60);assert.ok(v.x>0&&v.x<270);
+ const c=cameraFollow(1200,1600,480,1000,0,2400,1/60);assert.ok(c>1200&&c<1700);
+ assert.equal(damp(10,100,5,0),10);
+});
+
+import {ambienceProfile,layerPosition} from '../src/journey/game/ambience.js';
+test('light parallax keeps indoor clouds and foliage off and respects reduced motion',()=>{
+ assert.equal(ambienceProfile(3).cloud,0);assert.equal(ambienceProfile(3).foreground,0);
+ assert.deepEqual(ambienceProfile(1,true),{cloud:0,mist:0,foreground:0,particles:0});
+});
+test('overlay layers move at different rates without changing the background',()=>{
+ const screenTravel=rate=>(layerPosition(400,100,rate,0)-100)-layerPosition(400,0,rate,0);
+ assert.ok(Math.abs(screenTravel(.22)+22)<1e-9);assert.ok(Math.abs(screenTravel(1.12)+112)<1e-9);
+});

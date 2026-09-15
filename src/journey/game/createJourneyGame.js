@@ -1,11 +1,13 @@
 import Phaser from 'phaser';
 import {regions,REGION_WIDTH,WORLD_HEIGHT,GROUND_Y} from '../data/regions';
-import {clamp,resolveAxes,landingTarget} from './motion';
+import {clamp,resolveAxes,damp,motionVelocity,cameraFollow} from './motion';
+import {createAmbience} from './ambience';
+import {neighboringRegion,arrivalPosition,LIBRARY_DOOR_X,canEnterLibrary} from './travel';
 
 export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgress){
  const worldWidth=regions.length*REGION_WIDTH;
  class TravelWorld extends Phaser.Scene {
-  constructor(){super('journey');this.layers=new Map();this.lastReport=0;this.mode='walking';this.near=null;this.wasPaused=true;this.pending=new Set();this.failed=new Set();this.lastGround=0;this.jumpUntil=0;}
+  constructor(){super('journey');this.layers=new Map();this.lastReport=0;this.mode='walking';this.near=null;this.wasPaused=true;this.pending=new Set();this.failed=new Set();this.lastGround=0;this.jumpUntil=0;this.regionIndex=0;this.room=null;this.walkDistance=0;this.characterAngle=0;}
   preload(){
    this.load.image('witch','/journey/characters/witch.webp');
    this.load.image('cottage',regions[0].image);
@@ -16,13 +18,14 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    if(this.failed.size){return;}
    const source=this.textures.get('witch').getSourceImage();
    this.textures.addSpriteSheet('witch-frames',source,{frameWidth:source.width/4,frameHeight:source.height/3});
-   this.anims.create({key:'walk',frames:this.anims.generateFrameNumbers('witch-frames',{start:0,end:3}),frameRate:8,repeat:-1});
-   this.physics.world.setBounds(0,0,worldWidth,WORLD_HEIGHT);
+   this.physics.world.setBounds(0,0,REGION_WIDTH,WORLD_HEIGHT);
    this.physics.world.gravity.y=1250;
    const floor=this.add.rectangle(worldWidth/2,GROUND_Y+60,worldWidth,120,0,0);
    this.physics.add.existing(floor,true);
    this.player=this.physics.add.sprite(540,GROUND_Y,'witch-frames',4).setOrigin(.5,1).setScale(.55).setDepth(5);
    this.player.body.setSize(110,300).setOffset(126,55);
+   this.player.setVisible(false);
+   this.character=this.add.sprite(540,GROUND_Y,'witch-frames',4).setOrigin(.5,1).setScale(.55).setDepth(5);
    this.player.setCollideWorldBounds(true);
    this.physics.add.collider(this.player,floor);
    this.shadow=this.add.ellipse(540,GROUND_Y+2,84,10,0x263028,.2).setDepth(4);
@@ -32,8 +35,8 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    this.load.on('loaderror',file=>{this.pending.delete(file.key);this.failed.add(file.key);onError(file.key);});
    this.addRegion(regions[0]);this.loadNeighbors(0);
    this.resize();this.scale.on('resize',this.resize,this);
-   this.sparkles=Array.from({length:24},(_,i)=>this.add.circle((i*911)%worldWidth,150+(i*71)%430,1.5+(i%2),0xffe6ab,.5).setDepth(4));
-   bridge.current={...bridge.current,ready:true,jumpTo:index=>this.jumpTo(index),retry:()=>this.retry(),pause:true};
+   this.ambience=createAmbience(this);
+   bridge.current={...bridge.current,ready:true,jumpTo:index=>this.jumpTo(index),enterLibrary:()=>this.enterLibrary(),exitLibrary:()=>this.exitLibrary(),retry:()=>this.retry(),pause:true};
    this.events.once('shutdown',()=>{this.scale.off('resize',this.resize,this);bridge.current.ready=false;});
    onReady();
   }
@@ -41,8 +44,7 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    if(this.layers.has(r.id)||!this.textures.exists(r.id))return;
    const image=this.add.image(r.x,0,r.id).setOrigin(0).setDisplaySize(REGION_WIDTH,WORLD_HEIGHT).setDepth(0);
    this.layers.set(r.id,image);
-   // A soft veil conceals the short visual seam while the road stays continuous.
-   if(r.index){const seam=this.add.graphics().setDepth(1);for(let i=0;i<28;i++){seam.fillStyle(0xe8ddc3,.008);seam.fillRect(r.x-56+i*2,0,112-i*4,WORLD_HEIGHT);} }
+
   }
   loadNeighbors(index){
    let queued=false;
@@ -57,82 +59,127 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    this.load.start();
   }
   resize(){
-   const camera=this.cameras.main;const zoom=this.scale.height/WORLD_HEIGHT;
-   camera.setZoom(zoom);camera.setBounds(0,0,worldWidth,WORLD_HEIGHT);
+   const camera=this.cameras.main;const zoom=Math.max(this.scale.height/WORLD_HEIGHT,this.scale.width/REGION_WIDTH);
+   camera.setZoom(zoom);camera.setBounds(this.regionIndex*REGION_WIDTH,0,REGION_WIDTH,WORLD_HEIGHT);
    camera.centerOn(this.player.x,WORLD_HEIGHT/2);
+  }
+  requestTravel(index,x,{room=null,preserveFlight=false}={}){
+   if(this.transitioning)return;
+   this.destination={region:regions[index],x,room,preserveFlight,velocity:{x:this.player.body.velocity.x,y:this.player.body.velocity.y}};this.loadNeighbors(index);
   }
   jumpTo(index){
    const r=regions[clamp(index,0,6)];
-   this.loadNeighbors(r.index);
-   this.destination=r;
+   if(index===3)this.returnX=LIBRARY_DOOR_X;
+   this.requestTravel(r.index,r.x+r.anchor-220,{room:index===3?'library':null});
+  }
+  enterLibrary(){
+   if(this.room||this.regionIndex!==2||!canEnterLibrary(this.player.x,this.player.y,this.mode,GROUND_Y))return;
+   this.returnX=this.player.x;this.requestTravel(3,3*REGION_WIDTH+260,{room:'library'});
+  }
+  exitLibrary(){if(this.room)this.requestTravel(2,this.returnX??LIBRARY_DOOR_X);}
+  beginTransition(){
+   const d=this.destination;this.destination=null;this.transitioning=true;
+   const y=this.player.y,mode=this.mode;this.player.setVelocity(0);
+   if(!d.preserveFlight){bridge.current.keys={};bridge.current.stick={x:0,y:0};}
+   const camera=this.cameras.main,duration=bridge.current.reduced?30:280;
+   camera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,()=>{
+    this.regionIndex=d.region.index;this.room=d.room;
+    this.player.setPosition(d.x,d.preserveFlight?y:GROUND_Y-2).setVelocity(0);
+    this.mode=d.preserveFlight?mode:'walking';this.player.body.setAllowGravity(this.mode==='walking');
+    this.physics.world.setBounds(d.region.x,0,REGION_WIDTH,WORLD_HEIGHT);
+    this.resize();this.lastReport=0;
+    camera.once(Phaser.Cameras.Scene2D.Events.FADE_IN_COMPLETE,()=>{this.transitioning=false;if(d.preserveFlight&&!bridge.current.pause)this.player.setVelocity(d.velocity.x,d.velocity.y);});
+    camera.fadeIn(duration,27,26,32);
+   });camera.fadeOut(duration,27,26,32);
   }
   update(time,delta){
    if(!this.player)return;
    const controls=bridge.current;
-   const paused=controls.pause;
+   const paused=controls.pause||this.transitioning||!!this.destination;
    if(paused){
-    this.physics.world.pause();this.player.setVelocity(0);this.player.anims.pause();
-    controls.stick={x:0,y:0};controls.jump=false;controls.fly=false;
-    if(!this.wasPaused){controls.keys={};this.wasPaused=true;}
+    this.physics.world.pause();this.player.setVelocity(0);
+    if(controls.pause){controls.stick={x:0,y:0};controls.jump=false;controls.fly=false;
+     if(!this.wasPaused){controls.keys={};this.wasPaused=true;}
+    }
    }else{
-    this.physics.world.resume();this.player.anims.resume();this.wasPaused=false;
+    this.physics.world.resume();this.wasPaused=false;
    }
-   if(this.destination&&this.textures.exists(this.destination.id)){
-    this.player.setPosition(this.destination.x+this.destination.anchor-220,GROUND_Y-2).setVelocity(0);
-    this.player.body.setAllowGravity(true);this.mode='walking';this.destination=null;this.lastReport=0;
-   }
-   const current=clamp(Math.floor(this.player.x/REGION_WIDTH),0,6);
+   if(this.destination&&this.textures.exists(this.destination.region.id)&&!this.transitioning)this.beginTransition();
+   const current=this.regionIndex;
+   const dt=Math.min(delta/1000,.05);
    this.loadNeighbors(current);
    if(!paused){
     const k=controls.keys||{};const axes=resolveAxes({x:Number(!!(k.KeyD||k.ArrowRight))-Number(!!(k.KeyA||k.ArrowLeft)),y:Number(!!(k.KeyS||k.ArrowDown))-Number(!!(k.KeyW||k.ArrowUp))},controls.stick||{x:0,y:0});
     const fly=controls.fly;
     controls.fly=false;
     if(fly){
-     if(this.mode==='flying'){this.mode='landing';this.landing=landingTarget(this.player.x,worldWidth,GROUND_Y);}
-     else if(this.mode!=='landing'){this.mode='flying';this.player.body.setAllowGravity(false);this.player.y-=25;this.player.setVelocity(0);}
+     if(this.mode==='flying'){this.mode='landing';}
+     else if(this.mode!=='landing'){this.mode='flying';this.player.body.setAllowGravity(false);this.player.setVelocityY(-120);this.takeoffUntil=time+180;}
     }
+    const grounded=this.player.body.blocked.down||this.player.body.touching.down;
     if(this.mode==='flying'){
-     this.player.setVelocity(axes.x*480,axes.y*340);this.player.anims.stop();this.player.setFrame(Math.abs(axes.x)+Math.abs(axes.y)>.1?10:9);
-     this.player.y=clamp(this.player.y,210,GROUND_Y-20);
+     const v=motionVelocity(this.player.body.velocity,axes,'flying',false,dt);
+     if(time<this.takeoffUntil)v.y=Math.min(v.y,-120);
+     this.player.setVelocity(v.x,v.y);
+     if(this.player.y<210){this.player.setY(210);this.player.setVelocityY(Math.max(0,v.y));}
+     if(this.player.y>GROUND_Y-4){this.player.setY(GROUND_Y-4);this.player.setVelocityY(Math.min(0,v.y));}
     }else if(this.mode==='landing'){
-     this.player.setVelocity(0,220);this.player.anims.stop();this.player.setFrame(11);
-     if(this.player.y>=GROUND_Y-6){this.player.setY(GROUND_Y-2);this.player.setVelocity(0);this.player.body.setAllowGravity(true);this.mode='walking';}
+     const height=GROUND_Y-this.player.y;
+     this.player.setVelocity(damp(this.player.body.velocity.x,0,5,dt),damp(this.player.body.velocity.y,clamp(height*2.8,35,235),6,dt));
+     if(height<=5){this.player.setY(GROUND_Y-2);this.player.setVelocity(0);this.player.body.setAllowGravity(true);this.mode='walking';}
     }else{
-     const grounded=this.player.body.blocked.down||this.player.body.touching.down;
      if(grounded)this.lastGround=time;
      if(controls.jump)this.jumpUntil=time+120;
      if(this.jumpUntil>time&&time-this.lastGround<100){this.player.setVelocityY(-610);this.jumpUntil=0;this.lastGround=-1000;}
-     this.player.setVelocityX(axes.x*270);
-     if(!grounded){this.player.anims.stop();this.player.setFrame(this.player.body.velocity.y<0?6:7);}
-     else if(Math.abs(axes.x)>.05)this.player.anims.play('walk',true);
-     else{this.player.anims.stop();this.player.setFrame(4);}
+     const v=motionVelocity(this.player.body.velocity,axes,'walking',grounded,dt);
+     this.player.setVelocityX(v.x);
     }
     controls.jump=false;
-    if(Math.abs(axes.x)>.05)this.player.setFlipX(axes.x<0);
-    // Never walk into an unloaded region, even after a large frame interruption.
-    const next=clamp(Math.floor((this.player.x+Math.sign(this.player.body.velocity.x)*100)/REGION_WIDTH),0,6);
-    if(!this.textures.exists(regions[next].id))this.player.setVelocityX(0);
-    const interact=controls.interact;
-    controls.interact=false;if(interact&&this.near)controls.onInteract?.(this.near);
+    if(Math.abs(this.player.body.velocity.x)>18)this.player.setFlipX(this.player.body.velocity.x<0);
+    const interact=controls.interact;controls.interact=false;
+    if(interact&&this.near){if(this.near==='library-door')this.enterLibrary();else if(this.near==='library-exit')this.exitLibrary();else controls.onInteract?.(this.near);}
+    if(!this.room){
+     const left=this.player.x-current*REGION_WIDTH<115&&this.player.body.velocity.x<-15,right=this.player.x>(current+1)*REGION_WIDTH-115&&this.player.body.velocity.x>15;
+     if(left||right){const direction=right?1:-1,next=neighboringRegion(current,direction);if(next!==null)this.requestTravel(next,arrivalPosition(next,direction),{preserveFlight:true});}
+    }
    }
    const camera=this.cameras.main;const visibleWidth=this.scale.width/camera.zoom;
-   const target=clamp(this.player.x+visibleWidth*.14,visibleWidth/2,worldWidth-visibleWidth/2);
-   const center=camera.midPoint.x||target;
-   camera.centerOn(controls.reduced?target:Phaser.Math.Linear(center,target,Math.min(1,delta/150)),WORLD_HEIGHT/2);
+   const center=camera.midPoint.x||this.player.x;
+   const nextCenter=controls.reduced?clamp(this.player.x,current*REGION_WIDTH+visibleWidth/2,(current+1)*REGION_WIDTH-visibleWidth/2):cameraFollow(center,this.player.x,this.player.body.velocity.x,visibleWidth,current*REGION_WIDTH,(current+1)*REGION_WIDTH,dt);
+   camera.centerOn(nextCenter,WORLD_HEIGHT/2);
+   const speed=Math.abs(this.player.body.velocity.x),grounded=this.player.body.blocked.down||this.player.body.touching.down;
+   if(!paused)this.walkDistance+=speed*dt;
+   let frame=4;
+   if(this.mode==='flying')frame=speed+Math.abs(this.player.body.velocity.y)>50?10:9;
+   else if(this.mode==='landing')frame=11;
+   else if(!grounded)frame=this.player.body.velocity.y<0?6:7;
+   else if(speed>12)frame=[0,1,2,3,2,1][Math.floor(this.walkDistance/22)%6];
+   this.character.setFrame(frame).setFlipX(this.player.flipX);
+   const lean=this.mode==='flying'?clamp(this.player.body.velocity.x/160,-3,3):0;
+   this.characterAngle=damp(this.characterAngle,lean,5,dt);
+   const bob=this.mode==='flying'&&!controls.reduced?Math.sin(time/420)*1.5:0;
+   this.character.setPosition(this.player.x,this.player.y+bob).setAngle(this.characterAngle);
    this.shadow.setX(this.player.x).setAlpha(clamp(1-(GROUND_Y-this.player.y)/450,0,.24));
    const r=regions[current], distance=Math.abs(this.player.x-(r.x+r.anchor));
    this.near=distance<260?r.id:null;
+   if(current===2&&Math.abs(this.player.x-LIBRARY_DOOR_X)<240)this.near='library-door';
+   if(this.room&&this.player.x-r.x<380)this.near='library-exit';
    this.targetMarker.clear();
    this.targetMarker.lineStyle(1,0xfff3c9,this.near ? .8 : .3);
-   this.targetMarker.strokeEllipse(r.x+r.anchor,GROUND_Y,100+Math.sin(time/500)*8,12);
-   this.sparkles.forEach((s,i)=>{s.visible=!controls.reduced;s.y=150+(i*71)%430+Math.sin(time/1500+i)*12;s.alpha=.2+Math.sin(time/900+i)*.2;});
-   if(time-this.lastReport>70){
+   this.targetMarker.strokeEllipse(r.x+r.anchor,GROUND_Y,100+(controls.reduced?0:Math.sin(time/500)*8),12);
+   this.ambience.update({region:current,cameraX:camera.worldView.x,playerY:this.player.y,time,reduced:controls.reduced,paused});
+   controls.onVisual?.(camera.worldView.x,camera.worldView.y,camera.zoom);
+   if(time-this.lastReport>100){
     this.lastReport=time;
     const project=x=>(x-camera.worldView.x)*camera.zoom;
-    const hotspots=regions.filter(r=>r.x+r.anchor>camera.worldView.x-100&&r.x+r.anchor<camera.worldView.right+100).map(r=>({id:r.id,x:project(r.x+r.anchor),y:(GROUND_Y-160-camera.worldView.y)*camera.zoom}));
-    onState({region:current,x:Math.round(this.player.x),y:Math.round(this.player.y),mode:this.mode,near:this.near,hotspots,progress:this.player.x/worldWidth,loading:!!this.destination});
+    const points=[{id:r.id,x:r.x+r.anchor,kind:'content'}];
+    if(current===2)points.push({id:'library-door',x:LIBRARY_DOOR_X,kind:'door'});
+    if(this.room)points.push({id:'library-exit',x:r.x+200,kind:'exit'});
+    const hotspots=points.filter(p=>p.x>camera.worldView.x-100&&p.x<camera.worldView.right+100).map(p=>({...p,worldX:p.x,x:project(p.x),y:(GROUND_Y-160-camera.worldView.y)*camera.zoom}));
+    const next=neighboringRegion(current,1),previous=neighboringRegion(current,-1);
+    onState({region:current,x:Math.round(this.player.x),y:Math.round(this.player.y),mode:this.mode,vx:Math.round(this.player.body.velocity.x),vy:Math.round(this.player.body.velocity.y),fps:Math.round(this.game.loop.actualFps),room:this.room,transitioning:!!this.transitioning,near:this.near,hotspots,progress:this.player.x/worldWidth,loading:!!this.destination,next,previous,atRight:this.player.x>(current+1)*REGION_WIDTH-500,atLeft:this.player.x<current*REGION_WIDTH+420});
    }
   }
  }
- return new Phaser.Game({type:Phaser.AUTO,parent,backgroundColor:'#d8d4c7',transparent:false,scene:TravelWorld,scale:{mode:Phaser.Scale.RESIZE,width:parent.clientWidth,height:parent.clientHeight},physics:{default:'arcade',arcade:{debug:false}},render:{antialias:true,roundPixels:false},fps:{target:60},input:{activePointers:3,keyboard:false},audio:{noAudio:true},banner:false});
+ return new Phaser.Game({type:Phaser.AUTO,parent,backgroundColor:'#d8d4c7',transparent:false,scene:TravelWorld,scale:{mode:Phaser.Scale.RESIZE,width:parent.clientWidth,height:parent.clientHeight},physics:{default:'arcade',arcade:{debug:false,fixedStep:false}},render:{antialias:true,roundPixels:false},fps:{target:60},input:{activePointers:3,keyboard:false},audio:{noAudio:true},banner:false});
 }
