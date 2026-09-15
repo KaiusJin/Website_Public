@@ -26,5 +26,9 @@ export function motionVelocity(velocity,axes,mode,grounded,seconds){
 }
 export function cameraFollow(center,playerX,velocityX,viewWidth,min,max,seconds){
  const lookAhead=clamp(velocityX/480,-1,1)*viewWidth*.12;
- return damp(center,clamp(playerX+lookAhead,min+viewWidth/2,max-viewWidth/2),5.5,seconds);
+ const next=damp(center,clamp(playerX+lookAhead,min+viewWidth/2,max-viewWidth/2),5.5,seconds);
+ // Shrinking look-ahead during braking must not pull the scenery backwards.
+ // Follow may reverse only after the character's actual velocity reverses.
+ const directional=velocityX>.5?Math.max(center,next):velocityX<-.5?Math.min(center,next):center;
+ return clamp(directional,min+viewWidth/2,max-viewWidth/2);
 }

@@ -2,30 +2,33 @@ import Phaser from 'phaser';
 import {regions,REGION_WIDTH,WORLD_HEIGHT,GROUND_Y} from '../data/regions';
 import {clamp,resolveAxes,damp,motionVelocity,cameraFollow} from './motion';
 import {createAmbience} from './ambience';
+import {advanceAnimation,animationPose,spritePlacement} from './animation';
+import characterAtlas from '../data/character-atlas.json';
 import {neighboringRegion,arrivalPosition,LIBRARY_DOOR_X,canEnterLibrary} from './travel';
 
 export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgress){
  const worldWidth=regions.length*REGION_WIDTH;
  class TravelWorld extends Phaser.Scene {
-  constructor(){super('journey');this.layers=new Map();this.lastReport=0;this.mode='walking';this.near=null;this.wasPaused=true;this.pending=new Set();this.failed=new Set();this.lastGround=0;this.jumpUntil=0;this.regionIndex=0;this.room=null;this.walkDistance=0;this.characterAngle=0;}
+  constructor(){super('journey');this.layers=new Map();this.lastReport=0;this.mode='walking';this.near=null;this.wasPaused=true;this.pending=new Set();this.failed=new Set();this.lastGround=0;this.jumpUntil=0;this.regionIndex=0;this.room=null;this.animation={clip:'idle',phase:0,elapsed:0};this.characterAngle=0;}
   preload(){
-   this.load.image('witch','/journey/characters/witch.webp');
+   for(const [key,sheet] of Object.entries(characterAtlas))this.load.image(`elaina-${key}`,sheet.image);
    this.load.image('cottage',regions[0].image);
    this.load.on('progress',onProgress);
    this.load.on('loaderror',file=>{this.failed.add(file.key);onError(file.key);});
   }
   create(){
    if(this.failed.size){return;}
-   const source=this.textures.get('witch').getSourceImage();
-   this.textures.addSpriteSheet('witch-frames',source,{frameWidth:source.width/4,frameHeight:source.height/3});
+   for(const [key,sheet] of Object.entries(characterAtlas)){
+    const texture=this.textures.get(`elaina-${key}`);
+    sheet.frames.forEach((f,i)=>texture.add(i,0,f.x,f.y,f.width,f.height));
+   }
    this.physics.world.setBounds(0,0,REGION_WIDTH,WORLD_HEIGHT);
    this.physics.world.gravity.y=1250;
    const floor=this.add.rectangle(worldWidth/2,GROUND_Y+60,worldWidth,120,0,0);
    this.physics.add.existing(floor,true);
-   this.player=this.physics.add.sprite(540,GROUND_Y,'witch-frames',4).setOrigin(.5,1).setScale(.55).setDepth(5);
-   this.player.body.setSize(110,300).setOffset(126,55);
-   this.player.setVisible(false);
-   this.character=this.add.sprite(540,GROUND_Y,'witch-frames',4).setOrigin(.5,1).setScale(.55).setDepth(5);
+   // Fixed collision rectangle; artwork frames never alter the body or floor contact.
+   this.player=this.physics.add.sprite(540,GROUND_Y,'__WHITE').setOrigin(.5,1).setDisplaySize(60,168).setVisible(false);
+   this.character=this.add.sprite(540,GROUND_Y,'elaina-states',0).setDepth(5);
    this.player.setCollideWorldBounds(true);
    this.physics.add.collider(this.player,floor);
    this.shadow=this.add.ellipse(540,GROUND_Y+2,84,10,0x263028,.2).setDepth(4);
@@ -37,7 +40,9 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    this.resize();this.scale.on('resize',this.resize,this);
    this.ambience=createAmbience(this);
    bridge.current={...bridge.current,ready:true,jumpTo:index=>this.jumpTo(index),enterLibrary:()=>this.enterLibrary(),exitLibrary:()=>this.exitLibrary(),retry:()=>this.retry(),pause:true};
-   this.events.once('shutdown',()=>{this.scale.off('resize',this.resize,this);bridge.current.ready=false;});
+   // Arcade writes coordinates back in POST_UPDATE. Draw after that write.
+   this.events.on(Phaser.Scenes.Events.POST_UPDATE,this.renderFrame,this);
+   this.events.once('shutdown',()=>{this.events.off(Phaser.Scenes.Events.POST_UPDATE,this.renderFrame,this);this.scale.off('resize',this.resize,this);bridge.current.ready=false;});
    onReady();
   }
   addRegion(r){
@@ -143,22 +148,27 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
      if(left||right){const direction=right?1:-1,next=neighboringRegion(current,direction);if(next!==null)this.requestTravel(next,arrivalPosition(next,direction),{preserveFlight:true});}
     }
    }
+  }
+  renderFrame(time,delta){
+   if(!this.player)return;
+   const controls=bridge.current,current=this.regionIndex,dt=Math.min(delta/1000,.05);
+   const paused=controls.pause||this.transitioning||!!this.destination;
    const camera=this.cameras.main;const visibleWidth=this.scale.width/camera.zoom;
    const center=camera.midPoint.x||this.player.x;
    const nextCenter=controls.reduced?clamp(this.player.x,current*REGION_WIDTH+visibleWidth/2,(current+1)*REGION_WIDTH-visibleWidth/2):cameraFollow(center,this.player.x,this.player.body.velocity.x,visibleWidth,current*REGION_WIDTH,(current+1)*REGION_WIDTH,dt);
    camera.centerOn(nextCenter,WORLD_HEIGHT/2);
+   const viewX=camera.scrollX+camera.width/2-visibleWidth/2;
+   const viewY=camera.scrollY+camera.height/2-this.scale.height/camera.zoom/2;
    const speed=Math.abs(this.player.body.velocity.x),grounded=this.player.body.blocked.down||this.player.body.touching.down;
-   if(!paused)this.walkDistance+=speed*dt;
-   let frame=4;
-   if(this.mode==='flying')frame=speed+Math.abs(this.player.body.velocity.y)>50?10:9;
-   else if(this.mode==='landing')frame=11;
-   else if(!grounded)frame=this.player.body.velocity.y<0?6:7;
-   else if(speed>12)frame=[0,1,2,3,2,1][Math.floor(this.walkDistance/22)%6];
-   this.character.setFrame(frame).setFlipX(this.player.flipX);
-   const lean=this.mode==='flying'?clamp(this.player.body.velocity.x/160,-3,3):0;
-   this.characterAngle=damp(this.characterAngle,lean,5,dt);
-   const bob=this.mode==='flying'&&!controls.reduced?Math.sin(time/420)*1.5:0;
-   this.character.setPosition(this.player.x,this.player.y+bob).setAngle(this.characterAngle);
+   this.animation=advanceAnimation(this.animation,{speed,grounded,mode:this.mode,paused},dt);
+   const pose=animationPose(this.animation,this.player.body.velocity.y);
+   const metrics=characterAtlas[pose.sheet].frames[pose.frame];
+   const placement=spritePlacement(metrics,this.player.flipX,190,pose.stretch);
+   this.character.setTexture(`elaina-${pose.sheet}`,pose.frame).setFlipX(this.player.flipX)
+    .setOrigin(placement.originX,placement.originY).setScale(placement.scaleX,placement.scaleY);
+   const lean=this.mode==='flying'?clamp(this.player.body.velocity.x/160,-3,3):grounded?this.player.body.velocity.x/450:0;
+   if(!paused)this.characterAngle=damp(this.characterAngle,lean,5,dt);
+   this.character.setPosition(this.player.x,this.player.y+pose.bob).setAngle(this.characterAngle);
    this.shadow.setX(this.player.x).setAlpha(clamp(1-(GROUND_Y-this.player.y)/450,0,.24));
    const r=regions[current], distance=Math.abs(this.player.x-(r.x+r.anchor));
    this.near=distance<260?r.id:null;
@@ -167,15 +177,15 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    this.targetMarker.clear();
    this.targetMarker.lineStyle(1,0xfff3c9,this.near ? .8 : .3);
    this.targetMarker.strokeEllipse(r.x+r.anchor,GROUND_Y,100+(controls.reduced?0:Math.sin(time/500)*8),12);
-   this.ambience.update({region:current,cameraX:camera.worldView.x,playerY:this.player.y,time,reduced:controls.reduced,paused});
-   controls.onVisual?.(camera.worldView.x,camera.worldView.y,camera.zoom);
+   this.ambience.update({region:current,cameraX:viewX,playerY:this.player.y,time,reduced:controls.reduced,paused});
+   controls.onVisual?.(viewX,viewY,camera.zoom);
    if(time-this.lastReport>100){
     this.lastReport=time;
-    const project=x=>(x-camera.worldView.x)*camera.zoom;
+    const project=x=>(x-viewX)*camera.zoom;
     const points=[{id:r.id,x:r.x+r.anchor,kind:'content'}];
     if(current===2)points.push({id:'library-door',x:LIBRARY_DOOR_X,kind:'door'});
     if(this.room)points.push({id:'library-exit',x:r.x+200,kind:'exit'});
-    const hotspots=points.filter(p=>p.x>camera.worldView.x-100&&p.x<camera.worldView.right+100).map(p=>({...p,worldX:p.x,x:project(p.x),y:(GROUND_Y-160-camera.worldView.y)*camera.zoom}));
+    const hotspots=points.filter(p=>p.x>viewX-100&&p.x<(viewX+visibleWidth)+100).map(p=>({...p,worldX:p.x,x:project(p.x),y:(GROUND_Y-160-viewY)*camera.zoom}));
     const next=neighboringRegion(current,1),previous=neighboringRegion(current,-1);
     onState({region:current,x:Math.round(this.player.x),y:Math.round(this.player.y),mode:this.mode,vx:Math.round(this.player.body.velocity.x),vy:Math.round(this.player.body.velocity.y),fps:Math.round(this.game.loop.actualFps),room:this.room,transitioning:!!this.transitioning,near:this.near,hotspots,progress:this.player.x/worldWidth,loading:!!this.destination,next,previous,atRight:this.player.x>(current+1)*REGION_WIDTH-500,atLeft:this.player.x<current*REGION_WIDTH+420});
    }

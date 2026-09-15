@@ -1,0 +1,156 @@
+{
+  "walk": {
+    "image": "/journey/characters/elaina-walk.webp",
+    "frames": [
+      {
+        "x": 0,
+        "y": 0,
+        "width": 512,
+        "height": 512,
+        "anchorX": 256,
+        "anchorY": 470,
+        "referenceHeight": 430
+      },
+      {
+        "x": 512,
+        "y": 0,
+        "width": 512,
+        "height": 512,
+        "anchorX": 256,
+        "anchorY": 470,
+        "referenceHeight": 430
+      },
+      {
+        "x": 1024,
+        "y": 0,
+        "width": 512,
+        "height": 512,
+        "anchorX": 256,
+        "anchorY": 470,
+        "referenceHeight": 430
+      },
+      {
+        "x": 1536,
+        "y": 0,
+        "width": 512,
+        "height": 512,
+        "anchorX": 256,
+        "anchorY": 470,
+        "referenceHeight": 430
+      },
+      {
+        "x": 0,
+        "y": 512,
+        "width": 512,
+        "height": 512,
+        "anchorX": 256,
+        "anchorY": 470,
+        "referenceHeight": 430
+      },
+      {
+        "x": 512,
+        "y": 512,
+        "width": 512,
+        "height": 512,
+        "anchorX": 256,
+        "anchorY": 470,
+        "referenceHeight": 430
+      },
+      {
+        "x": 1024,
+        "y": 512,
+        "width": 512,
+        "height": 512,
+        "anchorX": 256,
+        "anchorY": 470,
+        "referenceHeight": 430
+      },
+      {
+        "x": 1536,
+        "y": 512,
+        "width": 512,
+        "height": 512,
+        "anchorX": 256,
+        "anchorY": 470,
+        "referenceHeight": 430
+      }
+    ]
+  },
+  "states": {
+    "image": "/journey/characters/elaina-states.webp",
+    "frames": [
+      {
+        "x": 0,
+        "y": 0,
+        "width": 512,
+        "height": 512,
+        "anchorX": 256,
+        "anchorY": 470,
+        "referenceHeight": 430
+      },
+      {
+        "x": 512,
+        "y": 0,
+        "width": 512,
+        "height": 512,
+        "anchorX": 256,
+        "anchorY": 470,
+        "referenceHeight": 430
+      },
+      {
+        "x": 1024,
+        "y": 0,
+        "width": 512,
+        "height": 512,
+        "anchorX": 256,
+        "anchorY": 470,
+        "referenceHeight": 430
+      },
+      {
+        "x": 1536,
+        "y": 0,
+        "width": 512,
+        "height": 512,
+        "anchorX": 256,
+        "anchorY": 470,
+        "referenceHeight": 430
+      },
+      {
+        "x": 0,
+        "y": 512,
+        "width": 512,
+        "height": 512,
+        "anchorX": 256,
+        "anchorY": 470,
+        "referenceHeight": 430
+      },
+      {
+        "x": 512,
+        "y": 512,
+        "width": 512,
+        "height": 512,
+        "anchorX": 256,
+        "anchorY": 470,
+        "referenceHeight": 430
+      },
+      {
+        "x": 1024,
+        "y": 512,
+        "width": 512,
+        "height": 512,
+        "anchorX": 256,
+        "anchorY": 470,
+        "referenceHeight": 430
+      },
+      {
+        "x": 1536,
+        "y": 512,
+        "width": 512,
+        "height": 512,
+        "anchorX": 256,
+        "anchorY": 470,
+        "referenceHeight": 430
+      }
+    ]
+  }
+}

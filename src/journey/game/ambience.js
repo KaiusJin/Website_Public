@@ -1,3 +1,4 @@
+import {GROUND_Y} from '../data/regions.js';
 // Lightweight layers sit above the unchanged illustration; no scenery is replaced.
 const OUTDOOR_CLOUD_ALPHA=[.1,.13,.065,0,.08,.025,.045];
 export function ambienceProfile(region,reduced=false){
@@ -36,7 +37,7 @@ export function createAmbience(scene){
    // Freeze decorative drifting during reading. Camera-relative depth still follows navigation.
    const elapsed=this.lastTime===undefined?0:Math.min(time-this.lastTime,50);this.lastTime=time;
    if(!paused)this.elapsed=(this.elapsed||0)+elapsed;
-   const clock=this.elapsed||0,flightLift=(637-playerY)*.018;
+   const clock=this.elapsed||0,flightLift=(GROUND_Y-playerY)*.018;
    clouds.forEach((s,i)=>s.setPosition(origin+layerPosition(220+i*730,offset,.22,clock+i*2000,22),85+(i%3)*43-flightLift).setAlpha(p.cloud));
    mist.forEach((s,i)=>s.setPosition(origin+layerPosition(360+i*960,offset,.64,clock+i*3500,36),565+i*38-flightLift*.5).setAlpha(p.mist));
    leaves.forEach((s,i)=>s.setPosition(origin+layerPosition(120+i*590,offset,1.12,0),810+flightLift).setRotation(Math.sin(clock/3200+i)*.018).setAlpha(p.foreground));

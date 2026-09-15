@@ -77,3 +77,41 @@ test('overlay layers move at different rates without changing the background',()
  const screenTravel=rate=>(layerPosition(400,100,rate,0)-100)-layerPosition(400,0,rate,0);
  assert.ok(Math.abs(screenTravel(.22)+22)<1e-9);assert.ok(Math.abs(screenTravel(1.12)+112)<1e-9);
 });
+
+import {advanceAnimation,animationPose,spritePlacement} from '../src/journey/game/animation.js';
+test('walking animation visits all eight drawings in one cycle',()=>{
+ let state={clip:'walk',phase:0,elapsed:0};
+ const frames=new Set();
+ for(let i=0;i<60;i++){
+  state=advanceAnimation(state,{speed:270,grounded:true,mode:'walking',paused:false},1/60);
+  frames.add(animationPose(state).frame);
+ }
+ assert.equal(frames.size,8);
+});
+test('animation clock has consistent cadence at 30, 60 and 120 Hz and freezes during reading',()=>{
+ const run=fps=>{let s={clip:'walk',phase:0,elapsed:0};for(let i=0;i<fps;i++)s=advanceAnimation(s,{speed:270,grounded:true,mode:'walking'},1/fps);return s;};
+ assert.ok(Math.abs(run(30).phase-run(120).phase)<1e-8);
+ const state=run(60);assert.equal(advanceAnimation(state,{paused:true},.05),state);
+});
+test('frame anchors remain at the same anatomical point when facing either direction',()=>{
+ const f={width:400,height:450,anchorX:245,anchorY:430,referenceHeight:400};
+ const right=spritePlacement(f,false,190),left=spritePlacement(f,true,190);
+ assert.ok(Math.abs(right.originX+left.originX-1)<1e-8);
+ assert.equal(right.originY*f.height,430);assert.equal(left.originY,right.originY);
+ assert.equal(spritePlacement(f,false,190,1.003).originY,right.originY);
+});
+
+test('camera never rolls back while coasting to a stop in either direction',()=>{
+ for(const direction of [-1,1])for(const fps of [30,60,120]){
+  let x=1200,v=direction*480,c=1200;
+  for(let i=0;i<fps*3;i++){
+   v=damp(v,0,3.5,1/fps);x+=v/fps;
+   const next=cameraFollow(c,x,v,800,0,2400,1/fps);
+   assert.ok(direction*(next-c)>=-1e-8,`camera rolled back at ${fps}Hz`);c=next;
+  }
+  assert.equal(cameraFollow(c,x,0,800,0,2400,1/fps),c);
+  // A deliberate reversal must still move the camera in the new direction.
+  const next=cameraFollow(c,x-direction*300,-direction*270,800,0,2400,1/fps);
+  assert.ok(direction*(next-c)<0);
+ }
+});

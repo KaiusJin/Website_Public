@@ -1,6 +1,6 @@
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {createJourneyGame} from './game/createJourneyGame';
-import {regions,regionText} from './data/regions';
+import {regions,regionText,GROUND_Y} from './data/regions';
 import {copy,initialLanguage} from './i18n/copy';
 import {localize} from './data/content';
 import useJourneyContent from './data/useJourneyContent';
@@ -16,7 +16,7 @@ export default function JourneyApp(){
  const [started,setStarted]=useState(false),[blurred,setBlurred]=useState(false),[portrait,setPortrait]=useState(false);
  const [touch,setTouch]=useState(()=>savedBool('journey-touch',matchMedia('(pointer:coarse)').matches));
  const reduced=false;
- const [world,setWorld]=useState({region:0,x:540,y:637,mode:'walking',near:null,hotspots:[],progress:0});
+ const [world,setWorld]=useState({region:0,x:540,y:GROUND_Y,mode:'walking',near:null,hotspots:[],progress:0});
  const content=useJourneyContent();const t=copy[lang],region=regions[world.region];
  const openRegion=useCallback(id=>{const r=regions.find(r=>r.id===id);if(id==='library-door'){bridge.current.enterLibrary?.();return;}if(id==='library-exit'){bridge.current.exitLibrary?.();return;}if(r)setPanel(r.section);},[]);
  bridge.current.onVisual=(cameraX,cameraY,zoom)=>{for(const node of hotspotNodes.current.values()){if(node){node.style.left=`${(Number(node.dataset.worldX)-cameraX)*zoom}px`;node.style.top=`${(477-cameraY)*zoom}px`;}}};
