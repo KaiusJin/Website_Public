@@ -1,0 +1,57 @@
+{
+  "date": "2026-09-15",
+  "mode": "Built-in image_gen; no selectable model version claimed",
+  "purpose": "Clearer character linework, eight-frame walking cycle, separate still broom hover",
+  "references": [
+    ".local/animation-v2/character-reference.png",
+    ".local/animation-v2/walk-pose-guide.png"
+  ],
+  "assets": [
+    {
+      "source": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-b7e64db1-bca5-47ca-80ac-1e1e63cd271f.png",
+      "output": "public/journey/characters/elaina-walk-v2.webp",
+      "nativeSize": [
+        1774,
+        887
+      ],
+      "packedSize": [
+        3072,
+        1536
+      ],
+      "prompt": "Use case: precise-object-edit. Make a sharper, HIGH RESOLUTION version of this exact 8-frame witch walk atlas. Output 3840x1920 pixels. Keep character identity, head position, costume, body proportions, grid and all transparent padding. Clean crisp anime outlines, sharply defined eyes, hair strands, hat edges and boot buckles, no blur, haze, painterly smearing or glow. Do not just enlarge blurry pixels; redraw precise clean edges.\nCorrect walking poses so there is a real complete two-step cycle: frame3 (row1 col3) must have the FAR knee lifted FORWARD toward the right, with that far boot lifted in front of the planted near shin; frame4 far leg reaches forward while NEAR leg extends diagonally BACK to the left. Frame5 (row2 col1) far leg extended forward and NEAR leg diagonally BACK to left, near leg is the visible foreground leg. Frame6 keep near foot trailing back/lifting while far foot bears weight. Frame7 NEAR knee raised FORWARD to the right and near boot crossing in front of far shin; frame8 near leg reaches forward and far leg extends BACK left. Match side-view anatomical poses exactly. ALL heads face right. Same head size and feet baseline in every cell.\n4 columns x2 rows. Genuine transparent background. No floor, checkerboard, guide marks or text."
+    },
+    {
+      "source": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-a2403639-be8e-40ef-b132-03d03457a8e1.png",
+      "output": "public/journey/characters/elaina-idle.webp",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "packedSize": [
+        1536,
+        1536
+      ],
+      "prompt": "Use case: identity-preserve. Sharply redraw the exact attached standing Elaina-like witch as a four-frame idle sprite sheet, 2 columns x2 rows, high resolution 2048x2048. Same RIGHT-facing side profile, same face, eyes, silver hair, hat with pink bands and gold charm, dark long robe pink trim, white blouse yellow ribbon, short skirt, purple ankle boots. IDENTICAL body/head/feet position and size in all four cells, as if four exposures of the same fixed drawing. Frame1 eyes open calm relaxed standing; frame2 tiny breath, same pose; frame3 only eyes softly CLOSED for blink, otherwise identical; frame4 eyes open slight exhale, same pose. No head turning, no waving or walking. Complete hat and both boots with ample padding all sides. Crisp dark anime linework, sharp violet eyes and hair strands, flat clean cel shading. No blur or fuzzy edges. True transparent RGBA background, no scenery, ground, shadows, letters or checkerboard. Match character reference strictly, do not redesign."
+    },
+    {
+      "source": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-1dde7e0d-db28-452d-8343-a87d18cf8c45.png",
+      "output": "public/journey/characters/elaina-hover.webp",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "packedSize": [
+        1024,
+        1024
+      ],
+      "prompt": "Use case: identity-preserve. Production single transparent character sprite, 1536x1536. Sharply redraw the attached SAME Elaina-like witch in the SAME calm seated broom HOVER pose. Preserve exact side-facing-right silhouette, face, head angle, hip position, knees, boots, hat, clothing and horizontal broom. Character sits upright relaxed; hair gently hangs behind rather than streaming at speed. No motion lines. Gold bristles left, broom handle right. Silver hair violet eyes, purple-dark witch hat pink double band gold charm, long purple-charcoal robe pink trim, yellow bow, white blouse, purple boots. Clean official-anime-like cel shading and precise dark linework. Sharply defined face, eyes, hair and costume edges with no fuzzy halo, blur or haze. Single full character and broom centered with generous transparent padding at every edge. Transparent PNG, actual alpha, no backdrop, checkerboard, ground, cast shadow, letters or text. Same anatomical proportions as reference, not chibi or redesigned."
+    }
+  ],
+  "postprocessing": {
+    "authorization": "User explicitly approved local background removal and frame alignment.",
+    "method": "rembg isnet-anime for painted checkerboard in walk only; preserve generated alpha for idle and hover. Normalize anatomical neck axis, height and sole position; pack lossless WebP.",
+    "script": ".local/prepare-character-v2.py",
+    "qualityLimit": "Packing/upscaling does not create native detail. Requested 3840x1920 walk output was returned as 1774x887. These remain AI-generated poses, not a hand-drawn anatomical cycle.",
+    "rendering": "Actual canvas backing size tracks devicePixelRatio up to 2, with 8 MP budget. Scale zoom restores CSS dimensions and HUD projection."
+  }
+}

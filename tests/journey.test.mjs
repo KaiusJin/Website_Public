@@ -115,3 +115,40 @@ test('camera never rolls back while coasting to a stop in either direction',()=>
   assert.ok(direction*(next-c)<0);
  }
 });
+
+test('broom settles on one still image; purely vertical flight also animates',()=>{
+ let state={clip:'broom-fly',phase:2,elapsed:0};
+ const fly={speed:0,verticalSpeed:0,grounded:false,mode:'flying'};
+ for(let i=0;i<300;i++){
+  state=advanceAnimation(state,fly,1/60);
+  assert.deepEqual(animationPose(state),{sheet:'hover',frame:0,stretch:1,bob:0});
+ }
+ state=advanceAnimation(state,{...fly,verticalSpeed:-100},1/60);
+ assert.equal(state.clip,'broom-fly');assert.equal(animationPose(state).sheet,'states');
+ state=advanceAnimation(state,{...fly,mode:'landing',verticalSpeed:80},1/60);
+ assert.equal(state.clip,'broom-land');assert.equal(animationPose(state).sheet,'hover');
+});
+test('broom hover hysteresis avoids repeated pose changes near the speed threshold',()=>{
+ let state={clip:'broom-idle',phase:0,elapsed:0};
+ const step=speed=>state=advanceAnimation(state,{speed,grounded:false,mode:'flying'},1/60);
+ for(const speed of [14,22,27,16])assert.equal(step(speed).clip,'broom-idle');
+ assert.equal(step(30).clip,'broom-fly');
+ for(const speed of [27,22,14])assert.equal(step(speed).clip,'broom-fly');
+ assert.equal(step(10).clip,'broom-idle');
+ assert.equal(advanceAnimation(state,{speed:100,mode:'flying',paused:true},1/60),state);
+});
+
+import {displayMetrics} from '../src/journey/game/display.js';
+test('high-DPI rendering adds real canvas pixels without changing CSS/world proportions',()=>{
+ for(const [w,h] of [[1440,900],[844,390],[1194,834]]){
+  const one=displayMetrics(w,h,1),two=displayMetrics(w,h,2);
+  assert.equal(two.width,one.width*2);assert.equal(two.height,one.height*2);
+  assert.equal(two.width*two.zoom,w);assert.equal(two.height*two.zoom,h);
+  assert.equal(two.height/800*two.zoom,one.height/800*one.zoom);
+ }
+});
+test('large screens have a bounded render budget; minimized parents stay valid',()=>{
+ const big=displayMetrics(2560,1440,3);
+ assert.ok(big.width*big.height<8_010_000);assert.ok(big.zoom>=.5);
+ assert.deepEqual(displayMetrics(0,0,1),{width:1,height:1,zoom:1});
+});

@@ -3,11 +3,14 @@ import {regions,REGION_WIDTH,WORLD_HEIGHT,GROUND_Y} from '../data/regions';
 import {clamp,resolveAxes,damp,motionVelocity,cameraFollow} from './motion';
 import {createAmbience} from './ambience';
 import {advanceAnimation,animationPose,spritePlacement} from './animation';
+import {displayMetrics} from './display';
 import characterAtlas from '../data/character-atlas.json';
 import {neighboringRegion,arrivalPosition,LIBRARY_DOOR_X,canEnterLibrary} from './travel';
 
 export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgress){
  const worldWidth=regions.length*REGION_WIDTH;
+ const screenSize=()=>displayMetrics(parent.clientWidth,parent.clientHeight,window.devicePixelRatio);
+ const initialSize=screenSize();
  class TravelWorld extends Phaser.Scene {
   constructor(){super('journey');this.layers=new Map();this.lastReport=0;this.mode='walking';this.near=null;this.wasPaused=true;this.pending=new Set();this.failed=new Set();this.lastGround=0;this.jumpUntil=0;this.regionIndex=0;this.room=null;this.animation={clip:'idle',phase:0,elapsed:0};this.characterAngle=0;}
   preload(){
@@ -38,11 +41,18 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    this.load.on('loaderror',file=>{this.pending.delete(file.key);this.failed.add(file.key);onError(file.key);});
    this.addRegion(regions[0]);this.loadNeighbors(0);
    this.resize();this.scale.on('resize',this.resize,this);
+   const updateResolution=()=>{
+    const size=screenSize();
+    if(this.scale.width===size.width&&this.scale.height===size.height&&this.scale.zoom===size.zoom)return;
+    this.scale.setZoom(size.zoom);this.scale.resize(size.width,size.height);
+   };
+   const resizeObserver=new ResizeObserver(updateResolution);resizeObserver.observe(parent);
+   window.addEventListener('resize',updateResolution);
    this.ambience=createAmbience(this);
    bridge.current={...bridge.current,ready:true,jumpTo:index=>this.jumpTo(index),enterLibrary:()=>this.enterLibrary(),exitLibrary:()=>this.exitLibrary(),retry:()=>this.retry(),pause:true};
    // Arcade writes coordinates back in POST_UPDATE. Draw after that write.
    this.events.on(Phaser.Scenes.Events.POST_UPDATE,this.renderFrame,this);
-   this.events.once('shutdown',()=>{this.events.off(Phaser.Scenes.Events.POST_UPDATE,this.renderFrame,this);this.scale.off('resize',this.resize,this);bridge.current.ready=false;});
+   this.events.once('shutdown',()=>{resizeObserver.disconnect();window.removeEventListener('resize',updateResolution);this.events.off(Phaser.Scenes.Events.POST_UPDATE,this.renderFrame,this);this.scale.off('resize',this.resize,this);bridge.current.ready=false;});
    onReady();
   }
   addRegion(r){
@@ -159,8 +169,9 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    camera.centerOn(nextCenter,WORLD_HEIGHT/2);
    const viewX=camera.scrollX+camera.width/2-visibleWidth/2;
    const viewY=camera.scrollY+camera.height/2-this.scale.height/camera.zoom/2;
+   const cssZoom=camera.zoom*this.scale.zoom;
    const speed=Math.abs(this.player.body.velocity.x),grounded=this.player.body.blocked.down||this.player.body.touching.down;
-   this.animation=advanceAnimation(this.animation,{speed,grounded,mode:this.mode,paused},dt);
+   this.animation=advanceAnimation(this.animation,{speed,verticalSpeed:this.player.body.velocity.y,grounded,mode:this.mode,paused},dt);
    const pose=animationPose(this.animation,this.player.body.velocity.y);
    const metrics=characterAtlas[pose.sheet].frames[pose.frame];
    const placement=spritePlacement(metrics,this.player.flipX,190,pose.stretch);
@@ -178,18 +189,18 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    this.targetMarker.lineStyle(1,0xfff3c9,this.near ? .8 : .3);
    this.targetMarker.strokeEllipse(r.x+r.anchor,GROUND_Y,100+(controls.reduced?0:Math.sin(time/500)*8),12);
    this.ambience.update({region:current,cameraX:viewX,playerY:this.player.y,time,reduced:controls.reduced,paused});
-   controls.onVisual?.(viewX,viewY,camera.zoom);
+   controls.onVisual?.(viewX,viewY,cssZoom);
    if(time-this.lastReport>100){
     this.lastReport=time;
-    const project=x=>(x-viewX)*camera.zoom;
+    const project=x=>(x-viewX)*cssZoom;
     const points=[{id:r.id,x:r.x+r.anchor,kind:'content'}];
     if(current===2)points.push({id:'library-door',x:LIBRARY_DOOR_X,kind:'door'});
     if(this.room)points.push({id:'library-exit',x:r.x+200,kind:'exit'});
-    const hotspots=points.filter(p=>p.x>viewX-100&&p.x<(viewX+visibleWidth)+100).map(p=>({...p,worldX:p.x,x:project(p.x),y:(GROUND_Y-160-viewY)*camera.zoom}));
+    const hotspots=points.filter(p=>p.x>viewX-100&&p.x<(viewX+visibleWidth)+100).map(p=>({...p,worldX:p.x,x:project(p.x),y:(GROUND_Y-160-viewY)*cssZoom}));
     const next=neighboringRegion(current,1),previous=neighboringRegion(current,-1);
     onState({region:current,x:Math.round(this.player.x),y:Math.round(this.player.y),mode:this.mode,vx:Math.round(this.player.body.velocity.x),vy:Math.round(this.player.body.velocity.y),fps:Math.round(this.game.loop.actualFps),room:this.room,transitioning:!!this.transitioning,near:this.near,hotspots,progress:this.player.x/worldWidth,loading:!!this.destination,next,previous,atRight:this.player.x>(current+1)*REGION_WIDTH-500,atLeft:this.player.x<current*REGION_WIDTH+420});
    }
   }
  }
- return new Phaser.Game({type:Phaser.AUTO,parent,backgroundColor:'#d8d4c7',transparent:false,scene:TravelWorld,scale:{mode:Phaser.Scale.RESIZE,width:parent.clientWidth,height:parent.clientHeight},physics:{default:'arcade',arcade:{debug:false,fixedStep:false}},render:{antialias:true,roundPixels:false},fps:{target:60},input:{activePointers:3,keyboard:false},audio:{noAudio:true},banner:false});
+ return new Phaser.Game({type:Phaser.AUTO,parent,backgroundColor:'#d8d4c7',transparent:false,scene:TravelWorld,scale:{mode:Phaser.Scale.NONE,...initialSize},physics:{default:'arcade',arcade:{debug:false,fixedStep:false}},render:{antialias:true,roundPixels:false},fps:{target:60},input:{activePointers:3,keyboard:false},audio:{noAudio:true},banner:false});
 }
