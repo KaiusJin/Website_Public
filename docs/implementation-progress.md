@@ -1,5 +1,13 @@
 # Implementation log
 
+## Latest correction — restore approved character (2026-09-15)
+
+- User rejected the subsequent full regeneration, recoloring and leg-rig experiment. Restored animation logic, walking speed, physics, tests and idle/hover/flight assets to `cb49cd3`.
+- User explicitly approved `exec-a55525f1-361e-4918-b6e2-5066d226f5cb.png`. Applied a conservative built-in image clarity edit to that exact eight-pose sheet, preserving its appearance, colors and poses; reused the authorized local background removal and anchor alignment workflow.
+- Active walk asset is `elaina-walk-approved.webp`; frame metadata and high-DPI rendering remain at the restored baseline. The returned edit is 1774×887 before packing, so no native 4K detail is claimed. Prompt/source/output details are in `character-approved-restore.json`.
+- Rejected experiment files are archived under ignored `.local/rejected-character-v3`, outside the active application.
+
+
 ## Stage commits
 
 1. **Foundation** — requirements baseline, public CMS inspection, engine dependency.

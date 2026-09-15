@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-15",
+  "request": "Restore the version before the rejected full character regeneration. User approved the attached a555 sheet and requested clarity only.",
+  "restoredBaseline": "cb49cd3",
+  "mode": "Built-in image_gen conservative clarity edit; existing user-authorized local matting/alignment pipeline",
+  "reference": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-a55525f1-361e-4918-b6e2-5066d226f5cb.png",
+  "generatedSource": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-49e73df3-207b-44d5-8a40-eaccf6cec658.png",
+  "output": "public/journey/characters/elaina-walk-approved.webp",
+  "prompt": "Use case: precise-object-edit. Fidelity-first cleanup of the EXACT provided eight-frame anime sprite sheet. The user APPROVES THIS EXACT IMAGE and rejects redesigns. Apply only conservative image restoration / edge clarity enhancement and increased resolution. Keep all eight figures, every pose, limb angle, face, expression, head size, hair contour, hat silhouette, cloak shape, purple/pink/gold colors, exposure, and relative positions EXACTLY unchanged. No anatomy corrections or new animation poses, no new artistic interpretation, no recoloring or brightening, no changing shading. Preserve 4 columns x 2 rows and aspect ratio 2:1. Clean existing fine outlines and recover crisp existing eyes, hair and boot contours without oversharpen halos, noise or invented details. Target 3548x1774 or larger if supported, but exact visual fidelity matters more than pixel count. Background checkerboard may be left unchanged for our existing local matte pipeline. Do not add text or decorations.",
+  "constraints": [
+    "Keep approved appearance, palette, eight poses and frame order",
+    "Restore prior walk speed, animation cadence, inertia and idle/hover assets",
+    "Retain existing high-DPI rendering"
+  ],
+  "notes": [
+    "The rejected rig, palette correction and speed changes have been removed from the active project.",
+    "This is a linework clarity edit, not a claim of native 4K detail."
+  ]
+}
