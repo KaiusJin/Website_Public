@@ -25,9 +25,10 @@ export default function ContentPanel({section,content,lang,t,onPersonal,onRestar
  const profile=localize(data.site_profile[0]||{},lang);
  if(section==='about')return <><span className="record-meta">{t.focus}</span><h3 className="profile-heading">{profile.heading||t.profileTitle}</h3><p className="journal-lead">{profile.intro||t.profileBody}</p><p>{profile.bio||t.profileMore}</p><div className="profile-facts"><div><small>{lang==='en'?'EDUCATION':'教育'}</small><strong>University of Waterloo</strong><span>Computer Science</span></div><div><small>{lang==='en'?'BASED IN':'所在城市'}</small><strong>{profile.location||'Waterloo, Canada'}</strong><span>Backend · Cloud · AI</span></div></div><button className="journal-text-button" onClick={onPersonal}>{t.personal}<Icon name="arrow"/></button></>;
  if(section==='contact')return <><h3 className="profile-heading">{t.end}</h3><p className="journal-lead">{t.contactBody}</p><div className="contact-stamps"><External href={`mailto:${profile.email||'kaius.jin@outlook.com'}`}><Icon name="letter"/>{t.email}</External><External href={profile.github||'https://github.com/KaiusJin'}>{t.github}</External><External href={profile.linkedin||'https://www.linkedin.com/in/kaixuan-jin/'}>{t.linkedin}</External>{profile.resume_url&&<External href={profile.resume_url}>{t.resume}</External>}</div><p>{t.endBody}</p><button className="journal-text-button" onClick={onRestart}>{t.replay}<Icon name="arrow"/></button></>;
- if(section==='personal')return <Personal entries={data.personal_entries} lang={lang} t={t}/>;
+
  if(loading)return <p role="status">{t.loading}…</p>;
  if(error)return <div className="journal-empty"><p role="alert">{t.dataError}</p><button className="journey-primary" onClick={retry}>{t.retry}</button></div>;
+ if(section==='personal')return <Personal entries={data.personal_entries} lang={lang} t={t}/>;
  if(section==='skills'){
   const derived=deriveSkills(data.projects,data.experiences);
   return data.skills.length?data.skills.map(s=><Record key={s.id} item={s} lang={lang} t={t} type={t.skills}/>):<><p className="journal-lead">{t.skillsDerived}</p><div className="spell-tags">{derived.map((s,i)=><span key={s}><small>{String(i+1).padStart(2,'0')}</small>{s}<Icon name="star" size={17}/></span>)}</div></>;
