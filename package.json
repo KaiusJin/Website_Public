@@ -8,8 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "test": "node --test tests/*.test.mjs",
-    "preview": "vite preview",
-    "test:db": "python3 scripts/test-database.py"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.1",

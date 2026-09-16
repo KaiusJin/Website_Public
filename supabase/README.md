@@ -1,34 +1,19 @@
-# Portfolio CMS
+# Live portfolio database
 
-Classic and Journey share one live English record per entry. Admin writes directly to the content tables. There is no draft, publish-status, visibility or content-translation workflow.
+The existing Supabase project **Personal Website** is the database source of truth for Website_Public and Website_Admin. Both apps connect to it directly with their configured Supabase URL and public client key. The seven historical migration files are retained in `supabase/migrations/`; the old disposable PostgreSQL fixture is retired.
 
-## Current production state — 2026-09-16
+## Current content model — 2026-09-16
 
-All six migrations in this directory are applied and recorded in `supabase_migrations.schema_migrations`. The original five were verified against the live structure before their history was repaired; the sixth adds automatic icons and removes unused metadata fields. Do not replay these migrations against production.
+- Content tables: `projects`, `work_experiences`, `club_experiences`, `volunteer_experiences`, `awards`, `skills`, `site_profile`, `personal_entries`, and `journey_scene_content`.
+- Media metadata is in `media_assets`; uploaded public files are in the `journey-media` Storage bucket.
+- `site_profile` has one row. Classic hero, profile, and contact copy lives in its ordinary columns; Journey English and Chinese copy lives in `journey_en` and `journey_zh`. Email, social links, location, and résumé URL are shared. The résumé URL is currently empty because no résumé has been uploaded.
+- The former draft, visibility, translation, publishing, and legacy `experiences` objects are absent. Experience and skill icons are assigned automatically by the live database.
+- Row-level security is enabled on the public content tables. Public clients can read content; the existing administrator policy controls writes.
 
-- Content: `projects`, `work_experiences`, `club_experiences`, `volunteer_experiences`, `awards`, `skills`, `site_profile`, `personal_entries`, `journey_scene_content`.
-- Media metadata: `media_assets`. Uploads use public `journey-media`; the empty retired `journey-drafts` bucket has been deleted and its one-time script removed.
-- `category_slug`, `media_assets.caption`, `date_badge`, legacy experiences and draft/publishing objects are absent.
-- SQL column types and nullability, including empty tables, are recorded in `docs/cms-schema-observed.json`.
+All seven files correspond to migration versions already recorded **in the remote database**. They document how the live schema reached its current state. The chain starts from an earlier CMS baseline that is not included here, so it is not a standalone fresh-install script. Do not replay these migrations against production.
 
-## Automatic icons
+## Checks and future changes
 
-`journey_assign_icon` assigns one of ten built-in FontAwesome classes from the record's saved `order`, wrapping after ten. Experience records use `role_icon`; skill categories use `category_icon`. Existing records have been backfilled. Admin does not offer manual icon fields, and Classic renders the saved classes.
+`npm test` checks current website behavior, including Classic and Journey rendering of profile/contact values. `npm run lint` and `npm run build` check the application source. [tests/cms-final-state.sql](../tests/cms-final-state.sql) is a **read-only** contract for the live database: run it in the Supabase SQL editor and confirm every `passed` value is `true`. It checks the current tables, profile fields and row shape, RLS/policies, icon triggers, and retired tables. It does not prove a browser session or Admin write flow works. The former `test:db` command and legacy fixture were removed because they replayed old transitions rather than checking the live final state.
 
-Profile is a singleton, and scene order is fixed by the Journey world. Admin offers neither profile duplication nor dragging for profile/scenes. Other lists save their order using UPDATE, without inserting incomplete content rows. If an ordering request fails, Admin reports the failure and reloads the actual saved order.
-
-Only an absent profile record receives default copy. Blank fields in an existing record stay blank in both frontends. Scene text is resolved consistently for captions, maps and route labels. Choosing an uploaded image in Admin copies its URL and alt text together.
-
-## Local checks
-
-`npm test` runs the existing movement tests and a small set of CMS rendering checks. `npm run test:db` requires `initdb`, `pg_ctl` and `psql` on PATH. It creates an isolated temporary PostgreSQL, applies the fixture and all migrations, runs normal content/ordering/icon and access checks, then removes the instance. Never execute `tests/cms-fixture.sql` against a live database.
-
-Keep the historical migration chain: it is still the reproducible path from the legacy fixture to the current schema. Old graphics and animation assets are intentionally retained.
-
-## Future migrations
-
-Use new migration files for future changes and check the recorded history before applying them. The previous rollout instructions describing the fifth migration as pending are obsolete.
-
-During this repair the management token worked, while the supplied direct database password and Storage key failed authentication. The database/history updates used the authorized management connection; Storage cleanup used the project's valid key fetched through that connection. No credentials were printed or added to tracked files. Future direct CLI connections need a valid database password.
-
-The repaired migration table follows the [Supabase CLI history format](https://raw.githubusercontent.com/supabase/cli/v2.75.0/pkg/migration/history.go). Existing history was not truncated or re-executed.
+Before a future database change, inspect the live schema, policies, data, and recorded migration versions in Supabase. Add a new migration file for the change, apply it through an authorized database workflow, then verify the final state with a read-only query. Do not rerun historical migrations against production.

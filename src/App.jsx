@@ -13,7 +13,7 @@ import { resolveProfile } from './data/profile';
 
 function App() {
   const profileContent = useCMSData('site_profile');
-  const profile = profileContent.loading || profileContent.error ? {} : resolveProfile(profileContent.data);
+  const profile = profileContent.loading || profileContent.error ? {} : resolveProfile(profileContent.data) ?? {};
   const [activeSection, setActiveSection] = useState('hero');
   const [currentPage, setCurrentPage] = useState('home');
   const [scrollTarget, setScrollTarget] = useState(null);

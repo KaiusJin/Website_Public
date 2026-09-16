@@ -1,5 +1,7 @@
 # Implementation log
 
+**Current database state (2026-09-16):** The live `site_profile` row now contains Classic and bilingual Journey profile/contact content. The live database records seven applied migration versions, and their SQL files are retained in `supabase/migrations/`. The old local replay fixture and test were retired; the current contract and read-only check are in [the CMS README](../supabase/README.md) and [cms-final-state.sql](../tests/cms-final-state.sql). The dated stage notes below are historical and must not be used as current database instructions. Application changes remain local; no website deployment is claimed.
+
 ## Audit fixes — 2026-09-16
 
 - Fixed both entry routes, Classic profile/contact/resume and project dates, experience category labels, Journey scene copy and journal error mapping. Explicitly cleared profile fields stay cleared.
@@ -14,7 +16,7 @@
 - Production now uses the split experience tables and one live English record per entry. The retired visibility, translation, content-draft, publish-function and legacy `experiences` schema is absent.
 - Classic and Journey read every collection directly by its database `order`; Journey skills come only from the `skills` table.
 - The empty `journey-drafts` bucket has now been deleted through Storage API; the completed one-time cleanup script and package command are removed.
-- Migration history is repaired: all six local versions are recorded, including automatic icon assignment and the final metadata cleanup.
+- Migration history was repaired, and a seventh profile/contact change was subsequently applied. Those versions remain recorded remotely, with all seven SQL files retained locally.
 - Earlier stage notes below describe the implementation state at the time and are not the current CMS contract.
 
 ## Latest correction — restore approved character (2026-09-15)
@@ -38,7 +40,7 @@ Each stage is committed once per affected repository after its checks. This log 
 
 - Public and Admin local configuration targets the same Supabase project (checked without disclosing credentials).
 - Anonymous public reads currently return 3 projects, 2 work experiences, 1 club experience, 1 volunteer experience, 4 awards and 4 skill categories.
-- Observed field shapes are recorded in `cms-schema-observed.json`; sample JS types do not establish SQL column types or RLS rules.
+- The old sampled field-shape file was retired. Inspect the live catalog for SQL types and RLS rules; use the read-only final-state check linked above for the current application contract.
 - Existing public records currently have sparse descriptions. No employment achievements or personal journal entries will be invented.
 - No independent API service is evidenced. Both applications directly use Supabase.
 - Phaser 3.90.0 installed for world rendering/physics; classic app remains separate.

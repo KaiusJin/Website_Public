@@ -2,6 +2,7 @@ const paths={
  star:'m12 2 2.8 6.1 6.7.9-4.9 4.7 1.2 6.6L12 17.2l-5.8 3.1 1.2-6.6L2.5 9l6.7-.9Z',
  moon:'M20.5 13.2A9 9 0 0 1 10.8 3.5 9 9 0 1 0 20.5 13.2Z',
  book:'M12 5v15M3 4c4-1 7 0 9 2 2-2 5-3 9-2v15c-4-1-7 0-9 2-2-2-5-3-9-2Z',
+ more:'M5 12h.01M12 12h.01M19 12h.01',
  map:'m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2Zm6-2v16m6-14v16',
  home:'m3 10 9-7 9 7M5 9v12h14V9M9 21v-7h6v7',
  leaf:'M20 3C5 2 1 9 6 16c7 7 15 0 14-13ZM5 21 16 8',
@@ -18,4 +19,4 @@ const paths={
  music:'M9 18V5l11-2v13M9 8l11-2M9 18c0 4-7 4-7 0s7-4 7 0Zm11-2c0 4-7 4-7 0s7-4 7 0Z',
  external:'M14 3h7v7m0-7L10 14M10 5H3v16h16v-7',
 };
-export default function Icon({name='star',size=20,...props}) {return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}><path d={paths[name]||paths.star}/></svg>}
+export default function Icon({name='star',size=20,...props}) {return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={name==='more'?3:1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}><path d={paths[name]||paths.star}/></svg>}

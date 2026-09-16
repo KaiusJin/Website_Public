@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {joystickVector,resolveAxes} from '../src/journey/game/motion.js';
 import {safeUrl} from '../src/journey/data/content.js';
-import {regions,REGION_WIDTH,townExperienceHotspots} from '../src/journey/data/regions.js';
+import {regions,REGION_WIDTH,townExperienceHotspots,libraryProjectHotspots,libraryOtherHotspot,libraryHotspotsFor} from '../src/journey/data/regions.js';
 import {copy} from '../src/journey/i18n/copy.js';
 test('joystick dead zone avoids drift; extreme diagonal gestures remain bounded',()=>{
  assert.deepEqual(joystickVector(2,2),{x:0,y:0});
@@ -24,6 +24,16 @@ test('desktop hotspots follow scene landmarks while phones can keep one aligned 
  const positions=[...regions.filter(r=>r.hotspot).map(r=>r.hotspot),...townExperienceHotspots.map(({offset,y})=>({offset,y}))];
  positions.forEach(({offset,y})=>{assert.ok(offset>0&&offset<REGION_WIDTH);assert.ok(y>150&&y<650);});
  assert.ok(new Set(positions.map(point=>point.y)).size>4);
+});
+test('library has four ordered project locations followed by other projects',()=>{
+ assert.equal(libraryProjectHotspots.length,4);
+ assert.deepEqual(libraryProjectHotspots.map(point=>point.index),[0,1,2,3]);
+ const points=[...libraryProjectHotspots,libraryOtherHotspot];
+ assert.ok(points.every((point,index)=>point.offset>0&&point.offset<REGION_WIDTH&&(index===0||point.offset>points[index-1].offset)));
+ assert.ok(points.every(point=>point.y>150&&point.y<650));
+ assert.deepEqual(libraryHotspotsFor(3),libraryProjectHotspots.slice(0,3));
+ assert.deepEqual(libraryHotspotsFor(4),points);
+ assert.deepEqual(libraryHotspotsFor(6),points);
 });
 
 import {neighboringRegion,arrivalPosition,LIBRARY_DOOR_X,canEnterLibrary} from '../src/journey/game/travel.js';
