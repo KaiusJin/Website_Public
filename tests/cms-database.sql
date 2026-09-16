@@ -4,6 +4,8 @@ set local role authenticated;
 select set_config('request.jwt.claims','{"email":"kaixuan.jin@outlook.com"}',true);
 do $$ declare d public.content_drafts; r jsonb; old_revision timestamptz; result_count integer; begin
  if public.journey_fields('auth.users') is not null then raise exception 'Table allowlist failed'; end if;
+ if public.journey_fields('experiences') is not null then raise exception 'Legacy experience table remains allowed'; end if;
+ if public.journey_fields('work_experiences') is null or public.journey_fields('club_experiences') is null or public.journey_fields('volunteer_experiences') is null then raise exception 'Split experience allowlist failed'; end if;
  select * into d from public.journey_save_draft('personal_entries','11111111-1111-4111-8111-111111111111','{"kind":"daily","title":"Fixture only","visibility":"public","translations":{"zh-CN":{"title":"测试"}},"order":0}',null,null);
  if exists(select from public.personal_entries where id=d.target_id) then raise exception 'Draft leaked into live table'; end if;
  begin perform public.journey_save_draft('personal_entries',d.target_id,d.payload,null,null);raise exception 'Expected conflict';exception when serialization_failure then null;end;

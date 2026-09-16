@@ -9,3 +9,5 @@ export function safeUrl(value,{email=false}={}){
 }
 export function visibleItems(items=[]){return items.filter(i=>i.visibility==='public'||i.visibility===undefined).sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0));}
 export function deriveSkills(projects=[],experiences=[]){return [...new Set([...projects,...experiences].flatMap(i=>(i.skills||[]).map(s=>s.tag)).filter(Boolean))];}
+export const experienceTables=['work_experiences','club_experiences','volunteer_experiences'];
+export function collectExperiences(data={}){return experienceTables.flatMap(table=>data[table]||[]);}

@@ -1,7 +1,7 @@
 import {useCallback,useEffect,useState} from 'react';
 import {supabase} from '../../lib/supabase';
 import {visibleItems} from './content';
-export const initial={projects:[],experiences:[],skills:[],awards:[],personal_entries:[],site_profile:[],journey_scene_content:[]};
+export const initial={projects:[],work_experiences:[],club_experiences:[],volunteer_experiences:[],skills:[],awards:[],personal_entries:[],site_profile:[],journey_scene_content:[]};
 export default function useJourneyContent(){
  const [preview,setPreview]=useState(null);
  const [data,setData]=useState(initial),[loading,setLoading]=useState(true),[error,setError]=useState(false),[revision,setRevision]=useState(0);

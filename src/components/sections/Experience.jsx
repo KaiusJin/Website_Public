@@ -2,19 +2,22 @@ import React, { useMemo } from 'react';
 import { useCMSData, getSortDate } from '../../hooks/useCMSData';
 
 export default function Experience() {
-  const { data: experiencesData, loading: experiencesLoading } = useCMSData('data/experiences');
+  const { data: workExperiences, loading: workLoading } = useCMSData('data/work_experiences');
+  const { data: clubExperiences, loading: clubLoading } = useCMSData('data/club_experiences');
+  const { data: volunteerExperiences, loading: volunteerLoading } = useCMSData('data/volunteer_experiences');
+  const experiencesLoading = workLoading || clubLoading || volunteerLoading;
 
   const filteredExperiences = useMemo(() => {
-    if (!experiencesData) return [];
-
-    return experiencesData
+    return [...(workExperiences || []), ...(clubExperiences || []), ...(volunteerExperiences || [])]
       .sort((a, b) => {
-        const orderA = parseInt(a.order) ?? 999;
-        const orderB = parseInt(b.order) ?? 999;
+        const parsedA = Number.parseInt(a.order, 10);
+        const parsedB = Number.parseInt(b.order, 10);
+        const orderA = Number.isFinite(parsedA) ? parsedA : 999;
+        const orderB = Number.isFinite(parsedB) ? parsedB : 999;
         if (orderA !== orderB) return orderA - orderB;
         return getSortDate(b) - getSortDate(a);
       });
-  }, [experiencesData]);
+  }, [workExperiences, clubExperiences, volunteerExperiences]);
 
   const formatDateBadge = (item) => {
     let start = item.start_date;

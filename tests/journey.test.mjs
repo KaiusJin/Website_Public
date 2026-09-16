@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {joystickVector,resolveAxes,landingTarget} from '../src/journey/game/motion.js';
-import {localize,safeUrl,visibleItems,deriveSkills} from '../src/journey/data/content.js';
+import {localize,safeUrl,visibleItems,deriveSkills,collectExperiences,experienceTables} from '../src/journey/data/content.js';
 import {regions,REGION_WIDTH} from '../src/journey/data/regions.js';
 import {copy} from '../src/journey/i18n/copy.js';
 test('joystick dead zone avoids drift; extreme diagonal gestures remain bounded',()=>{
@@ -35,6 +35,11 @@ test('seven chapters are continuous and every displayed UI key has both language
 test('empty skill table can display only technologies evidenced in public records',()=>{
  assert.deepEqual(deriveSkills([{skills:[{tag:'Python'},{tag:'Java'}]}],[{skills:[{tag:'Python'}]}]),['Python','Java']);
 });
+test('three experience tables remain distinct while supporting combined views',()=>{
+ const data={work_experiences:[{id:'work'}],club_experiences:[{id:'club'}],volunteer_experiences:[{id:'volunteer'}]};
+ assert.deepEqual(experienceTables,['work_experiences','club_experiences','volunteer_experiences']);
+ assert.deepEqual(collectExperiences(data).map(item=>item.id),['work','club','volunteer']);
+});
 
 import {neighboringRegion,arrivalPosition,LIBRARY_DOOR_X,canEnterLibrary} from '../src/journey/game/travel.js';
 test('outdoor route passes the library building without entering the indoor room',()=>{
@@ -43,11 +48,10 @@ test('outdoor route passes the library building without entering the indoor room
 test('crossing a chapter boundary lands inside its destination and away from the trigger',()=>{
  for(const index of [0,1,2,4,5,6])for(const dir of [-1,1]){const x=arrivalPosition(index,dir);assert.ok(x>index*REGION_WIDTH+115&&x<(index+1)*REGION_WIDTH-115);}
 });
-test('library entrance requires proximity and landing',()=>{
- assert.equal(canEnterLibrary(LIBRARY_DOOR_X,637,'walking',637),true);
- assert.equal(canEnterLibrary(LIBRARY_DOOR_X,637,'flying',637),false);
- assert.equal(canEnterLibrary(LIBRARY_DOOR_X,500,'walking',637),false);
- assert.equal(canEnterLibrary(LIBRARY_DOOR_X-400,637,'walking',637),false);
+test('library entrance requires proximity but allows entering while flying',()=>{
+ assert.equal(canEnterLibrary(LIBRARY_DOOR_X),true);
+ assert.equal(canEnterLibrary(LIBRARY_DOOR_X-100),true);
+ assert.equal(canEnterLibrary(LIBRARY_DOOR_X-400),false);
 });
 
 import {damp,motionVelocity,cameraFollow} from '../src/journey/game/motion.js';

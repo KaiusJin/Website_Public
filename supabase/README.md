@@ -10,7 +10,8 @@ Use an isolated PostgreSQL instance; `tests/cms-fixture.sql` creates a minimal d
 
 1. Create a disposable database and run `tests/cms-fixture.sql`.
 2. Apply `migrations/202609150001_journey_cms.sql`.
-3. Run `tests/cms-database.sql` with `ON_ERROR_STOP=1`. Assertions roll back all test records.
+3. Apply `migrations/202609150002_split_experience_tables.sql`.
+4. Run `tests/cms-database.sql` with `ON_ERROR_STOP=1`. Assertions roll back all test records.
 
 The fixture covers Postgres functions and RLS, not the hosted Storage API. Hosted upload/copy and the authenticated Admin flow need verification when database work resumes.
 
@@ -28,4 +29,6 @@ Set Admin `VITE_PUBLIC_ORIGIN` to the Public origin; localhost defaults to `http
 
 Before production execution, export affected records and current policies, verify the administrator still matches the inspected policy, and review the transaction. The existing public app can keep running because English columns remain compatible. Deploy Admin only after migration succeeds. The migration includes no content seed or fabricated journal records.
 
-For an application rollback, deploy the previous Admin/Public build; the additive schema can remain. Do not drop new tables, translations or drafts. Restore an accidentally unpublished item through Admin by publishing it with Public visibility. Existing anonymous access is deliberately restricted rather than restoring unconditional SELECT policies.
+The second migration moves all legacy `experiences` rows and drafts into `work_experiences`, creates separate club/design-team and volunteer tables, then removes the legacy table. Back up the four original content tables before production execution.
+
+For an application rollback, restore the database backup before deploying the previous Admin/Public build because that build reads the legacy `experiences` table. Restore an accidentally unpublished item through Admin by publishing it with Public visibility. Existing anonymous access is deliberately restricted rather than restoring unconditional SELECT policies.

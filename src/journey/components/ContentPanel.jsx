@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {localize,safeUrl,deriveSkills} from '../data/content';
+import {localize,safeUrl,deriveSkills,collectExperiences} from '../data/content';
 import Icon from './Icon';
 const External=({href,children,...props})=>{const url=safeUrl(href,{email:true});return url?<a href={url} target={url.startsWith('mailto:')?undefined:'_blank'} rel="noopener noreferrer" {...props}>{children}<Icon name="external" size={15}/></a>:null;};
 function Record({item,lang,t,type}){
@@ -30,7 +30,7 @@ export default function ContentPanel({section,content,lang,t,onPersonal,onRestar
  if(error)return <div className="journal-empty"><p role="alert">{t.dataError}</p><button className="journey-primary" onClick={retry}>{t.retry}</button></div>;
  if(section==='personal')return <Personal entries={data.personal_entries} lang={lang} t={t}/>;
  if(section==='skills'){
-  const derived=deriveSkills(data.projects,data.experiences);
+  const derived=deriveSkills(data.projects,collectExperiences(data));
   return data.skills.length?data.skills.map(s=><Record key={s.id} item={s} lang={lang} t={t} type={t.skills}/>):<><p className="journal-lead">{t.skillsDerived}</p><div className="spell-tags">{derived.map((s,i)=><span key={s}><small>{String(i+1).padStart(2,'0')}</small>{s}<Icon name="star" size={17}/></span>)}</div></>;
  }
  return <>{data[section]?.length?data[section].map(item=><Record key={item.id} item={item} lang={lang} t={t} type={t[section]}/>):<p>{t.noItems}</p>}{section==='awards'&&profile.resume_url&&<div className="record-links"><External href={profile.resume_url}>{t.resume}</External></div>}</>;

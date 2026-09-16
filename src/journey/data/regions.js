@@ -1,6 +1,11 @@
 export const REGION_WIDTH=2400;
 export const WORLD_HEIGHT=800;
 export const GROUND_Y=728;
+export const townExperienceHotspots=[
+ {id:'work_experiences',offset:520,icon:'town'},
+ {id:'club_experiences',offset:1120,icon:'star'},
+ {id:'volunteer_experiences',offset:1580,icon:'leaf'},
+];
 export const regions=[
  {id:'cottage',title:['The little cottage','魔女的小屋'],description:['Where curiosity packs its bags.','把好奇心装进行囊。'],section:'about', color:'#7d815c', anchor:740, icon:'home',image:'/journey/regions/cottage-hd.webp'},
  {id:'meadow',title:['The open meadow','风起的草原'],description:['A little about the traveler.','在微风里，认识旅行的人。'],section:'about',color:'#708559',anchor:1150,icon:'leaf',image:'/journey/regions/meadow-hd.webp'},

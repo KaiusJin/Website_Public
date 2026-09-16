@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import {regions,REGION_WIDTH,WORLD_HEIGHT,GROUND_Y} from '../data/regions';
+import {regions,REGION_WIDTH,WORLD_HEIGHT,GROUND_Y,townExperienceHotspots} from '../data/regions';
 import {clamp,resolveAxes,damp,motionVelocity,cameraFollow} from './motion';
 import {createAmbience} from './ambience';
 import {advanceAnimation,animationPose,spritePlacement} from './animation';
@@ -88,7 +88,7 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    this.requestTravel(r.index,r.x+r.anchor-220,{room:index===3?'library':null});
   }
   enterLibrary(){
-   if(this.room||this.regionIndex!==2||!canEnterLibrary(this.player.x,this.player.y,this.mode,GROUND_Y))return;
+   if(this.room||this.regionIndex!==2||!canEnterLibrary(this.player.x))return;
    this.returnX=this.player.x;this.requestTravel(3,3*REGION_WIDTH+260,{room:'library'});
   }
   exitLibrary(){if(this.room)this.requestTravel(2,this.returnX??LIBRARY_DOOR_X);}
@@ -181,19 +181,20 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    if(!paused)this.characterAngle=damp(this.characterAngle,lean,5,dt);
    this.character.setPosition(this.player.x,this.player.y+pose.bob).setAngle(this.characterAngle);
    this.shadow.setX(this.player.x).setAlpha(clamp(1-(GROUND_Y-this.player.y)/450,0,.24));
-   const r=regions[current], distance=Math.abs(this.player.x-(r.x+r.anchor));
-   this.near=distance<260?r.id:null;
+   const r=regions[current];
+   const contentPoints=current===2&&!this.room?townExperienceHotspots.map(point=>({...point,x:r.x+point.offset,kind:'content'})):[{id:r.id,x:r.x+r.anchor,kind:'content',icon:r.icon}];
+   const closest=contentPoints.reduce((best,point)=>{const distance=Math.abs(this.player.x-point.x);return !best||distance<best.distance?{...point,distance}:best;},null);
+   this.near=closest?.distance<260?closest.id:null;
    if(current===2&&Math.abs(this.player.x-LIBRARY_DOOR_X)<240)this.near='library-door';
    if(this.room&&this.player.x-r.x<380)this.near='library-exit';
    this.targetMarker.clear();
-   this.targetMarker.lineStyle(1,0xfff3c9,this.near ? .8 : .3);
-   this.targetMarker.strokeEllipse(r.x+r.anchor,GROUND_Y,100+(controls.reduced?0:Math.sin(time/500)*8),12);
+   for(const point of contentPoints){this.targetMarker.lineStyle(1,0xfff3c9,this.near===point.id?0.8:0.3);this.targetMarker.strokeEllipse(point.x,GROUND_Y,100+(controls.reduced?0:Math.sin(time/500)*8),12);}
    this.ambience.update({region:current,cameraX:viewX,playerY:this.player.y,time,reduced:controls.reduced,paused});
    controls.onVisual?.(viewX,viewY,cssZoom);
    if(time-this.lastReport>100){
     this.lastReport=time;
     const project=x=>(x-viewX)*cssZoom;
-    const points=[{id:r.id,x:r.x+r.anchor,kind:'content'}];
+    const points=[...contentPoints];
     if(current===2)points.push({id:'library-door',x:LIBRARY_DOOR_X,kind:'door'});
     if(this.room)points.push({id:'library-exit',x:r.x+200,kind:'exit'});
     const hotspots=points.filter(p=>p.x>viewX-100&&p.x<(viewX+visibleWidth)+100).map(p=>({...p,worldX:p.x,x:project(p.x),y:(GROUND_Y-160-viewY)*cssZoom}));
