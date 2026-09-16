@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {joystickVector,resolveAxes,landingTarget} from '../src/journey/game/motion.js';
-import {localize,safeUrl,visibleItems,deriveSkills,collectExperiences,experienceTables} from '../src/journey/data/content.js';
-import {regions,REGION_WIDTH,MOBILE_HOTSPOT_Y,townExperienceHotspots} from '../src/journey/data/regions.js';
+import {joystickVector,resolveAxes} from '../src/journey/game/motion.js';
+import {safeUrl} from '../src/journey/data/content.js';
+import {regions,REGION_WIDTH,townExperienceHotspots} from '../src/journey/data/regions.js';
 import {copy} from '../src/journey/i18n/copy.js';
 test('joystick dead zone avoids drift; extreme diagonal gestures remain bounded',()=>{
  assert.deepEqual(joystickVector(2,2),{x:0,y:0});
@@ -11,18 +11,6 @@ test('joystick dead zone avoids drift; extreme diagonal gestures remain bounded'
 test('mixed keyboard and touch cannot create diagonal speed advantage',()=>{
  assert.deepEqual(resolveAxes({x:1,y:0},{x:-1,y:0}),{x:0,y:0});
  assert.ok(Math.abs(Math.hypot(...Object.values(resolveAxes({x:1,y:1},{x:1,y:1})))-1)<1e-8);
-});
-test('landing clamps targets at both edges of a long world',()=>{
- assert.deepEqual(landingTarget(-999,16800,637),{x:100,y:637});
- assert.deepEqual(landingTarget(19000,16800,637),{x:16700,y:637});
-});
-test('language selection does not replace English database content',()=>{
- const row={id:'real',title:'Source',bullets:[{text:'English'}]};
- assert.deepEqual(localize(row,'zh-CN'),row);assert.equal(localize(row,'en').title,'Source');
-});
-test('content is ordered without relying on the removed visibility field',()=>{
- const rows=[{id:1,order:2},{id:2,order:0},{id:3,order:1}];
- assert.deepEqual(visibleItems(rows).map(r=>r.id),[2,3,1]);assert.deepEqual(rows.map(r=>r.id),[1,2,3]);
 });
 test('untrusted links cannot execute code or open data documents',()=>{
  for(const url of ['javascript:alert(1)','data:text/html,hi','file:///etc/passwd',''])assert.equal(safeUrl(url),null);
@@ -36,15 +24,6 @@ test('desktop hotspots follow scene landmarks while phones can keep one aligned 
  const positions=[...regions.filter(r=>r.hotspot).map(r=>r.hotspot),...townExperienceHotspots.map(({offset,y})=>({offset,y}))];
  positions.forEach(({offset,y})=>{assert.ok(offset>0&&offset<REGION_WIDTH);assert.ok(y>150&&y<650);});
  assert.ok(new Set(positions.map(point=>point.y)).size>4);
- assert.equal(MOBILE_HOTSPOT_Y,477);
-});
-test('empty skill table can display only technologies evidenced in public records',()=>{
- assert.deepEqual(deriveSkills([{skills:[{tag:'Python'},{tag:'Java'}]}],[{skills:[{tag:'Python'}]}]),['Python','Java']);
-});
-test('three experience tables remain distinct while supporting combined views',()=>{
- const data={work_experiences:[{id:'work'}],club_experiences:[{id:'club'}],volunteer_experiences:[{id:'volunteer'}]};
- assert.deepEqual(experienceTables,['work_experiences','club_experiences','volunteer_experiences']);
- assert.deepEqual(collectExperiences(data).map(item=>item.id),['work','club','volunteer']);
 });
 
 import {neighboringRegion,arrivalPosition,LIBRARY_DOOR_X,canEnterLibrary} from '../src/journey/game/travel.js';
@@ -54,7 +33,7 @@ test('outdoor route passes the library building without entering the indoor room
 test('crossing a chapter boundary lands inside its destination and away from the trigger',()=>{
  for(const index of [0,1,2,4,5,6])for(const dir of [-1,1]){const x=arrivalPosition(index,dir);assert.ok(x>index*REGION_WIDTH+115&&x<(index+1)*REGION_WIDTH-115);}
 });
-test('library entrance requires proximity but allows entering while flying',()=>{
+test('library entrance proximity rejects a distant player',()=>{
  assert.equal(canEnterLibrary(LIBRARY_DOOR_X),true);
  assert.equal(canEnterLibrary(LIBRARY_DOOR_X-100),true);
  assert.equal(canEnterLibrary(LIBRARY_DOOR_X-400),false);
@@ -79,9 +58,8 @@ test('direction reversal decelerates before moving the other way; camera remains
 });
 
 import {ambienceProfile,layerPosition} from '../src/journey/game/ambience.js';
-test('light parallax keeps indoor clouds and foliage off and respects reduced motion',()=>{
+test('light parallax keeps indoor clouds and foliage off',()=>{
  assert.equal(ambienceProfile(3).cloud,0);assert.equal(ambienceProfile(3).foreground,0);
- assert.deepEqual(ambienceProfile(1,true),{cloud:0,mist:0,foreground:0,particles:0});
 });
 test('overlay layers move at different rates without changing the background',()=>{
  const screenTravel=rate=>(layerPosition(400,100,rate,0)-100)-layerPosition(400,0,rate,0);

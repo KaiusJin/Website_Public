@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { safeUrl } from '../../journey/data/content';
 
 const contactSlogans = [
   'I turn scattered signals into working systems.',
@@ -7,7 +8,7 @@ const contactSlogans = [
   'I connect algorithms with human problems.'
 ];
 
-export default function Contact() {
+export default function Contact({ profile, loading, error }) {
   const [activeSlogan, setActiveSlogan] = useState(0);
 
   useEffect(() => {
@@ -26,60 +27,49 @@ export default function Contact() {
             <i className="fas fa-paper-plane" style={{ color: 'var(--accent)' }}></i> Contact Me
           </h2>
 
+          {loading && <p role="status">Loading contact details…</p>}
+          {error && <p role="alert">Contact details could not be loaded.</p>}
           <div className="contact-info-list">
-            {/* Email Item */}
-            <div className="contact-info-item">
+            {profile.email && <div className="contact-info-item">
               <div className="contact-info-icon-badge">
                 <i className="fas fa-envelope"></i>
               </div>
               <div className="contact-info-details">
                 <span className="contact-info-label">EMAIL</span>
-                <a href="mailto:kaius.jin@outlook.com" className="contact-info-value-link">
-                  kaius.jin@outlook.com
+                <a href={`mailto:${profile.email}`} className="contact-info-value-link">
+                  {profile.email}
                 </a>
               </div>
             </div>
 
+            }
+
             {/* Location Item */}
-            <div className="contact-info-item">
+            {profile.location && <div className="contact-info-item">
               <div className="contact-info-icon-badge">
                 <i className="fas fa-map-marker-alt"></i>
               </div>
               <div className="contact-info-details">
                 <span className="contact-info-label">LOCATION</span>
                 <span className="contact-info-value-text">
-                  Waterloo, ON, Canada
+                  {profile.location}
                 </span>
               </div>
             </div>
+            }
           </div>
 
-          {/* Minimalist Social Links */}
           <div className="contact-social-row">
-            <a
-              href="https://github.com/KaiusJin"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="GitHub"
-            >
-              <i className="fab fa-github"></i>
-            </a>
-            <a
-              href="https://www.linkedin.com/in/kaixuan-jin/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="LinkedIn"
-            >
-              <i className="fab fa-linkedin"></i>
-            </a>
-            <a
-              href="https://devpost.com/kaixuan-jin?ref_content=user-portfolio&ref_feature=portfolio&ref_medium=global-nav"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Devpost"
-            >
-              <i className="fas fa-laptop-code"></i>
-            </a>
+            {[
+              ['GitHub', profile.github, 'fab fa-github'],
+              ['LinkedIn', profile.linkedin, 'fab fa-linkedin'],
+              ['Download résumé', profile.resume_url, 'fas fa-file-pdf'],
+            ].map(([label, href, icon]) => safeUrl(href) && (
+              <a key={label} href={safeUrl(href)} target="_blank" rel="noopener noreferrer" title={label} aria-label={label}>
+                <i className={icon} aria-hidden="true" />
+                {label === 'Download résumé' && <span> Résumé</span>}
+              </a>
+            ))}
           </div>
         </div>
 

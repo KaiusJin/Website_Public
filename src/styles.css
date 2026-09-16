@@ -9,15 +9,6 @@
   --card-bg: #ffffff;
   --border-color: #e2e8f0;
   --accent: #38bdf8;
-  --accent-hover: #0ea5e9;
-
-  /* Dark Region Colors (Contact / Footer) */
-  --dark-bg: #111827;
-  --dark-text-primary: #f9fafb;
-  --dark-text-secondary: #cbd5e1;
-  --dark-accent: #38bdf8;
-  --dark-border: #1f2937;
-
   /* Typography */
   --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -25,7 +16,6 @@
 
   /* Layout */
   --max-width: 1280px;
-  --nav-height: 72px;
   --border-radius: 16px;
 
   /* Transitions */
@@ -116,13 +106,6 @@ section:last-of-type {
   gap: 12px;
 }
 
-.section-subtitle {
-  font-size: 1.1rem;
-  color: var(--text-secondary);
-  margin-bottom: 48px;
-  max-width: 600px;
-}
-
 /* Floating Glassmorphism Navbar */
 .navbar-container {
   position: sticky;
@@ -168,6 +151,13 @@ section:last-of-type {
   color: var(--accent);
 }
 
+.navbar-logo-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
 .navbar-links {
   display: flex;
   align-items: center;
@@ -207,16 +197,6 @@ section:last-of-type {
 .navbar-links a.active::after {
   transform: scaleX(1);
   transform-origin: left;
-}
-
-/* Mobile Menu Button */
-.menu-toggle {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: var(--text-primary);
 }
 
 /* Hero Section */
@@ -434,23 +414,6 @@ section:last-of-type {
   transform: translateY(-6px);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
   border-color: #cbd5e1;
-}
-
-/* Project Card details */
-.project-card .card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 16px;
-  gap: 16px;
-}
-
-.project-card h3 {
-  font-size: 1.35rem;
-  font-weight: 750;
-  color: var(--text-primary);
-  letter-spacing: -0.02em;
-  line-height: 1.3;
 }
 
 .date-badge {
@@ -746,83 +709,6 @@ section:last-of-type {
   color: var(--accent);
 }
 
-/* Integrated Awards Sub-section (Option A) */
-.awards-sub-section {
-  margin-top: 64px;
-  border-top: 1px solid var(--border-color);
-  padding-top: 48px;
-}
-
-.awards-sub-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 24px;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.awards-sub-title i {
-  color: var(--accent);
-}
-
-.awards-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-}
-
-.award-sub-card {
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 24px;
-  transition: var(--transition-smooth);
-}
-
-.award-sub-card:hover {
-  transform: translateY(-3px);
-  border-color: #cbd5e1;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02);
-}
-
-.award-sub-card h4 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 4px;
-}
-
-.award-sub-org {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-  margin-bottom: 8px;
-}
-
-.award-sub-desc {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  margin-bottom: 12px;
-}
-
-.award-sub-link {
-  font-size: 0.8rem;
-  color: var(--text-primary);
-  text-decoration: none;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  transition: var(--transition-fast);
-}
-
-.award-sub-link:hover {
-  color: var(--accent);
-}
-
 /* Profile / About Section */
 .about-layout {
   display: grid;
@@ -886,39 +772,6 @@ section:last-of-type {
   font-size: 0.95rem;
   color: var(--text-primary);
   font-weight: 500;
-}
-
-/* GitHub contributions style updates */
-.github-contributions {
-  grid-column: span 2;
-  margin-top: 48px;
-  border-top: 1px solid var(--border-color);
-  padding-top: 48px;
-}
-
-.github-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 20px;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.github-chart-container {
-  background: white;
-  border: 1px solid var(--border-color);
-  padding: 24px;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.github-chart-container img {
-  max-width: 100%;
-  height: auto;
 }
 
 /* Contact Section Styling */
@@ -1137,10 +990,6 @@ section:last-of-type {
     gap: 32px;
   }
 
-  .github-contributions {
-    grid-column: span 1;
-  }
-
   .contact-layout {
     grid-template-columns: 1fr;
     gap: 40px;
@@ -1166,10 +1015,6 @@ section:last-of-type {
     display: none; /* Can be toggled on mobile */
   }
 
-  .menu-toggle {
-    display: block;
-  }
-
   .hero-title {
     font-size: 2.5rem;
   }
@@ -1179,8 +1024,7 @@ section:last-of-type {
   }
 
   .card-grid,
-  .bento-grid,
-  .awards-grid {
+  .bento-grid {
     grid-template-columns: 1fr;
     gap: 24px;
   }
@@ -1519,10 +1363,9 @@ section:last-of-type {
 }
 
 /* All Projects Page Styles */
-/* All Projects Page Styles */
 .all-projects-page {
   min-height: 100vh;
-  background: var(--bg-primary);
+  background: var(--bg-page);
   padding-top: 0;
   padding-bottom: 100px;
   width: 100%;
@@ -1550,7 +1393,7 @@ section:last-of-type {
 .all-projects-content {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 100px var(--section-padding) 0 var(--section-padding);
+  padding: 100px 24px 0;
 }
 
 .all-projects-header {
@@ -1564,14 +1407,6 @@ section:last-of-type {
   letter-spacing: -0.04em;
   color: var(--text-primary);
   margin-bottom: 16px;
-}
-
-.all-projects-subtitle {
-  font-size: 1.25rem;
-  color: var(--text-secondary);
-  max-width: 760px;
-  margin: 0 auto;
-  line-height: 1.6;
 }
 
 .all-projects-footer-action {
@@ -1614,7 +1449,7 @@ section:last-of-type {
     font-size: 2.5rem;
   }
 
-  .all-projects-subtitle {
-    font-size: 1.1rem;
-  }
 }
+
+.project-date { color: var(--text-secondary); font-size: .9rem; margin-bottom: 12px; }
+.experience-category { color: var(--text-secondary); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }

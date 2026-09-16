@@ -1,9 +1,8 @@
 import {GROUND_Y} from '../data/regions.js';
 // Lightweight layers sit above the unchanged illustration; no scenery is replaced.
 const OUTDOOR_CLOUD_ALPHA=[.1,.13,.065,0,.08,.025,.045];
-export function ambienceProfile(region,reduced=false){
- if(reduced)return {cloud:0,mist:0,foreground:0,particles:0};
- return {cloud:OUTDOOR_CLOUD_ALPHA[region]??.07,mist:region===3?.025:region===5?.105:.055,foreground:region===3?0:.2,particles:region===3?.45:.38};
+export function ambienceProfile(region){
+ return {cloud:OUTDOOR_CLOUD_ALPHA[region],mist:region===3?.025:region===5?.105:.055,foreground:region===3?0:.2,particles:region===3?.45:.38};
 }
 export function layerPosition(anchor,cameraOffset,rate,time,drift=0){return anchor+cameraOffset*(1-rate)+Math.sin(time/15000)*drift;}
 export function createAmbience(scene){
@@ -11,12 +10,12 @@ export function createAmbience(scene){
   if(scene.textures.exists(key))return;
   const canvas=scene.textures.createCanvas(key,w,h),ctx=canvas.getContext();paint(ctx,w,h);canvas.refresh();
  }
- texture('journey-cloud-wisp',384,160,(ctx,w,h)=>{
+ texture('journey-cloud-wisp',384,160,(ctx)=>{
   for(const [x,y,rx,ry]of[[90,85,85,30],[172,72,115,50],[274,90,100,27]]){
    ctx.save();ctx.translate(x,y);ctx.scale(rx,ry);const g=ctx.createRadialGradient(0,0,0,0,0,1);g.addColorStop(0,'rgba(255,250,235,.75)');g.addColorStop(.4,'rgba(255,250,235,.35)');g.addColorStop(1,'rgba(255,250,235,0)');ctx.fillStyle=g;ctx.fillRect(-1,-1,2,2);ctx.restore();
   }
  });
- texture('journey-soft-leaves',192,160,(ctx)=>{
+ texture('journey-soft-leaves',192,160,(ctx,_w,_h)=>{
   ctx.filter='blur(1.8px)';ctx.strokeStyle='#67784d';ctx.fillStyle='#67784d';ctx.lineWidth=1.7;
   for(let stem=0;stem<5;stem++){
    const rootX=25+stem*30,tipX=rootX+(stem-2)*18,tipY=32+(stem%3)*22;
@@ -32,8 +31,8 @@ export function createAmbience(scene){
  const leaves=Array.from({length:5},(_,i)=>scene.add.image(0,810,'journey-soft-leaves').setOrigin(.5,1).setDisplaySize(180+(i%2)*40,130+(i%3)*15).setDepth(7));
  const particles=Array.from({length:18},(_,i)=>scene.add.ellipse(0,0,i%3===0?4:2,i%3===0?2:2,i%3===0?0xe9d8b2:0xffe9b7,.4).setDepth(i%2?4:7));
  return {
-  update({region,cameraX,playerY,time,reduced,paused}){
-   const origin=region*2400,offset=cameraX-origin,p=ambienceProfile(region,reduced);
+  update({region,cameraX,playerY,time,paused}){
+   const origin=region*2400,offset=cameraX-origin,p=ambienceProfile(region);
    // Freeze decorative drifting during reading. Camera-relative depth still follows navigation.
    const elapsed=this.lastTime===undefined?0:Math.min(time-this.lastTime,50);this.lastTime=time;
    if(!paused)this.elapsed=(this.elapsed||0)+elapsed;
@@ -46,7 +45,6 @@ export function createAmbience(scene){
     const y=region===3?230+(i*37)%330+Math.sin(clock/2000+i)*12:100+((i*47+clock*.011)%500);
     s.setPosition(origin+layerPosition(localX,offset,i%2?.76:1.07,0),y).setAlpha(p.particles*(.55+.25*Math.sin(clock/1300+i))).setRotation(clock/2800+i);
    });
-  },
-  destroy(){[...clouds,...mist,...leaves,...particles].forEach(s=>s.destroy());}
+  }
  };
 }
