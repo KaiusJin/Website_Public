@@ -1,4 +1,3 @@
-import React from 'react';
 import { scrollToElementWithOffset } from '../utils/smoothScroll';
 
 export default function NavBar({ activeSection }) {

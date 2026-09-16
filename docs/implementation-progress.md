@@ -1,5 +1,22 @@
 # Implementation log
 
+## Audit fixes — 2026-09-16
+
+- Fixed both entry routes, Classic profile/contact/resume and project dates, experience category labels, Journey scene copy and journal error mapping. Explicitly cleared profile fields stay cleared.
+- Ten built-in icons now cycle by saved order and are assigned in the database for skills and all experience tables. Admin icon text fields are removed.
+- Admin saves order with UPDATE, isolates each table’s request lifecycle, reports failures, treats profile as a singleton, and copies uploaded image descriptions into content through a media picker.
+- Music is loaded only when enabled. Retired column reads and duplicate rendering branches are removed.
+- Old graphics and animation assets are retained at the user’s request. New tests are limited to essential startup, content rendering and ordering checks; no manual-icon tests are retained.
+- Database migration and icon backfill applied; content row counts preserved. Application source is updated locally; no application deployment is claimed.
+
+## Latest CMS cleanup — 2026-09-16
+
+- Production now uses the split experience tables and one live English record per entry. The retired visibility, translation, content-draft, publish-function and legacy `experiences` schema is absent.
+- Classic and Journey read every collection directly by its database `order`; Journey skills come only from the `skills` table.
+- The empty `journey-drafts` bucket has now been deleted through Storage API; the completed one-time cleanup script and package command are removed.
+- Migration history is repaired: all six local versions are recorded, including automatic icon assignment and the final metadata cleanup.
+- Earlier stage notes below describe the implementation state at the time and are not the current CMS contract.
+
 ## Latest correction — restore approved character (2026-09-15)
 
 - User rejected the subsequent full regeneration, recoloring and leg-rig experiment. Restored animation logic, walking speed, physics, tests and idle/hover/flight assets to `cb49cd3`.
@@ -20,7 +37,7 @@ Each stage is committed once per affected repository after its checks. This log 
 ## Foundation findings
 
 - Public and Admin local configuration targets the same Supabase project (checked without disclosing credentials).
-- Anonymous public reads returned 3 projects, 1 experience, 4 awards and 0 skill categories on 2026-09-15.
+- Anonymous public reads currently return 3 projects, 2 work experiences, 1 club experience, 1 volunteer experience, 4 awards and 4 skill categories.
 - Observed field shapes are recorded in `cms-schema-observed.json`; sample JS types do not establish SQL column types or RLS rules.
 - Existing public records currently have sparse descriptions. No employment achievements or personal journal entries will be invented.
 - No independent API service is evidenced. Both applications directly use Supabase.
@@ -29,7 +46,7 @@ Each stage is committed once per affected repository after its checks. This log 
 
 ## Open implementation dependencies
 
-- Production migration explicitly deferred by the user on 2026-09-15. Authenticated dashboard was inspected read-only; no migration was run online.
+- Production content schema and migration history are aligned; the retired empty Storage bucket is deleted.
 - No personal photos, diary entries, music selections or resume file supplied yet. Implement editing/display with honest empty states and publish only actual supplied content.
 - Actual image model version is not selectable via the built-in tool. Generated assets use built-in image generation; do not claim a specific version.
 
@@ -39,7 +56,7 @@ Each stage is committed once per affected repository after its checks. This log 
 - Built-in generation prompts and reference source recorded in `asset-generation.json`; no claim of a selectable model version.
 - Independent lazy `/journey` entry; classic `/` preserves its existing application and adds an exploration link.
 - Keyboard and virtual joystick, single jump, free broom flight/landing, seven-region navigation, modal reading and EN/中文 UI implemented.
-- Public records read from Supabase; sparse descriptions are preserved rather than invented. Skill display can derive technologies from actual published projects.
+- Public records read from Supabase; sparse descriptions are preserved rather than invented. Skill display reads the `skills` table directly.
 - Browser verified: rendered cottage, meadow and library, flight mode activation, travel map, and real project records in the library. Initial input handling issue fixed by consolidating browser key events into the shared input bridge.
 - `npm run build` passed; `node --test tests/journey.test.mjs` passed 8 cases. Full device and publishing checks remain Stage 4.
 

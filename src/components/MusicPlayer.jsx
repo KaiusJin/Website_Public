@@ -5,110 +5,71 @@ import './MusicPlayer.css';
 
 const tracks = [etherealTrack, dreamscapeTrack];
 const preferenceKey = 'kaius-background-music';
-
 function savedSoundPreference() {
-  try {
-    const saved = localStorage.getItem(preferenceKey);
-    return saved === null ? false : JSON.parse(saved);
-  } catch {
-    return false;
-  }
+  try { return localStorage.getItem(preferenceKey) === 'true'; }
+  catch { return false; }
 }
 
 export default function MusicPlayer() {
   const audioRef = useRef(null);
+  const requested = useRef(false);
   const [trackIndex, setTrackIndex] = useState(0);
   const [soundOn, setSoundOn] = useState(savedSoundPreference);
   const [needsInteraction, setNeedsInteraction] = useState(false);
 
   const startPlayback = useCallback(async () => {
     const audio = audioRef.current;
-    if (!audio) return false;
-
+    if (!audio || !requested.current) return;
     try {
       await audio.play();
+      if (!requested.current) { audio.pause(); return; }
       setNeedsInteraction(false);
-      return true;
     } catch {
-      setNeedsInteraction(true);
-      return false;
+      if (requested.current) setNeedsInteraction(true);
     }
   }, []);
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio) return;
-
+    requested.current = soundOn;
     audio.volume = 0.32;
-    audio.muted = !soundOn;
-    try {
-      localStorage.setItem(preferenceKey, JSON.stringify(soundOn));
-    } catch {
-      // Music still works when browser storage is unavailable.
-    }
-  }, [soundOn]);
+    try { localStorage.setItem(preferenceKey, String(soundOn)); }
+    catch { /* Playback does not depend on browser storage. */ }
+    if (soundOn) startPlayback();
+    else audio.pause();
+    return () => { requested.current = false; audio.pause(); };
+  }, [soundOn, trackIndex, startPlayback]);
 
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    audio.load();
-    startPlayback();
-  }, [trackIndex, startPlayback]);
-
-  useEffect(() => {
-    if (!needsInteraction) return;
-
-    const unlockPlayback = (event) => {
+    if (!soundOn || !needsInteraction) return;
+    const unlock = event => {
       if (event.target instanceof Element && event.target.closest('.music-toggle')) return;
       startPlayback();
     };
-
-    window.addEventListener('pointerdown', unlockPlayback, {once: true});
-    window.addEventListener('keydown', unlockPlayback, {once: true});
+    window.addEventListener('pointerdown', unlock);
+    window.addEventListener('keydown', unlock);
     return () => {
-      window.removeEventListener('pointerdown', unlockPlayback);
-      window.removeEventListener('keydown', unlockPlayback);
+      window.removeEventListener('pointerdown', unlock);
+      window.removeEventListener('keydown', unlock);
     };
-  }, [needsInteraction, startPlayback]);
+  }, [soundOn, needsInteraction, startPlayback]);
 
-  const toggleSound = async () => {
-    const audio = audioRef.current;
-
-    if (!soundOn) {
-      if (audio) audio.muted = false;
-      setSoundOn(true);
-      await startPlayback();
-      return;
-    }
-
-    if (audio) audio.muted = true;
-    setSoundOn(false);
-    if (audio?.paused) startPlayback();
+  const toggleSound = () => {
+    if (soundOn && needsInteraction) { startPlayback(); return; }
+    requested.current = !soundOn;
+    if (soundOn) audioRef.current.pause();
+    setNeedsInteraction(false);
+    setSoundOn(value => !value);
   };
-
   const audible = soundOn && !needsInteraction;
-  const label = audible
-    ? '关闭背景音乐 / Mute background music'
-    : '开启背景音乐 / Play background music';
+  const label = audible ? '关闭背景音乐 / Mute background music' : '开启背景音乐 / Play background music';
 
   return (
     <div className="music-control">
-      <audio
-        ref={audioRef}
-        src={tracks[trackIndex]}
-        preload="auto"
-        muted={!soundOn}
-        onEnded={() => setTrackIndex((current) => (current + 1) % tracks.length)}
-      />
-      <button
-        type="button"
-        className={`music-toggle ${audible ? 'is-playing' : 'is-muted'}`}
-        onClick={toggleSound}
-        aria-label={label}
-        aria-pressed={audible}
-        title={label}
-      >
+      <audio ref={audioRef} src={soundOn ? tracks[trackIndex] : undefined} preload="none"
+        onEnded={() => setTrackIndex(current => (current + 1) % tracks.length)} />
+      <button type="button" className={`music-toggle ${audible ? 'is-playing' : 'is-muted'}`}
+        onClick={toggleSound} aria-label={label} aria-pressed={audible} title={label}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M9 18V5l11-2v13M9 8l11-2M9 18c0 4-7 4-7 0s7-4 7 0Zm11-2c0 4-7 4-7 0s7-4 7 0Z" />
           {!audible && <path className="music-muted-line" d="M4 4 21 21" />}

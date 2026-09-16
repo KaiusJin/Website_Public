@@ -1,66 +1,45 @@
-import React, { useMemo } from 'react';
-import { useCMSData, getSortDate } from '../../hooks/useCMSData';
+import { useCMSData } from '../../hooks/useCMSData';
+import { dateRange } from '../../data/profile';
 
 export default function Experience() {
-  const { data: workExperiences, loading: workLoading } = useCMSData('data/work_experiences');
-  const { data: clubExperiences, loading: clubLoading } = useCMSData('data/club_experiences');
-  const { data: volunteerExperiences, loading: volunteerLoading } = useCMSData('data/volunteer_experiences');
+  const { data: workExperiences, loading: workLoading, error: workError } = useCMSData('work_experiences');
+  const { data: clubExperiences, loading: clubLoading, error: clubError } = useCMSData('club_experiences');
+  const { data: volunteerExperiences, loading: volunteerLoading, error: volunteerError } = useCMSData('volunteer_experiences');
   const experiencesLoading = workLoading || clubLoading || volunteerLoading;
-
-  const filteredExperiences = useMemo(() => {
-    return [...(workExperiences || []), ...(clubExperiences || []), ...(volunteerExperiences || [])]
-      .sort((a, b) => {
-        const parsedA = Number.parseInt(a.order, 10);
-        const parsedB = Number.parseInt(b.order, 10);
-        const orderA = Number.isFinite(parsedA) ? parsedA : 999;
-        const orderB = Number.isFinite(parsedB) ? parsedB : 999;
-        if (orderA !== orderB) return orderA - orderB;
-        return getSortDate(b) - getSortDate(a);
-      });
-  }, [workExperiences, clubExperiences, volunteerExperiences]);
-
-  const formatDateBadge = (item) => {
-    let start = item.start_date;
-    let end = item.is_present ? 'Present' : item.end_date;
-
-    if (!start && item.date_badge) {
-      if (item.date_badge.includes('-')) {
-        const parts = item.date_badge.split('-').map(s => s.trim());
-        start = parts[0];
-        end = end || parts[1];
-      } else {
-        start = item.date_badge;
-      }
-    }
-
-    return [start, end].filter(Boolean).join(' - ');
-  };
+  const experiencesError = workError || clubError || volunteerError;
+  const experiences = [
+    ...workExperiences.map(item => ({ ...item, category: 'Work Experience' })),
+    ...clubExperiences.map(item => ({ ...item, category: 'Clubs & Design Teams' })),
+    ...volunteerExperiences.map(item => ({ ...item, category: 'Volunteer Experience' })),
+  ];
 
   return (
     <section id="experience">
       <h2 className="section-title">
-        <i className="fas fa-briefcase" style={{ color: 'var(--accent)' }}></i> Work Experience
+        <i className="fas fa-briefcase" style={{ color: 'var(--accent)' }}></i> Experience
       </h2>
 
       {experiencesLoading && <p style={{ color: 'var(--text-secondary)' }}>Loading Experiences...</p>}
-      {!experiencesLoading && filteredExperiences.length === 0 && (
+      {!experiencesLoading && experiencesError && <p role="alert" style={{ color: 'var(--text-secondary)' }}>Experience could not be loaded.</p>}
+      {!experiencesLoading && !experiencesError && experiences.length === 0 && (
         <p style={{ color: 'var(--text-secondary)' }}>No experiences yet.</p>
       )}
 
       <div className="timeline-container">
-        {filteredExperiences.map((e, i) => (
-          <div key={e.id || i} className="timeline-item">
+        {experiences.map((e) => (
+          <div key={`${e.category}-${e.id}`} className="timeline-item">
             <div className="timeline-dot"></div>
             <div className="timeline-content">
               <div className="timeline-header">
                 <div className="timeline-title-area">
+                  <p className="experience-category">{e.category}</p>
                   <h3>{e.title}</h3>
                   <h4>
-                    <i className={e.role_icon || 'fas fa-users-cog'}></i>
+                    <i className={e.role_icon} aria-hidden="true"></i>
                     {e.role}
                   </h4>
                 </div>
-                <span className="timeline-date">{formatDateBadge(e)}</span>
+                <span className="timeline-date">{dateRange(e)}</span>
               </div>
 
               <div className="timeline-body">
@@ -69,6 +48,13 @@ export default function Experience() {
                     <li key={j}>{b.text}</li>
                   ))}
                 </ul>
+                {e.skills?.length > 0 && (
+                  <div className="skills-list" aria-label={`${e.title} skills`}>
+                    {e.skills.map((skill, j) => (
+                      <span key={`${skill.tag}-${j}`} className="skill-tag">{skill.tag}</span>
+                    ))}
+                  </div>
+                )}
                 {e.link && (
                   <div className="timeline-actions">
                     <a href={e.link} target="_blank" rel="noopener noreferrer">

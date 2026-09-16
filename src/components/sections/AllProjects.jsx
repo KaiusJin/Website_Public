@@ -1,40 +1,22 @@
-import React, { useMemo, useEffect } from 'react';
-import { useCMSData, getSortDate } from '../../hooks/useCMSData';
+import { useEffect } from 'react';
+import { useCMSData } from '../../hooks/useCMSData';
 import ProjectRow from './ProjectRow';
 
 export default function AllProjects({ onBack }) {
-  const { data: projectsData, loading } = useCMSData('data/projects');
+  const { data: projectsData, loading, error } = useCMSData('projects');
 
-  // Scroll to top instantly when this page mounts or finishes loading
   useEffect(() => {
-    const originalScrollBehavior = document.documentElement.style.scrollBehavior;
-    document.documentElement.style.scrollBehavior = 'auto';
     window.scrollTo(0, 0);
-    // Force layout reflow
-    document.documentElement.offsetHeight;
-    document.documentElement.style.scrollBehavior = originalScrollBehavior;
-  }, [loading]);
-
-  const sortedProjects = useMemo(() => {
-    if (!projectsData) return [];
-
-    return projectsData
-      .sort((a, b) => {
-        const orderA = parseInt(a.order) ?? 999;
-        const orderB = parseInt(b.order) ?? 999;
-        if (orderA !== orderB) return orderA - orderB;
-        return getSortDate(b) - getSortDate(a);
-      });
-  }, [projectsData]);
+  }, []);
 
   return (
     <div className="all-projects-page">
       {/* Floating Subpage Navbar */}
       <header className="navbar-container all-projects-navbar" role="navigation" aria-label="Archive Navigation">
         <div className="navbar-content">
-          <div className="navbar-logo" onClick={onBack} style={{ cursor: 'pointer' }}>
+          <button type="button" className="navbar-logo navbar-logo-button" onClick={onBack}>
             Kaius <span>Jin</span>
-          </div>
+          </button>
           <button onClick={onBack} className="navbar-back-link">
             <i className="fas fa-arrow-left" style={{ marginRight: '6px' }}></i> Back to Home
           </button>
@@ -50,11 +32,12 @@ export default function AllProjects({ onBack }) {
         </div>
 
         {loading && <p style={{ color: 'var(--text-secondary)' }}>Loading Project Archive...</p>}
-        {!loading && sortedProjects.length === 0 && <p style={{ color: 'var(--text-secondary)' }}>No projects found.</p>}
+        {!loading && error && <p role="alert" style={{ color: 'var(--text-secondary)' }}>Projects could not be loaded.</p>}
+        {!loading && !error && projectsData.length === 0 && <p style={{ color: 'var(--text-secondary)' }}>No projects found.</p>}
 
         <div className="projects-list-wrapper">
-          {sortedProjects.map((p, i) => (
-            <ProjectRow key={p.id || i} project={p} index={i} />
+          {projectsData.map((p, i) => (
+            <ProjectRow key={p.id} project={p} index={i} />
           ))}
         </div>
 

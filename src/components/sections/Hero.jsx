@@ -1,28 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { scrollToElementWithOffset } from '../../utils/smoothScroll';
 
-export default function Hero() {
-  const greetings = [
-    { prefix: "Hi, I'm ", suffix: "." },             // English
-    { prefix: "你好，我是 ", suffix: "。" },          // Chinese
-    { prefix: "Bonjour, je suis ", suffix: "." },    // French
-    { prefix: "こんにちは、", suffix: " です。" },   // Japanese
-    { prefix: "안녕하세요, ", suffix: " 입니다." }   // Korean
-  ];
+const greetings = [
+  { prefix: "Hi, I'm ", suffix: "." },
+  { prefix: "你好，我是 ", suffix: "。" },
+  { prefix: "Bonjour, je suis ", suffix: "." },
+  { prefix: "こんにちは、", suffix: " です。" },
+  { prefix: "안녕하세요, ", suffix: " 입니다." }
+];
 
+export default function Hero({ profile }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
+    let transitionTimeout;
     const interval = setInterval(() => {
       setIsFading(true);
-      setTimeout(() => {
+      transitionTimeout = setTimeout(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % greetings.length);
         setIsFading(false);
-      }, 500); // Wait for fade-out to complete before changing text
+      }, 500);
     }, 3500);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      clearTimeout(transitionTimeout);
+    };
   }, []);
 
   const handleScrollTo = (id) => {
@@ -51,9 +55,7 @@ export default function Hero() {
         {currentGreeting.prefix}<span>Kaius Jin</span>{currentGreeting.suffix}
       </h1>
       
-      <p className="hero-subtitle">
-        I build clean software systems with clarity, reliability, and thoughtful design. Focus on backend systems, cloud tools, and AI-powered applications.
-      </p>
+      {profile.intro && <p className="hero-subtitle">{profile.intro}</p>}
       
       <div className="hero-tags">
         <span>Backend Engineering</span>

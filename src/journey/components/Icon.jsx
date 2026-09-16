@@ -17,6 +17,5 @@ const paths={
  screen:'M9 4H4v5m11-5h5v5m0 6v5h-5M9 20H4v-5',
  music:'M9 18V5l11-2v13M9 8l11-2M9 18c0 4-7 4-7 0s7-4 7 0Zm11-2c0 4-7 4-7 0s7-4 7 0Z',
  external:'M14 3h7v7m0-7L10 14M10 5H3v16h16v-7',
- check:'m5 12 4 4 10-10',
 };
 export default function Icon({name='star',size=20,...props}) {return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}><path d={paths[name]||paths.star}/></svg>}

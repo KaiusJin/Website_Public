@@ -1,18 +1,7 @@
-import React, { useMemo } from 'react';
 import { useCMSData } from '../../hooks/useCMSData';
 
 export default function Awards() {
-  const { data: awardsData, loading } = useCMSData('data/awards');
-
-  const filteredAwards = useMemo(() => {
-    if (!awardsData || awardsData.length === 0) return [];
-
-    return [...awardsData].sort((a, b) => {
-      const orderA = parseInt(a.order) ?? 999;
-      const orderB = parseInt(b.order) ?? 999;
-      return orderA - orderB;
-    });
-  }, [awardsData]);
+  const { data: awardsData, loading, error } = useCMSData('awards');
 
   return (
     <section id="awards">
@@ -21,13 +10,14 @@ export default function Awards() {
       </h2>
 
       {loading && <p style={{ color: 'var(--text-secondary)' }}>Loading Awards...</p>}
-      {!loading && filteredAwards.length === 0 && (
+      {!loading && error && <p role="alert" style={{ color: 'var(--text-secondary)' }}>Awards could not be loaded.</p>}
+      {!loading && !error && awardsData.length === 0 && (
         <p style={{ color: 'var(--text-secondary)' }}>No awards yet.</p>
       )}
 
       <div className="card-grid">
-        {filteredAwards.map((a, i) => (
-          <div key={i} className="card award-card">
+        {awardsData.map((a) => (
+          <div key={a.id} className="card award-card">
             <div className="award-heading-row">
               <h3 className="award-title">{a.title}</h3>
               <span className="date-badge">
@@ -43,7 +33,7 @@ export default function Awards() {
                 marginBottom: '16px'
               }}
             >
-              {a.organization || (a.org_and_year ? a.org_and_year.split('·')[0].trim() : '')}
+              {a.organization || ''}
             </div>
 
             {a.description && (
@@ -60,10 +50,10 @@ export default function Awards() {
               </ul>
             )}
 
-            {(a.link || a.cert_link) && (
+            {a.link && (
               <div className="card-actions" style={{ marginTop: 'auto', paddingTop: '16px' }}>
                 <a
-                  href={a.link || a.cert_link}
+                  href={a.link}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ color: 'var(--text-primary)', textDecoration: 'none', fontWeight: '600', fontSize: '0.9rem' }}

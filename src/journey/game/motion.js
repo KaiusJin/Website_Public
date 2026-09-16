@@ -5,7 +5,6 @@ export function joystickVector(dx,dy,radius=46){
  const scale=Math.min(distance,radius)/distance/radius;
  return {x:dx*scale,y:dy*scale};
 }
-export function landingTarget(x,width,ground){return {x:clamp(x,100,width-100),y:ground};}
 export function resolveAxes(keyboard,stick){
  const x=clamp(keyboard.x+stick.x,-1,1),y=clamp(keyboard.y+stick.y,-1,1);
  const length=Math.hypot(x,y);

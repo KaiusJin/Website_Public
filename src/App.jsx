@@ -8,8 +8,12 @@ import Skills from './components/sections/Skills';
 import Experience from './components/sections/Experience';
 import Awards from './components/sections/Awards';
 import Contact from './components/sections/Contact';
+import { useCMSData } from './hooks/useCMSData';
+import { resolveProfile } from './data/profile';
 
 function App() {
+  const profileContent = useCMSData('site_profile');
+  const profile = profileContent.loading || profileContent.error ? {} : resolveProfile(profileContent.data);
   const [activeSection, setActiveSection] = useState('hero');
   const [currentPage, setCurrentPage] = useState('home');
   const [scrollTarget, setScrollTarget] = useState(null);
@@ -50,12 +54,9 @@ function App() {
       resizeObserver.observe(contentEl);
     }
 
-    window.addEventListener('load', handleScroll);
-
     // Disconnect scroll locking on manual user interaction
     const stopObserver = () => {
       resizeObserver.disconnect();
-      window.removeEventListener('load', handleScroll);
       window.removeEventListener('wheel', stopObserver);
       window.removeEventListener('touchmove', stopObserver);
       setScrollTarget(null);
@@ -69,7 +70,6 @@ function App() {
 
     return () => {
       resizeObserver.disconnect();
-      window.removeEventListener('load', handleScroll);
       window.removeEventListener('wheel', stopObserver);
       window.removeEventListener('touchmove', stopObserver);
       clearTimeout(timeout);
@@ -119,21 +119,15 @@ function App() {
           <NavBar activeSection={activeSection} />
 
           <main className="content">
-            <Hero />
-            <About />
+            <Hero profile={profile} />
+            <About profile={profile} loading={profileContent.loading} error={profileContent.error} />
             <Skills />
             <Projects onViewAll={() => {
-              const originalScrollBehavior = document.documentElement.style.scrollBehavior;
-              document.documentElement.style.scrollBehavior = 'auto';
               setCurrentPage('all-projects');
-              window.scrollTo(0, 0);
-              // Force layout reflow
-              document.documentElement.offsetHeight;
-              document.documentElement.style.scrollBehavior = originalScrollBehavior;
             }} />
             <Experience />
             <Awards />
-            <Contact />
+            <Contact profile={profile} loading={profileContent.loading} error={profileContent.error} />
           </main>
         </>
       ) : (

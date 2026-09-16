@@ -16,3 +16,7 @@ do $$ declare t text; begin foreach t in array array['projects','experiences','a
 execute format('create policy "Admin full access" on %I for all to authenticated using (auth.jwt()->>''email''=''kaixuan.jin@outlook.com'')',t);
 execute format('create policy "Allow public select" on %I for select to anon using(true)',t);
 end loop; end $$;
+
+-- A real legacy row must survive the experience-table split.
+insert into public.experiences(id,title,role,bullets,skills,start_date,is_present,"order")
+values('00000000-0000-0000-0000-000000001000','Legacy employer','Engineer','[{"text":"Preserve this achievement"}]','[{"tag":"SQL"}]','Jan 2024',true,0);

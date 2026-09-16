@@ -18,7 +18,7 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    for(const [key,sheet] of Object.entries(characterAtlas))this.load.image(`elaina-${key}`,sheet.image);
    this.load.image('cottage',regions[0].image);
    this.load.on('progress',onProgress);
-   this.load.on('loaderror',file=>{this.failed.add(file.key);onError(file.key);});
+   this.load.on('loaderror',file=>{this.pending.delete(file.key);this.failed.add(file.key);onError(file.key);});
   }
   create(){
    if(this.failed.size){return;}
@@ -52,7 +52,6 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    this.targetMarker=this.add.graphics().setDepth(4);
    this.load.on('filecomplete',(key,type)=>{if(type!=='image')return;this.pending.delete(key);const region=regions.find(r=>r.id===key);if(region)this.addRegion(region);});
    this.load.off('progress',onProgress);
-   this.load.on('loaderror',file=>{this.pending.delete(file.key);this.failed.add(file.key);onError(file.key);});
    this.addRegion(regions[0]);this.loadNeighbors(0);
    this.resize();this.scale.on('resize',this.resize,this);
    const updateResolution=()=>{
@@ -63,10 +62,10 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    const resizeObserver=new ResizeObserver(updateResolution);resizeObserver.observe(parent);
    window.addEventListener('resize',updateResolution);
    this.ambience=createAmbience(this);
-   bridge.current={...bridge.current,ready:true,jumpTo:index=>this.jumpTo(index),enterLibrary:()=>this.enterLibrary(),exitLibrary:()=>this.exitLibrary(),retry:()=>this.retry(),pause:true};
+   bridge.current={...bridge.current,jumpTo:index=>this.jumpTo(index),enterLibrary:()=>this.enterLibrary(),exitLibrary:()=>this.exitLibrary(),retry:()=>this.retry(),pause:true};
    // Arcade writes coordinates back in POST_UPDATE. Draw after that write.
    this.events.on(Phaser.Scenes.Events.POST_UPDATE,this.renderFrame,this);
-   this.events.once('shutdown',()=>{resizeObserver.disconnect();window.removeEventListener('resize',updateResolution);this.events.off(Phaser.Scenes.Events.POST_UPDATE,this.renderFrame,this);this.scale.off('resize',this.resize,this);bridge.current.ready=false;});
+   this.events.once('shutdown',()=>{resizeObserver.disconnect();window.removeEventListener('resize',updateResolution);this.events.off(Phaser.Scenes.Events.POST_UPDATE,this.renderFrame,this);this.scale.off('resize',this.resize,this);});
    onReady();
   }
   addRegion(r){
@@ -105,12 +104,12 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    if(this.room||this.regionIndex!==2||!canEnterLibrary(this.player.x))return;
    this.returnX=this.player.x;this.requestTravel(3,3*REGION_WIDTH+260,{room:'library'});
   }
-  exitLibrary(){if(this.room)this.requestTravel(2,this.returnX??LIBRARY_DOOR_X);}
+  exitLibrary(){if(this.room)this.requestTravel(2,this.returnX);}
   beginTransition(){
    const d=this.destination;this.destination=null;this.transitioning=true;
    const y=this.player.y,mode=this.mode;this.player.setVelocity(0);
    if(!d.preserveFlight){bridge.current.keys={};bridge.current.stick={x:0,y:0};}
-   const camera=this.cameras.main,duration=bridge.current.reduced?30:280;
+   const camera=this.cameras.main,duration=280;
    camera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,()=>{
     this.regionIndex=d.region.index;this.room=d.room;
     this.player.setPosition(d.x,d.preserveFlight?y:GROUND_Y-2).setVelocity(0);
@@ -182,7 +181,7 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    const paused=controls.pause||this.transitioning||!!this.destination;
    const camera=this.cameras.main;const visibleWidth=this.scale.width/camera.zoom;
    const center=camera.midPoint.x||this.player.x;
-   const nextCenter=controls.reduced?clamp(this.player.x,current*REGION_WIDTH+visibleWidth/2,(current+1)*REGION_WIDTH-visibleWidth/2):cameraFollow(center,this.player.x,this.player.body.velocity.x,visibleWidth,current*REGION_WIDTH,(current+1)*REGION_WIDTH,dt);
+   const nextCenter=cameraFollow(center,this.player.x,this.player.body.velocity.x,visibleWidth,current*REGION_WIDTH,(current+1)*REGION_WIDTH,dt);
    camera.centerOn(nextCenter,WORLD_HEIGHT/2);
    const viewX=camera.scrollX+camera.width/2-visibleWidth/2;
    const viewY=camera.scrollY+camera.height/2-this.scale.height/camera.zoom/2;
@@ -206,8 +205,8 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    if(current===2&&Math.abs(this.player.x-LIBRARY_DOOR_X)<240)this.near='library-door';
    if(this.room&&this.player.x-r.x<380)this.near='library-exit';
    this.targetMarker.clear();
-   for(const point of contentPoints){this.targetMarker.lineStyle(1,0xfff3c9,this.near===point.id?0.8:0.3);this.targetMarker.strokeEllipse(point.x,GROUND_Y,100+(controls.reduced?0:Math.sin(time/500)*8),12);}
-   this.ambience.update({region:current,cameraX:viewX,playerY:this.player.y,time,reduced:controls.reduced,paused});
+   for(const point of contentPoints){this.targetMarker.lineStyle(1,0xfff3c9,this.near===point.id?0.8:0.3);this.targetMarker.strokeEllipse(point.x,GROUND_Y,100+Math.sin(time/500)*8,12);}
+   this.ambience.update({region:current,cameraX:viewX,playerY:this.player.y,time,paused});
    controls.onVisual?.(viewX,viewY,cssZoom);
    if(time-this.lastReport>100){
     this.lastReport=time;
@@ -217,7 +216,9 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
     if(this.room)points.push({id:'library-exit',x:r.x+200,y:libraryExitHotspot.y,kind:'exit'});
     const hotspots=points.filter(p=>p.x>viewX-100&&p.x<(viewX+visibleWidth)+100).map(p=>{const worldY=p.y??MOBILE_HOTSPOT_Y,displayY=controls.phoneHotspots?MOBILE_HOTSPOT_Y:worldY;return {...p,worldX:p.x,worldY,x:project(p.x),y:(displayY-viewY)*cssZoom};});
     const next=neighboringRegion(current,1),previous=neighboringRegion(current,-1);
-    onState({region:current,x:Math.round(this.player.x),y:Math.round(this.player.y),mode:this.mode,facing:this.facing,vx:Math.round(this.player.body.velocity.x),vy:Math.round(this.player.body.velocity.y),fps:Math.round(this.game.loop.actualFps),room:this.room,transitioning:!!this.transitioning,near:this.near,hotspots,progress:this.player.x/worldWidth,loading:!!this.destination,next,previous,atRight:this.player.x>(current+1)*REGION_WIDTH-500,atLeft:this.player.x<current*REGION_WIDTH+420});
+    const state={region:current,mode:this.mode,room:this.room,transitioning:!!this.transitioning,near:this.near,hotspots,loading:!!this.destination,next,previous,atRight:this.player.x>(current+1)*REGION_WIDTH-500,atLeft:this.player.x<current*REGION_WIDTH+420,started:this.player.x>620};
+    const signature=[state.region,state.mode,state.room,state.transitioning,state.near,state.loading,state.next,state.previous,state.atRight,state.atLeft,state.started,...hotspots.map(point=>point.id)].join('|');
+    if(signature!==this.lastStateSignature){this.lastStateSignature=signature;onState(state);}
    }
   }
  }
