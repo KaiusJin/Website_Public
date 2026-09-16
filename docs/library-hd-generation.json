@@ -1,0 +1,83 @@
+{
+  "date": "2026-09-15",
+  "mode": "Built-in image_gen: four overlapping detail reconstruction edits; user-authorized local registration and stitching",
+  "source": "public/journey/regions/library-v2.webp",
+  "sourceSize": [
+    2169,
+    725
+  ],
+  "output": "public/journey/regions/library-hd.webp",
+  "outputSize": [
+    3752,
+    1254
+  ],
+  "outputBytes": 1665886,
+  "panels": [
+    {
+      "index": 0,
+      "sourceCrop": 0,
+      "sourceCropSize": [
+        725,
+        725
+      ],
+      "generatedPath": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-758f42f6-721a-4b9e-802a-2f6e11b50621.png",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "prompt": "Use case: precise-object-edit. High-detail reconstruction of this EXACT square crop of an existing panoramic fantasy library background. This is panel 1 of FOUR OVERLAPPING PANELS that will be registered and stitched together. Preserve the input image's exact crop, perspective, object positions, lighting, architecture and EVERY boundary location. Do not zoom, move the camera, widen the view, add borders or change composition.\nRepaint it at high resolution with much sharper existing detail: coherent individual book spines and fine gold tooling, crisp walnut shelving and carved trim, clear leaded window mullions and pointed arches, finely defined brass lantern metalwork, distinct vine leaves, precise furniture contours and thin plank joints. Keep the same soft luminous hand-painted anime fantasy atmosphere, warm amber wood and lamps contrasted with clean cool daylight outside. Render readable shapes rather than blur, haze, noisy microtexture, photographic oversharpening or overly dark contrast. Light remains physically consistent across the panel, no extra bloom.\nKeep the architecture and bookcases crisp throughout; distant outdoor scenery may be atmospheric but not smeared. Foreground floor remains only the existing narrow lower strip. No people, characters, text, UI, added objects, labels, borders or signature. Do not invent readable book titles.\nCritical stitching constraint: all content within 20% of both left and right edges must retain the reference structure and alignment exactly. Sharpen details inside existing forms rather than redesigning forms. Output a square high-resolution image, prefer 2048x2048 or larger. Keep the original colors and exposure exactly."
+    },
+    {
+      "index": 1,
+      "sourceCrop": 480,
+      "sourceCropSize": [
+        725,
+        725
+      ],
+      "generatedPath": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-00d66a11-757c-4939-8378-a8316b7a030d.png",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "prompt": "Use case: precise-object-edit. High-detail reconstruction of this EXACT square crop of an existing panoramic fantasy library background. This is panel 2 of FOUR OVERLAPPING PANELS that will be registered and stitched together. Preserve the input image's exact crop, perspective, object positions, lighting, architecture and EVERY boundary location. Do not zoom, move the camera, widen the view, add borders or change composition.\nRepaint it at high resolution with much sharper existing detail: coherent individual book spines and fine gold tooling, crisp walnut shelving and carved trim, clear leaded window mullions and pointed arches, finely defined brass lantern metalwork, distinct vine leaves, precise furniture contours and thin plank joints. Keep the same soft luminous hand-painted anime fantasy atmosphere, warm amber wood and lamps contrasted with clean cool daylight outside. Render readable shapes rather than blur, haze, noisy microtexture, photographic oversharpening or overly dark contrast. Light remains physically consistent across the panel, no extra bloom.\nKeep the architecture and bookcases crisp throughout; distant outdoor scenery may be atmospheric but not smeared. Foreground floor remains only the existing narrow lower strip. No people, characters, text, UI, added objects, labels, borders or signature. Do not invent readable book titles.\nCritical stitching constraint: all content within 20% of both left and right edges must retain the reference structure and alignment exactly. Sharpen details inside existing forms rather than redesigning forms. Output a square high-resolution image, prefer 2048x2048 or larger. Keep the original colors and exposure exactly."
+    },
+    {
+      "index": 2,
+      "sourceCrop": 960,
+      "sourceCropSize": [
+        725,
+        725
+      ],
+      "generatedPath": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-1531f057-6f58-446d-a590-67499dbbf8f7.png",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "prompt": "Use case: precise-object-edit. High-detail reconstruction of this EXACT square crop of an existing panoramic fantasy library background. This is panel 3 of FOUR OVERLAPPING PANELS that will be registered and stitched together. Preserve the input image's exact crop, perspective, object positions, lighting, architecture and EVERY boundary location. Do not zoom, move the camera, widen the view, add borders or change composition.\nRepaint it at high resolution with much sharper existing detail: coherent individual book spines and fine gold tooling, crisp walnut shelving and carved trim, clear leaded window mullions and pointed arches, finely defined brass lantern metalwork, distinct vine leaves, precise furniture contours and thin plank joints. Keep the same soft luminous hand-painted anime fantasy atmosphere, warm amber wood and lamps contrasted with clean cool daylight outside. Render readable shapes rather than blur, haze, noisy microtexture, photographic oversharpening or overly dark contrast. Light remains physically consistent across the panel, no extra bloom.\nKeep the architecture and bookcases crisp throughout; distant outdoor scenery may be atmospheric but not smeared. Foreground floor remains only the existing narrow lower strip. No people, characters, text, UI, added objects, labels, borders or signature. Do not invent readable book titles.\nCritical stitching constraint: all content within 20% of both left and right edges must retain the reference structure and alignment exactly. Sharpen details inside existing forms rather than redesigning forms. Output a square high-resolution image, prefer 2048x2048 or larger. Keep the original colors and exposure exactly."
+    },
+    {
+      "index": 3,
+      "sourceCrop": 1444,
+      "sourceCropSize": [
+        725,
+        725
+      ],
+      "generatedPath": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-c6686b80-f393-4593-bd17-2737c2be2c60.png",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "prompt": "Use case: precise-object-edit. High-detail reconstruction of this EXACT square crop of an existing panoramic fantasy library background. This is panel 4 of FOUR OVERLAPPING PANELS that will be registered and stitched together. Preserve the input image's exact crop, perspective, object positions, lighting, architecture and EVERY boundary location. Do not zoom, move the camera, widen the view, add borders or change composition.\nRepaint it at high resolution with much sharper existing detail: coherent individual book spines and fine gold tooling, crisp walnut shelving and carved trim, clear leaded window mullions and pointed arches, finely defined brass lantern metalwork, distinct vine leaves, precise furniture contours and thin plank joints. Keep the same soft luminous hand-painted anime fantasy atmosphere, warm amber wood and lamps contrasted with clean cool daylight outside. Render readable shapes rather than blur, haze, noisy microtexture, photographic oversharpening or overly dark contrast. Light remains physically consistent across the panel, no extra bloom.\nKeep the architecture and bookcases crisp throughout; distant outdoor scenery may be atmospheric but not smeared. Foreground floor remains only the existing narrow lower strip. No people, characters, text, UI, added objects, labels, borders or signature. Do not invent readable book titles.\nCritical stitching constraint: all content within 20% of both left and right edges must retain the reference structure and alignment exactly. Sharpen details inside existing forms rather than redesigning forms. Output a square high-resolution image, prefer 2048x2048 or larger. Keep the original colors and exposure exactly."
+    }
+  ],
+  "processing": {
+    "registration": "SIFT feature matching + robust affine registration against original crop; median reference-space registration errors 0.70–0.81 px",
+    "stitch": "Overlaps of about 424 px, least-error vertical seams with 20px smooth blending; bounded per-channel overlap exposure correction",
+    "compression": "WebP quality 96; native final panorama width below 4096 for texture compatibility",
+    "layers": "Existing scene rendering and light parallax retained; no additional runtime layers needed for this clarity change",
+    "upscale": "No separate super-resolution model; detail is regenerated per panel, not simply enlarged"
+  },
+  "script": ".local/library-hd/stitch.py",
+  "report": ".local/library-hd/stitch-report.json",
+  "limitations": "Requested 2048px panels were returned at 1254px. Final is 3752×1254, not native 4K. Hand-painted atmosphere and original composition preserved."
+}

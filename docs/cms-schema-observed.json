@@ -1,0 +1,141 @@
+{
+  "projects": {
+    "count": 3,
+    "columns": {
+      "id": {
+        "sampleType": "string"
+      },
+      "title": {
+        "sampleType": "string"
+      },
+      "date_badge": {
+        "sampleType": "object"
+      },
+      "bullets": {
+        "sampleType": "object"
+      },
+      "skills": {
+        "sampleType": "object"
+      },
+      "github_link": {
+        "sampleType": "string"
+      },
+      "start_date": {
+        "sampleType": "string"
+      },
+      "end_date": {
+        "sampleType": "string"
+      },
+      "is_present": {
+        "sampleType": "boolean"
+      },
+      "visibility": {
+        "sampleType": "string"
+      },
+      "order": {
+        "sampleType": "number"
+      },
+      "created_at": {
+        "sampleType": "string"
+      },
+      "link_text": {
+        "sampleType": "object"
+      },
+      "link": {
+        "sampleType": "string"
+      }
+    }
+  },
+  "experiences": {
+    "count": 1,
+    "columns": {
+      "id": {
+        "sampleType": "string"
+      },
+      "title": {
+        "sampleType": "string"
+      },
+      "date_badge": {
+        "sampleType": "object"
+      },
+      "role": {
+        "sampleType": "string"
+      },
+      "role_icon": {
+        "sampleType": "object"
+      },
+      "bullets": {
+        "sampleType": "object"
+      },
+      "link": {
+        "sampleType": "string"
+      },
+      "link_text": {
+        "sampleType": "object"
+      },
+      "start_date": {
+        "sampleType": "string"
+      },
+      "end_date": {
+        "sampleType": "string"
+      },
+      "is_present": {
+        "sampleType": "boolean"
+      },
+      "visibility": {
+        "sampleType": "string"
+      },
+      "order": {
+        "sampleType": "number"
+      },
+      "created_at": {
+        "sampleType": "string"
+      },
+      "skills": {
+        "sampleType": "object"
+      }
+    }
+  },
+  "awards": {
+    "count": 4,
+    "columns": {
+      "id": {
+        "sampleType": "string"
+      },
+      "title": {
+        "sampleType": "string"
+      },
+      "organization": {
+        "sampleType": "string"
+      },
+      "year": {
+        "sampleType": "string"
+      },
+      "description": {
+        "sampleType": "object"
+      },
+      "bullets": {
+        "sampleType": "object"
+      },
+      "visibility": {
+        "sampleType": "string"
+      },
+      "order": {
+        "sampleType": "number"
+      },
+      "created_at": {
+        "sampleType": "string"
+      },
+      "link": {
+        "sampleType": "object"
+      },
+      "link_text": {
+        "sampleType": "object"
+      }
+    }
+  },
+  "skills": {
+    "count": 0,
+    "columns": {}
+  }
+}

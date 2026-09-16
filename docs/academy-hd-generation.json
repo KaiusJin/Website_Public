@@ -1,0 +1,219 @@
+{
+  "asset": "The skyward academy",
+  "source": "public/journey/regions/academy-v2.webp",
+  "sourceSize": [
+    2172,
+    724
+  ],
+  "output": "public/journey/regions/academy-hd.webp",
+  "outputSize": [
+    3762,
+    1254
+  ],
+  "mode": "Built-in image_gen edit",
+  "panels": [
+    {
+      "index": 0,
+      "sourceCrop": [
+        0,
+        0,
+        724,
+        724
+      ],
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "generatedPath": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-22e9dd4c-0099-4c2c-b821-81cc31b8a692.png",
+      "prompt": "Use case: precise-object-edit.\nAsset type: panel 1 of FOUR overlapping panels of a panoramic anime fantasy academy game background.\nInput image is the edit target. Reconstruct this EXACT square crop with substantially sharper and more coherent fine detail. Preserve the exact crop, perspective, silhouette of every building and tree, lighting, colors, floor height, horizon and all object positions. Do not zoom, widen the view, move the camera or redesign the architecture.\nStyle: luminous detailed hand-painted anime fantasy environment, elegant ivory Gothic academy, deep blue roofs and gold accents, lavender wisteria, warm pink and apricot sunset, violet mountain shadows. Keep the same original palette and exposure.\nDetail by depth: refine foreground stone pavement joints, carved balustrades and nearby flowers; refine middle-distance Gothic stone tracery, spires, window mullions, gold astronomical clock markings and armillary sphere metalwork wherever present; define distant observatory domes, bridges, cliffs, lake reflections and mountain ridges while retaining atmospheric perspective. Keep sky gradients smooth and existing cloud forms delicate and clear. Sharpen within existing forms instead of adding new objects.\nCritical stitching constraints: preserve structure and alignment throughout, especially the outer 20% of the left and right edges; retain every intersecting branch, roof, bridge, cloud and path at its exact original position. Preserve the thin lower walkway and all existing headroom above the spires.\nNo people, characters, text, UI, borders or watermark. No extra bloom, fog overlay, crunchy sharpening halos, noise, excessive contrast or photorealistic textures. Square output, prefer 2048x2048 or larger. Increase real painted detail, not simple blurry enlargement."
+    },
+    {
+      "index": 1,
+      "sourceCrop": [
+        483,
+        0,
+        1207,
+        724
+      ],
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "generatedPath": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-e39d2070-a246-4e8f-866c-c44cfc3faf6a.png",
+      "prompt": "Use case: precise-object-edit.\nAsset type: panel 2 of FOUR overlapping panels of a panoramic anime fantasy academy game background.\nInput image is the edit target. Reconstruct this EXACT square crop with substantially sharper and more coherent fine detail. Preserve the exact crop, perspective, silhouette of every building and tree, lighting, colors, floor height, horizon and all object positions. Do not zoom, widen the view, move the camera or redesign the architecture.\nStyle: luminous detailed hand-painted anime fantasy environment, elegant ivory Gothic academy, deep blue roofs and gold accents, lavender wisteria, warm pink and apricot sunset, violet mountain shadows. Keep the same original palette and exposure.\nDetail by depth: refine foreground stone pavement joints, carved balustrades and nearby flowers; refine middle-distance Gothic stone tracery, spires, window mullions, gold astronomical clock markings and armillary sphere metalwork wherever present; define distant observatory domes, bridges, cliffs, lake reflections and mountain ridges while retaining atmospheric perspective. Keep sky gradients smooth and existing cloud forms delicate and clear. Sharpen within existing forms instead of adding new objects.\nCritical stitching constraints: preserve structure and alignment throughout, especially the outer 20% of the left and right edges; retain every intersecting branch, roof, bridge, cloud and path at its exact original position. Preserve the thin lower walkway and all existing headroom above the spires.\nNo people, characters, text, UI, borders or watermark. No extra bloom, fog overlay, crunchy sharpening halos, noise, excessive contrast or photorealistic textures. Square output, prefer 2048x2048 or larger. Increase real painted detail, not simple blurry enlargement."
+    },
+    {
+      "index": 2,
+      "sourceCrop": [
+        965,
+        0,
+        1689,
+        724
+      ],
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "generatedPath": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-febf872f-bbc5-4a52-87d1-588535bfe379.png",
+      "prompt": "Use case: precise-object-edit.\nAsset type: panel 3 of FOUR overlapping panels of a panoramic anime fantasy academy game background.\nInput image is the edit target. Reconstruct this EXACT square crop with substantially sharper and more coherent fine detail. Preserve the exact crop, perspective, silhouette of every building and tree, lighting, colors, floor height, horizon and all object positions. Do not zoom, widen the view, move the camera or redesign the architecture.\nStyle: luminous detailed hand-painted anime fantasy environment, elegant ivory Gothic academy, deep blue roofs and gold accents, lavender wisteria, warm pink and apricot sunset, violet mountain shadows. Keep the same original palette and exposure.\nDetail by depth: refine foreground stone pavement joints, carved balustrades and nearby flowers; refine middle-distance Gothic stone tracery, spires, window mullions, gold astronomical clock markings and armillary sphere metalwork wherever present; define distant observatory domes, bridges, cliffs, lake reflections and mountain ridges while retaining atmospheric perspective. Keep sky gradients smooth and existing cloud forms delicate and clear. Sharpen within existing forms instead of adding new objects.\nCritical stitching constraints: preserve structure and alignment throughout, especially the outer 20% of the left and right edges; retain every intersecting branch, roof, bridge, cloud and path at its exact original position. Preserve the thin lower walkway and all existing headroom above the spires.\nNo people, characters, text, UI, borders or watermark. No extra bloom, fog overlay, crunchy sharpening halos, noise, excessive contrast or photorealistic textures. Square output, prefer 2048x2048 or larger. Increase real painted detail, not simple blurry enlargement."
+    },
+    {
+      "index": 3,
+      "sourceCrop": [
+        1448,
+        0,
+        2172,
+        724
+      ],
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "generatedPath": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-c0391543-84d6-49a1-9519-e6704aaf4e29.png",
+      "prompt": "Use case: precise-object-edit.\nAsset type: panel 4 of FOUR overlapping panels of a panoramic anime fantasy academy game background.\nInput image is the edit target. Reconstruct this EXACT square crop with substantially sharper and more coherent fine detail. Preserve the exact crop, perspective, silhouette of every building and tree, lighting, colors, floor height, horizon and all object positions. Do not zoom, widen the view, move the camera or redesign the architecture.\nStyle: luminous detailed hand-painted anime fantasy environment, elegant ivory Gothic academy, deep blue roofs and gold accents, lavender wisteria, warm pink and apricot sunset, violet mountain shadows. Keep the same original palette and exposure.\nDetail by depth: refine foreground stone pavement joints, carved balustrades and nearby flowers; refine middle-distance Gothic stone tracery, spires, window mullions, gold astronomical clock markings and armillary sphere metalwork wherever present; define distant observatory domes, bridges, cliffs, lake reflections and mountain ridges while retaining atmospheric perspective. Keep sky gradients smooth and existing cloud forms delicate and clear. Sharpen within existing forms instead of adding new objects.\nCritical stitching constraints: preserve structure and alignment throughout, especially the outer 20% of the left and right edges; retain every intersecting branch, roof, bridge, cloud and path at its exact original position. Preserve the thin lower walkway and all existing headroom above the spires.\nNo people, characters, text, UI, borders or watermark. No extra bloom, fog overlay, crunchy sharpening halos, noise, excessive contrast or photorealistic textures. Square output, prefer 2048x2048 or larger. Increase real painted detail, not simple blurry enlargement."
+    }
+  ],
+  "processing": [
+    "Four overlapping square crops reconstructed separately with the built-in image generation tool.",
+    "SIFT feature matching and RANSAC affine registration against the original crop preserve geometry.",
+    "Broad lighting/color correction against the shared source (Gaussian sigma 32 output pixels) retains new fine details while removing segment tint differences.",
+    "Minimum-error vertical seams with 20-pixel feathering join overlapping panels.",
+    "WebP quality 96; no additional image enlargement after stitching."
+  ],
+  "layering": "Near, middle and distant detail were specified separately in each prompt. Output remains one flattened background; existing runtime light-parallax layers are unchanged. No separate new transparent layers were generated.",
+  "superResolution": "Not used: native 1254-square generations provide a 3762x1254 stitched image. Requested 2048-square size was not returned; this is not a native 4K generation.",
+  "localWorkingDirectory": ".local/academy-hd",
+  "stitchScript": ".local/academy-hd/stitch.py",
+  "registrationReport": ".local/academy-hd/stitch-report.json",
+  "outputBytes": 1899472,
+  "registration": {
+    "size": [
+      3762,
+      1254
+    ],
+    "panels": [
+      {
+        "panel": 0,
+        "matches": 3760,
+        "inliers": 3733,
+        "medianRegistrationErrorReferencePixels": 0.7502805200780255,
+        "transform": [
+          [
+            0.9997185043285091,
+            -3.636270684859519e-05,
+            0.05998390201773418
+          ],
+          [
+            -0.0003004349683868229,
+            0.9992562417892706,
+            0.45916606514447267
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      {
+        "panel": 1,
+        "matches": 2588,
+        "inliers": 2548,
+        "medianRegistrationErrorReferencePixels": 0.7995281936427425,
+        "transform": [
+          [
+            0.999884849771149,
+            -0.00036146226817866764,
+            0.16495136817474076
+          ],
+          [
+            -0.00010490734064920141,
+            0.998886650487134,
+            0.5718377783531992
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "overlapPixels": 417,
+        "exposureCorrectionRGB": [
+          0.9857635498046875,
+          0.8573474884033203,
+          -0.175537109375
+        ],
+        "seamRange": [
+          84,
+          333
+        ]
+      },
+      {
+        "panel": 2,
+        "matches": 1936,
+        "inliers": 1907,
+        "medianRegistrationErrorReferencePixels": 0.8110574250825793,
+        "transform": [
+          [
+            0.9995063917291679,
+            5.6304381963710384e-05,
+            -0.0039067561426122666
+          ],
+          [
+            -9.457455339355394e-05,
+            0.9997256121355156,
+            0.12377135960434771
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "overlapPixels": 420,
+        "exposureCorrectionRGB": [
+          0.9293975830078125,
+          0.7434539794921875,
+          -0.793365478515625
+        ],
+        "seamRange": [
+          25,
+          330
+        ]
+      },
+      {
+        "panel": 3,
+        "matches": 2332,
+        "inliers": 2309,
+        "medianRegistrationErrorReferencePixels": 0.7347112640737898,
+        "transform": [
+          [
+            0.9998160843170484,
+            -6.922878907330113e-05,
+            -0.0019317562096148322
+          ],
+          [
+            -0.0001067745287268684,
+            0.9995287808095086,
+            0.060781184412576295
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "overlapPixels": 417,
+        "exposureCorrectionRGB": [
+          0.3565673828125,
+          0.5903472900390625,
+          -0.6378173828125
+        ],
+        "seamRange": [
+          107,
+          299
+        ]
+      }
+    ]
+  }
+}

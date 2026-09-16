@@ -1,0 +1,21 @@
+const paths={
+ star:'m12 2 2.8 6.1 6.7.9-4.9 4.7 1.2 6.6L12 17.2l-5.8 3.1 1.2-6.6L2.5 9l6.7-.9Z',
+ moon:'M20.5 13.2A9 9 0 0 1 10.8 3.5 9 9 0 1 0 20.5 13.2Z',
+ book:'M12 5v15M3 4c4-1 7 0 9 2 2-2 5-3 9-2v15c-4-1-7 0-9 2-2-2-5-3-9-2Z',
+ map:'m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2Zm6-2v16m6-14v16',
+ home:'m3 10 9-7 9 7M5 9v12h14V9M9 21v-7h6v7',
+ leaf:'M20 3C5 2 1 9 6 16c7 7 15 0 14-13ZM5 21 16 8',
+ town:'M3 21V8h7v13m0-17h8v17M1 21h22M5 11h3m-3 4h3m5-7h2m-2 4h2m-2 4h2m3-6h3v11',
+ letter:'M3 5h18v14H3Zm0 0 9 8 9-8',
+ close:'m6 6 12 12M6 18 18 6',
+ arrow:'M4 12h16m-6-6 6 6-6 6',
+ broom:'m10 14 10-11M3 17l4-5 5 5-5 4-5 1 1-5Zm1 3 5-5',
+ jump:'M12 21V3m-6 6 6-6 6 6M4 21h16',
+ settings:'M4 6h16M4 12h16M4 18h16M8 3v6m8 0v6m-6 0v6',
+ rotate:'M8 2h8v20H8ZM2 9V5h4m-4 0 4 4m16 6v4h-4m4 0-4-4',
+ camera:'M3 7h4l2-3h6l2 3h4v14H3Zm13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0',
+ music:'M9 18V5l11-2v13M9 8l11-2M9 18c0 4-7 4-7 0s7-4 7 0Zm11-2c0 4-7 4-7 0s7-4 7 0Z',
+ external:'M14 3h7v7m0-7L10 14M10 5H3v16h16v-7',
+ check:'m5 12 4 4 10-10',
+};
+export default function Icon({name='star',size=20,...props}) {return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}><path d={paths[name]||paths.star}/></svg>}
