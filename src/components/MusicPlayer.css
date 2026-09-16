@@ -1,0 +1,58 @@
+.music-control {
+  display: flex;
+  align-items: center;
+}
+
+.music-control audio {
+  display: none;
+}
+
+.journey-header .music-toggle {
+  position: relative;
+  width: 25px;
+  height: 30px;
+  padding: 5px 0;
+  display: grid;
+  place-items: center;
+  color: inherit;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  opacity: 0.9;
+  transition: opacity 160ms ease;
+}
+
+.journey-header .music-toggle:hover {
+  opacity: 1;
+}
+
+.music-toggle svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.music-toggle.is-playing svg {
+  animation: music-note 1.8s ease-in-out infinite;
+}
+
+.music-muted-line {
+  stroke-width: 2;
+}
+
+@keyframes music-note {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-5deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey-header .music-toggle,
+  .music-toggle.is-playing svg {
+    animation: none;
+    transition: none;
+  }
+}

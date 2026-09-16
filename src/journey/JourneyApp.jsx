@@ -8,6 +8,7 @@ import Icon from './components/Icon';
 import Modal from './components/Modal';
 import ContentPanel from './components/ContentPanel';
 import TouchControls from './components/TouchControls';
+import MusicPlayer from '../components/MusicPlayer';
 import './journey.css';
 function savedBool(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback;}catch{return fallback;}}
 export default function JourneyApp(){
@@ -23,6 +24,7 @@ export default function JourneyApp(){
  bridge.current.pause=!!panel||portrait||blurred||!ready;
  bridge.current.reduced=reduced;bridge.current.onInteract=openRegion;
  const clear=useCallback(()=>{bridge.current.stick={x:0,y:0};bridge.current.jump=false;bridge.current.fly=false;bridge.current.interact=false;bridge.current.keys={};},[]);
+ const releasePointerFocus=useCallback(event=>{const control=event.target.closest?.('button,a');if(control)queueMicrotask(()=>control.blur());},[]);
  useEffect(()=>{
   setReady(false);setProgress(0);setErrors([]);
   let active=true;
@@ -63,12 +65,12 @@ export default function JourneyApp(){
  const scene=sceneRecord?localize(sceneRecord,lang):null;
  const chapterTitle=scene?.title||regionText(region,'title',lang);
  const title=panel==='map'?t.map:panel==='settings'?t.settings:panel==='personal'?t.journal:t[panel];
- return <main className={`journey-root ${world.region>4?'journey-night':''} ${touch?'has-touch':''}`} onPointerDownCapture={()=>setBlurred(false)} onFocusCapture={()=>setBlurred(false)} data-paused={String(bridge.current.pause)} data-player-x={world.x} data-player-y={world.y} data-player-mode={world.mode} data-velocity-x={world.vx} data-velocity-y={world.vy} data-fps={world.fps} data-room={world.room||'outdoors'} data-region={region.id}>
+ return <main className={`journey-root ${world.region>4?'journey-night':''} ${touch?'has-touch':''}`} onPointerDownCapture={()=>setBlurred(false)} onClickCapture={releasePointerFocus} onFocusCapture={()=>setBlurred(false)} data-paused={String(bridge.current.pause)} data-player-x={world.x} data-player-y={world.y} data-player-mode={world.mode} data-velocity-x={world.vx} data-velocity-y={world.vy} data-fps={world.fps} data-room={world.room||'outdoors'} data-region={region.id}>
   <div ref={host} className="journey-canvas" tabIndex={-1} aria-label={t.brand}/>
   <div className="journey-vignette" aria-hidden="true"/>
   <header className="journey-header">
    <div className="journey-brand"><span className="brand-seal"><Icon name="moon" size={23}/></span><span><strong>{t.brand}</strong><small>{t.subtitle}</small></span></div>
-   <nav aria-label={t.map}><button aria-label={t.journal} onClick={()=>setPanel('personal')}><Icon name="book"/><span>{t.journal}</span></button><button aria-label={t.map} onClick={()=>setPanel('map')}><Icon name="map"/><span>{t.map}</span></button><span className="nav-divider"/><button className="language-button" onClick={()=>setLang(lang==='en'?'zh-CN':'en')} aria-label={t.language}>{lang==='en'?'中':'EN'}</button><button className="settings-button" onClick={()=>setPanel('settings')} aria-label={t.settings}><Icon name="settings"/></button><a href="/" className="classic-link">{t.classic}<Icon name="external" size={14}/></a></nav>
+   <nav aria-label={t.map}><button aria-label={t.journal} onClick={()=>setPanel('personal')}><Icon name="book"/><span>{t.journal}</span></button><button aria-label={t.map} onClick={()=>setPanel('map')}><Icon name="map"/><span>{t.map}</span></button><span className="nav-divider"/><MusicPlayer/><button className="language-button" onClick={()=>setLang(lang==='en'?'zh-CN':'en')} aria-label={t.language}>{lang==='en'?'中':'EN'}</button><button className="settings-button" onClick={()=>setPanel('settings')} aria-label={t.settings}><Icon name="settings"/></button><a href="/" className="classic-link">{t.classic}<Icon name="external" size={14}/></a></nav>
   </header>
   {content.preview&&<div className="preview-badge">{lang==='en'?'Private draft preview':'私有草稿预览'}</div>}
   {world.room&&!panel&&<button className="room-exit" onClick={()=>bridge.current.exitLibrary?.()}><Icon name="arrow"/>{t.leaveRoom}</button>}
