@@ -33,7 +33,7 @@ export default function Experience() {
       }
     }
 
-    return `${start}${end ? ' - ' + end : ''}`;
+    return [start, end].filter(Boolean).join(' - ');
   };
 
   return (
@@ -44,12 +44,12 @@ export default function Experience() {
 
       {experiencesLoading && <p style={{ color: 'var(--text-secondary)' }}>Loading Experiences...</p>}
       {!experiencesLoading && filteredExperiences.length === 0 && (
-        <p style={{ color: 'var(--text-secondary)' }}>No experiences published yet.</p>
+        <p style={{ color: 'var(--text-secondary)' }}>No experiences yet.</p>
       )}
 
       <div className="timeline-container">
         {filteredExperiences.map((e, i) => (
-          <div key={i} className="timeline-item">
+          <div key={e.id || i} className="timeline-item">
             <div className="timeline-dot"></div>
             <div className="timeline-content">
               <div className="timeline-header">

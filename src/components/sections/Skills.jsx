@@ -24,7 +24,7 @@ export default function Skills() {
       </h2>
 
       {loading && <p style={{ color: 'var(--text-secondary)' }}>Loading Skills...</p>}
-      {!loading && sortedSkills.length === 0 && <p style={{ color: 'var(--text-secondary)' }}>No skills published yet.</p>}
+      {!loading && sortedSkills.length === 0 && <p style={{ color: 'var(--text-secondary)' }}>No skills yet.</p>}
 
       <div className="bento-grid">
         {sortedSkills.map((c, i) => (

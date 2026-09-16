@@ -14,6 +14,7 @@ const paths={
  settings:'M4 6h16M4 12h16M4 18h16M8 3v6m8 0v6m-6 0v6',
  rotate:'M8 2h8v20H8ZM2 9V5h4m-4 0 4 4m16 6v4h-4m4 0-4-4',
  camera:'M3 7h4l2-3h6l2 3h4v14H3Zm13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0',
+ screen:'M9 4H4v5m11-5h5v5m0 6v5h-5M9 20H4v-5',
  music:'M9 18V5l11-2v13M9 8l11-2M9 18c0 4-7 4-7 0s7-4 7 0Zm11-2c0 4-7 4-7 0s7-4 7 0Z',
  external:'M14 3h7v7m0-7L10 14M10 5H3v16h16v-7',
  check:'m5 12 4 4 10-10',

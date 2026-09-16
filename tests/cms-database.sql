@@ -1,23 +1,26 @@
--- Run against a disposable fixture database after the migration, never a live project.
+-- Run against a disposable fixture database after all migrations, never a live project.
 begin;
 set local role authenticated;
 select set_config('request.jwt.claims','{"email":"kaixuan.jin@outlook.com"}',true);
-do $$ declare d public.content_drafts; r jsonb; old_revision timestamptz; result_count integer; begin
+do $$ declare result_count integer; has_obsolete_columns boolean; begin
  if public.journey_fields('auth.users') is not null then raise exception 'Table allowlist failed'; end if;
  if public.journey_fields('experiences') is not null then raise exception 'Legacy experience table remains allowed'; end if;
  if public.journey_fields('work_experiences') is null or public.journey_fields('club_experiences') is null or public.journey_fields('volunteer_experiences') is null then raise exception 'Split experience allowlist failed'; end if;
- select * into d from public.journey_save_draft('personal_entries','11111111-1111-4111-8111-111111111111','{"kind":"daily","title":"Fixture only","visibility":"public","translations":{"zh-CN":{"title":"测试"}},"order":0}',null,null);
- if exists(select from public.personal_entries where id=d.target_id) then raise exception 'Draft leaked into live table'; end if;
- begin perform public.journey_save_draft('personal_entries',d.target_id,d.payload,null,null);raise exception 'Expected conflict';exception when serialization_failure then null;end;
- r:=public.journey_publish(d.id,d.updated_at);
- if r->>'title'<>'Fixture only' then raise exception 'Publish failed'; end if;
- old_revision:=(r->>'updated_at')::timestamptz;
- select * into d from public.content_drafts where id=d.id;
- select * into d from public.journey_save_draft('personal_entries',d.target_id,d.payload||'{"title":"Changed"}',old_revision,d.updated_at);
- update public.personal_entries set title='External edit' where id=d.target_id;
- begin perform public.journey_publish(d.id,d.updated_at);raise exception 'Expected live conflict';exception when serialization_failure then null;end;
- begin perform public.journey_save_draft('projects',gen_random_uuid(),'{"id":"bad","visibility":"public"}',null,null);raise exception 'Expected rejection';exception when raise_exception then if sqlerrm='Expected rejection' then raise;end if;end;
- insert into public.personal_entries(kind,title,visibility) values('daily','Private fixture','private');
+ if 'visibility'=any(public.journey_fields('projects')) then raise exception 'Visibility remains in allowlist'; end if;
+ select exists(select from information_schema.columns where table_schema='public' and column_name in ('visibility','translations')) into has_obsolete_columns;
+ if has_obsolete_columns then raise exception 'Obsolete visibility/translations column remains in database'; end if;
+ if to_regclass('public.content_drafts') is not null then raise exception 'Obsolete draft table remains'; end if;
+ if not has_table_privilege('anon','public.projects','select') or has_table_privilege('anon','public.projects','insert') then raise exception 'Anonymous grants are not read-only'; end if;
+ if not has_table_privilege('authenticated','public.projects','select')
+  or not has_table_privilege('authenticated','public.projects','insert')
+  or not has_table_privilege('authenticated','public.projects','update')
+  or not has_table_privilege('authenticated','public.projects','delete') then raise exception 'Authenticated content grants are incomplete'; end if;
+ if has_table_privilege('anon','public.media_assets','select')
+  or not has_table_privilege('authenticated','public.media_assets','select')
+  or not has_table_privilege('authenticated','public.media_assets','insert')
+  or not has_table_privilege('authenticated','public.media_assets','update')
+  or not has_table_privilege('authenticated','public.media_assets','delete') then raise exception 'Media grants are incorrect'; end if;
+ insert into public.personal_entries(kind,title,"order") values('daily','Fixture one',1),('travel','Fixture two',0);
  select count(*) into result_count from public.personal_entries;
  if result_count<>2 then raise exception 'Admin read failed';end if;
  perform public.journey_reorder('personal_entries',(select jsonb_agg(jsonb_build_object('id',id,'updated_at',updated_at) order by title) from public.personal_entries));
@@ -25,16 +28,14 @@ do $$ declare d public.content_drafts; r jsonb; old_revision timestamptz; result
 end $$;
 select set_config('request.jwt.claims','{"email":"unprivileged@example.test"}',true);
 do $$ begin
- if (select count(*) from public.personal_entries)<>1 then raise exception 'Non-admin sees private content';end if;
- if exists(select from public.content_drafts) then raise exception 'Non-admin sees drafts';end if;
- begin perform public.journey_save_draft('projects',gen_random_uuid(),'{"visibility":"public"}',null,null);raise exception 'Expected auth rejection';exception when insufficient_privilege then null;end;
+ if (select count(*) from public.personal_entries)<>2 then raise exception 'Authenticated public read failed';end if;
+ begin insert into public.personal_entries(kind,title) values('daily','unauthorized');raise exception 'Unauthorized write allowed';exception when insufficient_privilege then null;end;
 end $$;
 set local role anon;
 select set_config('request.jwt.claims','{}',true);
 do $$ begin
- if (select count(*) from public.personal_entries)<>1 then raise exception 'Anonymous visibility failed';end if;
- begin perform * from public.content_drafts;raise exception 'Draft grants leaked';exception when insufficient_privilege then null;end;
+ if (select count(*) from public.personal_entries)<>2 then raise exception 'Anonymous public read failed';end if;
  begin insert into public.personal_entries(kind,title) values('daily','unauthorized');raise exception 'Anonymous write allowed';exception when insufficient_privilege then null;end;
 end $$;
 rollback;
-select 'PASS: draft isolation, bilingual publish, concurrent edits, allowlist, ordering, administrator/anon RLS' as verification;
+select 'PASS: one English live record, no visibility/drafts/translations, split experiences, ordering and RLS' as verification;

@@ -6,7 +6,10 @@ const headers = { apikey: env.VITE_SUPABASE_ANON_KEY, Authorization: `Bearer ${e
 console.log('Public and Admin target same project:',env.VITE_SUPABASE_URL===other.VITE_SUPABASE_URL);
 const response = await fetch(`${env.VITE_SUPABASE_URL}/rest/v1/`,{headers,signal:AbortSignal.timeout(20000)});
 const api=await response.json();
-const tables = ['projects','experiences','awards','skills'];
+const tables = [
+ 'projects','work_experiences','club_experiences','volunteer_experiences',
+ 'awards','skills','site_profile','personal_entries','journey_scene_content'
+];
 const report = {};
 for(const table of tables){
  const r=await fetch(`${env.VITE_SUPABASE_URL}/rest/v1/${table}?select=*&order=order.asc`,{headers,signal:AbortSignal.timeout(20000)});

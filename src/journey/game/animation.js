@@ -13,7 +13,8 @@ export function advanceAnimation(state,{speed,verticalSpeed=0,grounded,mode,paus
  return {clip,phase:phase+dt*rate,elapsed:state.elapsed+dt};
 }
 
-export function animationPose(state,velocityY=0){
+export function animationPose(state,velocityY=0,facing='side',mode='walking'){
+ if(facing==='front'||facing==='back')return {sheet:`${mode==='flying'||mode==='landing'?'broom':'ground'}-${facing}`,frame:0,stretch:1,bob:0};
  const {clip,phase,elapsed}=state;
  if(clip==='walk')return {sheet:'walk',frame:Math.floor(phase)%8,stretch:1+Math.sin(phase*Math.PI/2)*.003,bob:0};
  if(clip==='broom-fly')return {sheet:'states',frame:[5,6,7,6][Math.floor(phase)%4],stretch:1,bob:Math.sin(elapsed*2.2)*1.3};

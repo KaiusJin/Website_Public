@@ -3,7 +3,7 @@
     1024,
     1024
   ],
-  "runtimeIntegrated": false,
+  "runtimeIntegrated": true,
   "poses": [
     {
       "id": "ground-front",
@@ -21,7 +21,7 @@
         512,
         940
       ],
-      "anchorMeaning": "bottom-center of artwork; standing poses align to the soles. Broom poses need a seat anchor when integrated.",
+      "anchorMeaning": "Bottom alignment in the source artwork; runtime anatomical anchors and scaling are specified in character-atlas.json.",
       "sourceSize": [
         1254,
         1254
@@ -50,7 +50,7 @@
         512,
         940
       ],
-      "anchorMeaning": "bottom-center of artwork; standing poses align to the soles. Broom poses need a seat anchor when integrated.",
+      "anchorMeaning": "Bottom alignment in the source artwork; runtime anatomical anchors and scaling are specified in character-atlas.json.",
       "sourceSize": [
         1254,
         1254
@@ -79,7 +79,7 @@
         512,
         940
       ],
-      "anchorMeaning": "bottom-center of artwork; standing poses align to the soles. Broom poses need a seat anchor when integrated.",
+      "anchorMeaning": "Bottom alignment in the source artwork; runtime anatomical anchors and scaling are specified in character-atlas.json.",
       "sourceSize": [
         1254,
         1254
@@ -108,7 +108,7 @@
         512,
         940
       ],
-      "anchorMeaning": "bottom-center of artwork; standing poses align to the soles. Broom poses need a seat anchor when integrated.",
+      "anchorMeaning": "Bottom alignment in the source artwork; runtime anatomical anchors and scaling are specified in character-atlas.json.",
       "sourceSize": [
         1254,
         1254
@@ -121,5 +121,6 @@
       ],
       "scale": 0.7363013698630136
     }
-  ]
+  ],
+  "runtimeAtlas": "src/journey/data/character-atlas.json"
 }

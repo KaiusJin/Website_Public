@@ -1,8 +1,9 @@
 import Phaser from 'phaser';
-import {regions,REGION_WIDTH,WORLD_HEIGHT,GROUND_Y,townExperienceHotspots} from '../data/regions';
+import {regions,REGION_WIDTH,WORLD_HEIGHT,GROUND_Y,MOBILE_HOTSPOT_Y,townExperienceHotspots,libraryDoorHotspot,libraryExitHotspot} from '../data/regions';
 import {clamp,resolveAxes,damp,motionVelocity,cameraFollow} from './motion';
 import {createAmbience} from './ambience';
 import {advanceAnimation,animationPose,spritePlacement} from './animation';
+import {resolveFacing,isCharacterTap} from './facing';
 import {displayMetrics} from './display';
 import characterAtlas from '../data/character-atlas.json';
 import {neighboringRegion,arrivalPosition,LIBRARY_DOOR_X,canEnterLibrary} from './travel';
@@ -31,7 +32,20 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    this.physics.add.existing(floor,true);
    // Fixed collision rectangle; artwork frames never alter the body or floor contact.
    this.player=this.physics.add.sprite(540,GROUND_Y,'__WHITE').setOrigin(.5,1).setDisplaySize(60,168).setVisible(false);
-   this.character=this.add.sprite(540,GROUND_Y,'elaina-states',0).setDepth(5);
+   this.facing='side';
+   this.character=this.add.sprite(540,GROUND_Y,'elaina-states',0).setDepth(5).setInteractive({pixelPerfect:true,alphaTolerance:32});
+   // Only a tap on visible artwork counts; dragging or touching the transparent margin does not.
+   this.character.on('pointerdown',pointer=>{
+    if(!(pointer.wasTouch||bridge.current.touch)||bridge.current.pause||this.transitioning||this.destination)return;
+    this.characterTap={id:pointer.id,x:pointer.x,y:pointer.y};
+   });
+   this.character.on('pointerup',pointer=>{
+    const tap=this.characterTap;this.characterTap=null;
+    if(bridge.current.pause||this.transitioning||this.destination)return;
+    if(isCharacterTap(tap,pointer,this.scale.zoom))bridge.current.facingRequest='toggle';
+   });
+   this.input.on('pointerup',()=>{this.characterTap=null;});
+   this.input.on('pointerupoutside',()=>{this.characterTap=null;});
    this.player.setCollideWorldBounds(true);
    this.physics.add.collider(this.player,floor);
    this.shadow=this.add.ellipse(540,GROUND_Y+2,84,10,0x263028,.2).setDepth(4);
@@ -113,6 +127,7 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    const paused=controls.pause||this.transitioning||!!this.destination;
    if(paused){
     this.physics.world.pause();this.player.setVelocity(0);
+    controls.facingRequest=null;this.characterTap=null;
     if(controls.pause){controls.stick={x:0,y:0};controls.jump=false;controls.fly=false;
      if(!this.wasPaused){controls.keys={};this.wasPaused=true;}
     }
@@ -125,6 +140,8 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    this.loadNeighbors(current);
    if(!paused){
     const k=controls.keys||{};const axes=resolveAxes({x:Number(!!(k.KeyD||k.ArrowRight))-Number(!!(k.KeyA||k.ArrowLeft)),y:Number(!!(k.KeyS||k.ArrowDown))-Number(!!(k.KeyW||k.ArrowUp))},controls.stick||{x:0,y:0});
+    this.facing=resolveFacing(this.facing,{request:controls.facingRequest,axes,jump:controls.jump});
+    controls.facingRequest=null;
     const fly=controls.fly;
     controls.fly=false;
     if(fly){
@@ -172,17 +189,18 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    const cssZoom=camera.zoom*this.scale.zoom;
    const speed=Math.abs(this.player.body.velocity.x),grounded=this.player.body.blocked.down||this.player.body.touching.down;
    this.animation=advanceAnimation(this.animation,{speed,verticalSpeed:this.player.body.velocity.y,grounded,mode:this.mode,paused},dt);
-   const pose=animationPose(this.animation,this.player.body.velocity.y);
+   const pose=animationPose(this.animation,this.player.body.velocity.y,this.facing,this.mode);
    const metrics=characterAtlas[pose.sheet].frames[pose.frame];
-   const placement=spritePlacement(metrics,this.player.flipX,190,pose.stretch);
-   this.character.setTexture(`elaina-${pose.sheet}`,pose.frame).setFlipX(this.player.flipX)
+   const flipX=this.facing==='side'&&this.player.flipX;
+   const placement=spritePlacement(metrics,flipX,190,pose.stretch);
+   this.character.setTexture(`elaina-${pose.sheet}`,pose.frame).setFlipX(flipX)
     .setOrigin(placement.originX,placement.originY).setScale(placement.scaleX,placement.scaleY);
-   const lean=this.mode==='flying'?clamp(this.player.body.velocity.x/160,-3,3):grounded?this.player.body.velocity.x/450:0;
+   const lean=this.facing!=='side'?0:this.mode==='flying'?clamp(this.player.body.velocity.x/160,-3,3):grounded?this.player.body.velocity.x/450:0;
    if(!paused)this.characterAngle=damp(this.characterAngle,lean,5,dt);
    this.character.setPosition(this.player.x,this.player.y+pose.bob).setAngle(this.characterAngle);
    this.shadow.setX(this.player.x).setAlpha(clamp(1-(GROUND_Y-this.player.y)/450,0,.24));
    const r=regions[current];
-   const contentPoints=current===2&&!this.room?townExperienceHotspots.map(point=>({...point,x:r.x+point.offset,kind:'content'})):[{id:r.id,x:r.x+r.anchor,kind:'content',icon:r.icon}];
+   const contentPoints=current===2&&!this.room?townExperienceHotspots.map(point=>({...point,x:r.x+point.offset,kind:'content'})):[{id:r.id,x:r.x+(r.hotspot?.offset??r.anchor),y:r.hotspot?.y??MOBILE_HOTSPOT_Y,kind:'content',icon:r.icon}];
    const closest=contentPoints.reduce((best,point)=>{const distance=Math.abs(this.player.x-point.x);return !best||distance<best.distance?{...point,distance}:best;},null);
    this.near=closest?.distance<260?closest.id:null;
    if(current===2&&Math.abs(this.player.x-LIBRARY_DOOR_X)<240)this.near='library-door';
@@ -195,11 +213,11 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
     this.lastReport=time;
     const project=x=>(x-viewX)*cssZoom;
     const points=[...contentPoints];
-    if(current===2)points.push({id:'library-door',x:LIBRARY_DOOR_X,kind:'door'});
-    if(this.room)points.push({id:'library-exit',x:r.x+200,kind:'exit'});
-    const hotspots=points.filter(p=>p.x>viewX-100&&p.x<(viewX+visibleWidth)+100).map(p=>({...p,worldX:p.x,x:project(p.x),y:(GROUND_Y-160-viewY)*cssZoom}));
+    if(current===2)points.push({id:'library-door',x:LIBRARY_DOOR_X,y:libraryDoorHotspot.y,kind:'door'});
+    if(this.room)points.push({id:'library-exit',x:r.x+200,y:libraryExitHotspot.y,kind:'exit'});
+    const hotspots=points.filter(p=>p.x>viewX-100&&p.x<(viewX+visibleWidth)+100).map(p=>{const worldY=p.y??MOBILE_HOTSPOT_Y,displayY=controls.phoneHotspots?MOBILE_HOTSPOT_Y:worldY;return {...p,worldX:p.x,worldY,x:project(p.x),y:(displayY-viewY)*cssZoom};});
     const next=neighboringRegion(current,1),previous=neighboringRegion(current,-1);
-    onState({region:current,x:Math.round(this.player.x),y:Math.round(this.player.y),mode:this.mode,vx:Math.round(this.player.body.velocity.x),vy:Math.round(this.player.body.velocity.y),fps:Math.round(this.game.loop.actualFps),room:this.room,transitioning:!!this.transitioning,near:this.near,hotspots,progress:this.player.x/worldWidth,loading:!!this.destination,next,previous,atRight:this.player.x>(current+1)*REGION_WIDTH-500,atLeft:this.player.x<current*REGION_WIDTH+420});
+    onState({region:current,x:Math.round(this.player.x),y:Math.round(this.player.y),mode:this.mode,facing:this.facing,vx:Math.round(this.player.body.velocity.x),vy:Math.round(this.player.body.velocity.y),fps:Math.round(this.game.loop.actualFps),room:this.room,transitioning:!!this.transitioning,near:this.near,hotspots,progress:this.player.x/worldWidth,loading:!!this.destination,next,previous,atRight:this.player.x>(current+1)*REGION_WIDTH-500,atLeft:this.player.x<current*REGION_WIDTH+420});
    }
   }
  }
