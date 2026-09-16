@@ -22,7 +22,7 @@ export default function Awards() {
 
       {loading && <p style={{ color: 'var(--text-secondary)' }}>Loading Awards...</p>}
       {!loading && filteredAwards.length === 0 && (
-        <p style={{ color: 'var(--text-secondary)' }}>No awards published yet.</p>
+        <p style={{ color: 'var(--text-secondary)' }}>No awards yet.</p>
       )}
 
       <div className="card-grid">

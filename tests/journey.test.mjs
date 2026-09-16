@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {joystickVector,resolveAxes,landingTarget} from '../src/journey/game/motion.js';
 import {localize,safeUrl,visibleItems,deriveSkills,collectExperiences,experienceTables} from '../src/journey/data/content.js';
-import {regions,REGION_WIDTH} from '../src/journey/data/regions.js';
+import {regions,REGION_WIDTH,MOBILE_HOTSPOT_Y,townExperienceHotspots} from '../src/journey/data/regions.js';
 import {copy} from '../src/journey/i18n/copy.js';
 test('joystick dead zone avoids drift; extreme diagonal gestures remain bounded',()=>{
  assert.deepEqual(joystickVector(2,2),{x:0,y:0});
@@ -16,13 +16,13 @@ test('landing clamps targets at both edges of a long world',()=>{
  assert.deepEqual(landingTarget(-999,16800,637),{x:100,y:637});
  assert.deepEqual(landingTarget(19000,16800,637),{x:16700,y:637});
 });
-test('partial translations preserve stable identity and English fallback',()=>{
- const row={id:'real',title:'Source',bullets:[{text:'English'}],translations:{'zh-CN':{id:'bad',title:'译文',bullets:[],role:''}}};
- assert.deepEqual(localize(row,'zh-CN').bullets,[{text:'English'}]);assert.equal(localize(row,'zh-CN').id,'real');assert.equal(localize(row,'en').title,'Source');
+test('language selection does not replace English database content',()=>{
+ const row={id:'real',title:'Source',bullets:[{text:'English'}]};
+ assert.deepEqual(localize(row,'zh-CN'),row);assert.equal(localize(row,'en').title,'Source');
 });
-test('private and draft rows are excluded; source records are not mutated',()=>{
- const rows=[{id:1,visibility:'private',order:0},{id:2,visibility:'public',order:2},{id:3,visibility:'draft'},{id:4,visibility:'public',order:1}];
- assert.deepEqual(visibleItems(rows).map(r=>r.id),[4,2]);assert.equal(rows[0].id,1);
+test('content is ordered without relying on the removed visibility field',()=>{
+ const rows=[{id:1,order:2},{id:2,order:0},{id:3,order:1}];
+ assert.deepEqual(visibleItems(rows).map(r=>r.id),[2,3,1]);assert.deepEqual(rows.map(r=>r.id),[1,2,3]);
 });
 test('untrusted links cannot execute code or open data documents',()=>{
  for(const url of ['javascript:alert(1)','data:text/html,hi','file:///etc/passwd',''])assert.equal(safeUrl(url),null);
@@ -31,6 +31,12 @@ test('untrusted links cannot execute code or open data documents',()=>{
 test('seven chapters are continuous and every displayed UI key has both languages',()=>{
  assert.equal(regions.length,7);regions.forEach((r,i)=>{assert.equal(r.x,i*REGION_WIDTH);assert.ok(r.anchor>0&&r.anchor<REGION_WIDTH);assert.ok(copy.en[r.section]);});
  assert.deepEqual(Object.keys(copy.en).sort(),Object.keys(copy['zh-CN']).sort());
+});
+test('desktop hotspots follow scene landmarks while phones can keep one aligned row',()=>{
+ const positions=[...regions.filter(r=>r.hotspot).map(r=>r.hotspot),...townExperienceHotspots.map(({offset,y})=>({offset,y}))];
+ positions.forEach(({offset,y})=>{assert.ok(offset>0&&offset<REGION_WIDTH);assert.ok(y>150&&y<650);});
+ assert.ok(new Set(positions.map(point=>point.y)).size>4);
+ assert.equal(MOBILE_HOTSPOT_Y,477);
 });
 test('empty skill table can display only technologies evidenced in public records',()=>{
  assert.deepEqual(deriveSkills([{skills:[{tag:'Python'},{tag:'Java'}]}],[{skills:[{tag:'Python'}]}]),['Python','Java']);

@@ -207,5 +207,61 @@
         "referenceHeight": 650
       }
     ]
+  },
+  "ground-front": {
+    "image": "/journey/characters/directions/elaina-ground-front.webp",
+    "frames": [
+      {
+        "x": 0,
+        "y": 0,
+        "width": 1024,
+        "height": 1024,
+        "anchorX": 512,
+        "anchorY": 940,
+        "referenceHeight": 860
+      }
+    ]
+  },
+  "ground-back": {
+    "image": "/journey/characters/directions/elaina-ground-back.webp",
+    "frames": [
+      {
+        "x": 0,
+        "y": 0,
+        "width": 1024,
+        "height": 1024,
+        "anchorX": 512,
+        "anchorY": 940,
+        "referenceHeight": 860
+      }
+    ]
+  },
+  "broom-front": {
+    "image": "/journey/characters/directions/elaina-broom-front.webp",
+    "frames": [
+      {
+        "x": 0,
+        "y": 0,
+        "width": 1024,
+        "height": 1024,
+        "anchorX": 529,
+        "anchorY": 1040,
+        "referenceHeight": 1060
+      }
+    ]
+  },
+  "broom-back": {
+    "image": "/journey/characters/directions/elaina-broom-back.webp",
+    "frames": [
+      {
+        "x": 0,
+        "y": 0,
+        "width": 1024,
+        "height": 1024,
+        "anchorX": 500,
+        "anchorY": 1040,
+        "referenceHeight": 1060
+      }
+    ]
   }
 }
