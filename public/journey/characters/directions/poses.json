@@ -1,0 +1,125 @@
+{
+  "canvas": [
+    1024,
+    1024
+  ],
+  "runtimeIntegrated": false,
+  "poses": [
+    {
+      "id": "ground-front",
+      "png": "/journey/characters/directions/elaina-ground-front.png",
+      "webp": "/journey/characters/directions/elaina-ground-front.webp",
+      "width": 1024,
+      "height": 1024,
+      "bounds": [
+        296,
+        80,
+        727,
+        940
+      ],
+      "bottomAnchor": [
+        512,
+        940
+      ],
+      "anchorMeaning": "bottom-center of artwork; standing poses align to the soles. Broom poses need a seat anchor when integrated.",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceBounds": [
+        323,
+        32,
+        913,
+        1209
+      ],
+      "scale": 0.7306711979609176
+    },
+    {
+      "id": "ground-back",
+      "png": "/journey/characters/directions/elaina-ground-back.png",
+      "webp": "/journey/characters/directions/elaina-ground-back.webp",
+      "width": 1024,
+      "height": 1024,
+      "bounds": [
+        299,
+        80,
+        724,
+        940
+      ],
+      "bottomAnchor": [
+        512,
+        940
+      ],
+      "anchorMeaning": "bottom-center of artwork; standing poses align to the soles. Broom poses need a seat anchor when integrated.",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceBounds": [
+        326,
+        8,
+        929,
+        1227
+      ],
+      "scale": 0.7054963084495488
+    },
+    {
+      "id": "broom-front",
+      "png": "/journey/characters/directions/elaina-broom-front.png",
+      "webp": "/journey/characters/directions/elaina-broom-front.webp",
+      "width": 1024,
+      "height": 1024,
+      "bounds": [
+        84,
+        80,
+        939,
+        940
+      ],
+      "bottomAnchor": [
+        512,
+        940
+      ],
+      "anchorMeaning": "bottom-center of artwork; standing poses align to the soles. Broom poses need a seat anchor when integrated.",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceBounds": [
+        29,
+        20,
+        1222,
+        1220
+      ],
+      "scale": 0.7166666666666667
+    },
+    {
+      "id": "broom-back",
+      "png": "/journey/characters/directions/elaina-broom-back.png",
+      "webp": "/journey/characters/directions/elaina-broom-back.webp",
+      "width": 1024,
+      "height": 1024,
+      "bounds": [
+        64,
+        80,
+        959,
+        940
+      ],
+      "bottomAnchor": [
+        512,
+        940
+      ],
+      "anchorMeaning": "bottom-center of artwork; standing poses align to the soles. Broom poses need a seat anchor when integrated.",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceBounds": [
+        23,
+        17,
+        1238,
+        1185
+      ],
+      "scale": 0.7363013698630136
+    }
+  ]
+}

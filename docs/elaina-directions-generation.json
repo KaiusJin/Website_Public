@@ -1,0 +1,128 @@
+{
+  "mode": "Built-in image_gen edits, followed by locally authorized background removal and alignment",
+  "purpose": "Four additional standalone Elaina views; no keyboard/touch binding or runtime atlas changes.",
+  "sources": [
+    {
+      "title": "TV anime official character illustration",
+      "page": "https://majotabi.jp/#character",
+      "image": "https://majotabi.jp/assets/character/c1.png?0701=",
+      "role": "Front face, outfit and hair; edited into a relaxed front idle pose."
+    },
+    {
+      "title": "Publicly displayed anime production turnaround sheet (Mandarake listing)",
+      "page": "https://ekizo.mandarake.co.jp/auction/item/itemInfoJa.html?index=732355",
+      "image": "https://img.mandarake.co.jp/aucimg/3/0/0/1/0002493001.jpeg",
+      "role": "Rear hair, hat ornament position and cloak construction; scan colors not used as palette."
+    },
+    {
+      "title": "Publicly displayed broom design sheet (Mandarake listing)",
+      "page": "https://k.mandarake.co.jp/auction/item/itemInfoJa.html?index=660216",
+      "image": "https://img.mandarake.co.jp/aucimg/6/0/3/1/0002136031.jpeg",
+      "role": "Broom construction reference."
+    }
+  ],
+  "projectReferences": [
+    "public/journey/characters/elaina-walk-approved.webp",
+    "public/journey/characters/elaina-hover.webp"
+  ],
+  "workflow": [
+    "Official front illustration edited first with the current walking/hover sprite palette.",
+    "Ground rear and seated front derived from that front design.",
+    "Seated rear derived from the seated front and ground rear, with correctly reversed hat/broom direction.",
+    "The tool returned RGB images containing painted checkerboards despite requesting alpha; removed with local isnet-anime matting, then inspected against light and dark backgrounds.",
+    "PNG and lossless WebP exported at 1024 square, 80-pixel top margin and shared y=940 bottom alignment. No automatic keyboard/joystick assignment."
+  ],
+  "poses": [
+    {
+      "name": "ground-front",
+      "prompt": "Use case: identity-preserve.\nCreate ONE full-body FRONT VIEW idle game sprite of Elaina from Wandering Witch.\nReference roles: image 1 is the official character illustration and EDIT TARGET: preserve the left full-body character's face, long silver-white hair, violet-blue eyes, crooked very wide witch hat, two pink hat bands and dangling gold oval charm, white blouse and mustard-gold bow, dark plum-gray robe with pale lavender cuffs/lining and dusty pink piping, short dark pleated skirt, bare legs and plum ankle boots with pink toes/heels and gold trim. Remove the extra portrait heads and all extraneous material. Images 2 and 3 are the CURRENT GAME SPRITES and are the authoritative palette, proportions and crisp softly shaded line style; closely match them. Image 4 is supporting public model sheet for costume construction; ignore its paper, annotations and darker photographed colors.\nEdit the official standing pose only as needed to become a quiet straight-on idle: head and torso exactly face the viewer, both violet-blue eyes clearly visible, friendly composed closed-mouth expression, arms resting naturally down at her sides instead of gesturing, feet naturally close and level. Keep the existing game character's slender normal anime proportions (not chibi), recognizable face and identical costume. White hair with cool pale gray shadows; charcoal plum robe, NOT solid pitch black. No new accessories and no elaborate new decoration. Keep official small gold witch brooch subtle if visible.\nOne single character ONLY, entire hat to soles visible with ample clear margins, level camera no top-down angle, consistent neutral daylight color without warm or blue cast. Clean crisp 2D anime sprite, thin controlled outlines, soft cel shading, no blur, no 3D, no scenic background, no text.\nTrue TRANSPARENT RGBA background, not a painted checkerboard. Prefer a large square 1536x1536 or larger. Center body vertically, feet at around 91% canvas height; hat tip around 7%.",
+      "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-bea2da2e-fea6-4b74-8dd0-c406c86fc17b.png"
+    },
+    {
+      "name": "ground-back",
+      "prompt": "Use case: identity-preserve. Make ONE full-body straight BACK VIEW idle sprite of the exact Elaina in image 1. Rotate the same character 180 degrees; do not redesign or change her proportions, colors, materials, rendering style, hat width, face identity, garment cut or ankle boots. Image 1 is the authoritative front-view design and palette. Image 2 is the public anime turnaround sheet: use the RIGHTMOST back view only for accurate rear garment/hair construction, not for its dark photocopied color. Image 3 is the current game walking sprite for style consistency.\nRear view, head and torso both fully facing away, no visible face, no looking over shoulder, no front blouse or gold chest bow drawn on her back. Long silver-white hair falls naturally down the middle back to the waist with pointed tapered ends and the small tied side lock. Dark charcoal-plum cloak back with soft folds and split lower tails, pink edging and lavender lining only where physically visible; pale lavender cuffs. Preserve official hat shape with two pale pink bands; the dangling gold oval charm appears on viewer LEFT when seen from behind (it is viewer RIGHT in front). Feet level, relaxed arms down, same exact neutral standing silhouette and scale as image1. Full hat and boots included with clear margins. Thin clean anime line art, soft cel shadows, neutral daylight, sharp and detailed. No environment, text, props, frame or additional figures. TRUE transparent RGBA background, never paint checkerboard squares. Square high-resolution output preferably1536 or larger.",
+      "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-073a62bb-1905-45ca-ae9b-3478996df0b4.png"
+    },
+    {
+      "name": "broom-front",
+      "prompt": "Use case: identity-preserve. Make ONE full-body FRONT VIEW Elaina sprite, comfortably SITTING SIDE-SADDLE on her broom.\nImage1 is the authoritative new front character design: keep her exact facial identity, violet-blue eyes, white-silver hair and cool pale shadows, crooked broad plum witch hat with two pink bands and gold dangling charm, charcoal plum robe, lavender cuffs/lining, pink edging, white blouse with mustard-gold bow, short dark skirt, bare legs, plum ankle boots with pink toes/heels and gold cuff trim. Image2 is the existing game broom sprite: match its broom materials and comfortable side-saddle seated anatomy, knee angle, robe draping, and rendering style. Image3 is the official public broom construction reference, not a rendering style.\nFace and torso directly toward viewer, both eyes visible, gentle closed-mouth smile. Upright relaxed seated pose, both knees together gently bent, both shins hanging down naturally together slightly toward viewer RIGHT; no spread legs, keep skirt naturally covering lap. Broom passes HORIZONTALLY behind/under thighs at seat level: tan-gold bristles extend to viewer LEFT and simple curved wooden handle to viewer RIGHT; pink binding as in the current hover reference. Both hands rest naturally on broom beside hips. Cloth hangs beneath the seat, hair settles behind shoulders. Show the complete seated character and entire broom with ample margins. Use exactly image1 colors and thin crisp 2D anime outlines, no different lighting or heavily saturated black. No scenery, labels, extra figure, floor shadow or border. TRUE transparent RGBA background, no painted checkerboard. One square high-resolution sprite preferably1536 or larger.",
+      "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-015e8e0e-8ca8-4305-ad6e-349998fec2b7.png"
+    },
+    {
+      "name": "broom-back",
+      "prompt": "Use case: identity-preserve.\nMake ONE full-body straight BACK VIEW of the exact seated Elaina and broom in image1, as if the camera moves to the directly opposite side of her. Image1 is the FRONT SEATED pose to rotate 180 degrees, not mirror. Image2 is the matching ground BACK design and authoritative rear hair/hat/robe construction. Image3 is the current in-game side hover sprite for exact costume and broom materials. Image4 is the public model sheet to verify back-view construction, ignore paper colors.\nHead and shoulders face straight AWAY from viewer. No eyes, nose, face or over-the-shoulder glance. Long silver-white hair falls over her back to her waist, with tapered strands and small pink-tied side braid. Preserve the same crooked very wide charcoal-plum hat with two pale pink bands and dangling gold oval ornament; gold charm now viewer LEFT. Identical charcoal-plum coat, pale lavender cuffs/lining, dusty pink trim, plum ankle boots with pink heels and gold cuff trim, neutral lighting and proportions as the other three sprites.\nThe SAME relaxed side-saddle seating, upright torso with shoulders level, both knees and shins together on the far side of the broom. From this REAR camera, long robe back partly covers the seat and thighs; lower legs/boot heels appear below robe naturally, no front knee-caps on the back of legs and no front bow/blouse/brooch on the back. Hands rest beside hips on the handle naturally.\nThe full broom crosses horizontally at seat height, handle now extending to viewer LEFT, straw-gold bristles with pink binding to viewer RIGHT (opposite of the FRONT view). Same simple gently curved wooden handle, no added props. Do not paint the back as merely the front torso with white hair pasted onto the face. Maintain correct seated anatomy, cloth hanging downward beneath seat, no standing pose.\nClean crisp 2D anime illustration, thin linework and soft cel-shading consistent with references. One character plus one broom, fully included with generous clear margins, square high resolution preferably1536 or larger. True transparent RGBA background, never paint checkerboard pattern. No scenery, text, extra figures, borders or ground shadow.",
+      "path": "/Users/kaius/.codex/generated_images/01a0a6c0-5fe1-7d52-b51e-f55c495f825b/exec-d5e6999e-bf92-4b0d-94aa-3a278c8cc838.png"
+    }
+  ],
+  "assetMetadata": "public/journey/characters/directions/poses.json",
+  "validation": [
+    {
+      "name": "ground-front",
+      "size": [
+        1024,
+        1024
+      ],
+      "transparentFraction": 0.7971954345703125,
+      "bounds": [
+        296,
+        80,
+        727,
+        940
+      ],
+      "pngBytes": 385868,
+      "webpBytes": 252766,
+      "pngWebpVisiblePixelsMatch": true
+    },
+    {
+      "name": "ground-back",
+      "size": [
+        1024,
+        1024
+      ],
+      "transparentFraction": 0.8028049468994141,
+      "bounds": [
+        299,
+        80,
+        724,
+        940
+      ],
+      "pngBytes": 354575,
+      "webpBytes": 232048,
+      "pngWebpVisiblePixelsMatch": true
+    },
+    {
+      "name": "broom-front",
+      "size": [
+        1024,
+        1024
+      ],
+      "transparentFraction": 0.7533473968505859,
+      "bounds": [
+        84,
+        80,
+        939,
+        940
+      ],
+      "pngBytes": 485077,
+      "webpBytes": 329706,
+      "pngWebpVisiblePixelsMatch": true
+    },
+    {
+      "name": "broom-back",
+      "size": [
+        1024,
+        1024
+      ],
+      "transparentFraction": 0.7456874847412109,
+      "bounds": [
+        64,
+        80,
+        959,
+        940
+      ],
+      "pngBytes": 479219,
+      "webpBytes": 326594,
+      "pngWebpVisiblePixelsMatch": true
+    }
+  ]
+}
