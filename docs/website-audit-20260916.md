@@ -1,4 +1,4 @@
-**修复状态：** 此文件保留修复前的审查证据。已完成的修复及当前数据库状态见 [修复记录](implementation-progress.md) 与 [CMS 说明](../supabase/README.md)。按用户后续指示，旧图、人物动画和场景资源全部保留；新增测试已精简。
+**历史审查快照，不是当前数据库说明。** 下文的空 `site_profile`、未登记迁移和旧 SQL 测试等描述，记录的是修复前的状态；旧测试和采样文件已删除，历史迁移 SQL 则保留。其中指向已删除文件的链接不再适用。当前数据库状态和只读检查见 [CMS 说明](../supabase/README.md) 与 [最终态 SQL 测试](../tests/cms-final-state.sql)。按用户后续指示，旧图、人物动画和场景资源全部保留。
 
 **Website 审查记录 — 2026-09-16**
 
@@ -95,17 +95,11 @@ MediaLibrary 上传时填写的 alt 只写入 `media_assets.alt`。目前复制�
 
 另有 public/.DS_Store，虽已被 Git ignore，当前构建仍复制了它。美术生成 JSON 是出处记录，并非运行时兼容逻辑；可以归档，不能把所有旧文档都当成可随意抹掉的代码。
 
-**迁移与测试：哪些过时，哪些仍有用途**
+**当前迁移与测试（2026-09-16）**
 
-- [docs/cms-schema-observed.json](/Users/kaius/Project/Website_Public/docs/cms-schema-observed.json) 仍列出已经不存在的 date_badge，空表则是空 columns；`sampleType: object` 还混淆了 null 与真实 JSON 类型。这份采样不能继续充当当前 schema 定义，应更新成 information_schema 结构记录，或明确归档为历史快照。
-- [supabase/README.md:35](/Users/kaius/Project/Website_Public/supabase/README.md:35) 称只有前四个迁移生效、第五个还需执行，已经与实测结构和策略不符。迁移历史确实仍缺失，但不能照旧说明把“未登记”当“未执行”。应核对五个迁移的实际效果后更新登记方案。
-- **delete-retired-draft-bucket.mjs 还未完成使命。** bucket 仍存在且为空；脚本不能仅因名字含 retired 就删除。本次审查没有执行 Storage 删除。待 bucket 删除并复核后，再同时删除脚本、package.json 命令和操作说明。
-- **历史 migration 不是运行中的旧兼容层。** 第一、二个迁移创建草稿机制，第三至第五个删除它们。这些 SQL 当前仍被本地重建测试使用，而且生产没有登记历史；不宜直接剪掉文件中间的草稿代码。若要精简，应以已验证的最终结构建立新的 baseline，并协调历史登记和测试入口。
-- **tests/cms-fixture.sql 和 tests/cms-database.sql 仍有效。** 本次在全新隔离 PostgreSQL 中顺序执行 fixture、五个 migration、数据库测试，全部通过。它们不属于只跑过一次就失效的迁移脚本，也没有进入前端 bundle。
-- **数据库测试覆盖宣称过强。** [cms-database.sql:37](/Users/kaius/Project/Website_Public/tests/cms-database.sql:37) 只测 UPDATE 排序，没有测 Admin upsert；fixture 没有旧 experiences 样本，也就未证明迁移保留了真实旧记录；最终 PASS 文案中的 split experiences 超出了实际断言。应补有代表性的旧记录保留验证，并测试实际写入路径。
-- **29 个 JS 测试大部分应保留。** 惯性、镜头不倒退、方向、动画锚点、URL 协议、移动输入等都覆盖现存行为。可以删除或改写 [journey.test.mjs:29](/Users/kaius/Project/Website_Public/tests/journey.test.mjs:29) 那种仅对常量数组作原样比对的测试，以及只锁死 MOBILE_HOTSPOT_Y 数字的断言。图书馆测试标题声称“允许飞行进入”，实际只给 canEnterLibrary 传 x，没有覆盖飞行状态；语言测试只验证键集合一致，不等于每个 UI 引用都有翻译。
-- **缺少真正的入口和 CMS 展示检查。** lint、全部 JS 测试和生产 build 都通过，但漏掉了入口崩溃、日期缺失与日志错误映射。应优先补少量能检查这三个行为的测试，而非继续增加常量测试。
-
+- 七个已应用的迁移 SQL 保留在 `supabase/migrations/`，远端也记录了相同版本。历史 SQL 是变更记录，不应再次对生产执行。
+- 旧的本地 fixture、数据库重放测试和采样 schema 文件已删除。当前数据库结构以 [CMS 说明](../supabase/README.md) 为准，用 [只读最终态检查](../tests/cms-final-state.sql) 验证；Classic/Journey 展示行为由 `npm test` 验证。
+- 本审查报告其余内容保留修复前证据，相关数量和待办不代表当前状态。
 **不能误删的空值/兼容处理**
 
 - 线上许多 bullets、skills、link、role_icon 等列允许 NULL，且现有记录确有空值。`|| []`、空链接判断等不是“不可能边界”。

@@ -22,14 +22,14 @@ export default function About({ profile, loading, error }) {
               <span className="about-info-label">Location</span>
               <span className="about-info-value">{profile.location}</span>
             </div>}
-            <div className="about-info-item">
+            {profile.education && <div className="about-info-item">
               <span className="about-info-label">Education</span>
-              <span className="about-info-value">University of Waterloo, CS</span>
-            </div>
-            <div className="about-info-item">
+              <span className="about-info-value">{profile.education}</span>
+            </div>}
+            {profile.focus_areas && <div className="about-info-item">
               <span className="about-info-label">Focus Areas</span>
-              <span className="about-info-value">Backend / Cloud / AI Tools</span>
-            </div>
+              <span className="about-info-value">{profile.focus_areas}</span>
+            </div>}
           </div>
         </div>
       </div>}

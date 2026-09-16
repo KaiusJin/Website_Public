@@ -39,12 +39,12 @@ export default function Hero({ profile }) {
     <section id="hero" className="hero-section">
       <div className="hero-glow"></div>
       
-      <div className="hero-badge">
+      {profile.hero_badge && <div className="hero-badge">
         <i className="fas fa-graduation-cap"></i>
-        <span>Computer Science @ UWaterloo</span>
-      </div>
+        <span>{profile.hero_badge}</span>
+      </div>}
       
-      <h1 
+      {profile.name && <h1
         className="hero-title"
         style={{ 
           transition: 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1)', 
@@ -52,16 +52,13 @@ export default function Hero({ profile }) {
           whiteSpace: 'nowrap'
         }}
       >
-        {currentGreeting.prefix}<span>Kaius Jin</span>{currentGreeting.suffix}
-      </h1>
+        {currentGreeting.prefix}<span>{profile.name}</span>{currentGreeting.suffix}
+      </h1>}
       
       {profile.intro && <p className="hero-subtitle">{profile.intro}</p>}
       
       <div className="hero-tags">
-        <span>Backend Engineering</span>
-        <span>Cloud Infrastructure</span>
-        <span>Full-stack Development</span>
-        <span>AI Tools</span>
+        {(profile.hero_tags || []).map(tag => <span key={tag}>{tag}</span>)}
       </div>
       
       <div className="hero-actions">

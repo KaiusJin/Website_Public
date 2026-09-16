@@ -1,5 +1,6 @@
 import { useCMSData } from '../../hooks/useCMSData';
 import { dateRange } from '../../data/profile';
+import { safeUrl } from '../../journey/data/content';
 
 export default function Experience() {
   const { data: workExperiences, loading: workLoading, error: workError } = useCMSData('work_experiences');
@@ -26,46 +27,46 @@ export default function Experience() {
       )}
 
       <div className="timeline-container">
-        {experiences.map((e) => (
-          <div key={`${e.category}-${e.id}`} className="timeline-item">
-            <div className="timeline-dot"></div>
-            <div className="timeline-content">
-              <div className="timeline-header">
-                <div className="timeline-title-area">
-                  <p className="experience-category">{e.category}</p>
-                  <h3>{e.title}</h3>
-                  <h4>
-                    <i className={e.role_icon} aria-hidden="true"></i>
-                    {e.role}
-                  </h4>
+        {experiences.map((e) => {
+          const website = safeUrl(e.link);
+          return (
+            <div key={`${e.category}-${e.id}`} className="timeline-item">
+              <div className="timeline-dot"></div>
+              <div className="timeline-content">
+                <div className="timeline-header">
+                  <div className="timeline-title-area">
+                    <p className="experience-category">{e.category}</p>
+                    <h3>{website ? (
+                      <a className="timeline-title-link" href={website} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${e.title} website`}>
+                        <span>{e.title}</span><i className="fas fa-external-link-alt" aria-hidden="true"></i>
+                      </a>
+                    ) : e.title}</h3>
+                    <h4>
+                      <i className={e.role_icon} aria-hidden="true"></i>
+                      {e.role}
+                    </h4>
+                  </div>
+                  <span className="timeline-date">{dateRange(e)}</span>
                 </div>
-                <span className="timeline-date">{dateRange(e)}</span>
-              </div>
 
-              <div className="timeline-body">
-                <ul className="timeline-bullets">
-                  {(e.bullets || []).map((b, j) => (
-                    <li key={j}>{b.text}</li>
-                  ))}
-                </ul>
-                {e.skills?.length > 0 && (
-                  <div className="skills-list" aria-label={`${e.title} skills`}>
-                    {e.skills.map((skill, j) => (
-                      <span key={`${skill.tag}-${j}`} className="skill-tag">{skill.tag}</span>
+                <div className="timeline-body">
+                  <ul className="timeline-bullets">
+                    {(e.bullets || []).map((b, j) => (
+                      <li key={j}>{b.text}</li>
                     ))}
-                  </div>
-                )}
-                {e.link && (
-                  <div className="timeline-actions">
-                    <a href={e.link} target="_blank" rel="noopener noreferrer">
-                      {e.link_text || 'Visit Official Website'} <i className="fas fa-arrow-right" style={{ fontSize: '0.75rem' }}></i>
-                    </a>
-                  </div>
-                )}
+                  </ul>
+                  {e.skills?.length > 0 && (
+                    <div className="skills-list" aria-label={`${e.title} skills`}>
+                      {e.skills.map((skill, j) => (
+                        <span key={`${skill.tag}-${j}`} className="skill-tag">{skill.tag}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

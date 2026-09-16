@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import {regions,REGION_WIDTH,WORLD_HEIGHT,GROUND_Y,MOBILE_HOTSPOT_Y,townExperienceHotspots,libraryDoorHotspot,libraryExitHotspot} from '../data/regions';
+import {regions,REGION_WIDTH,WORLD_HEIGHT,GROUND_Y,MOBILE_HOTSPOT_Y,townExperienceHotspots,libraryDoorHotspot,libraryExitHotspot,libraryHotspotsFor} from '../data/regions';
 import {clamp,resolveAxes,damp,motionVelocity,cameraFollow} from './motion';
 import {createAmbience} from './ambience';
 import {advanceAnimation,animationPose,spritePlacement} from './animation';
@@ -199,7 +199,11 @@ export function createJourneyGame(parent,bridge,onState,onReady,onError,onProgre
    this.character.setPosition(this.player.x,this.player.y+pose.bob).setAngle(this.characterAngle);
    this.shadow.setX(this.player.x).setAlpha(clamp(1-(GROUND_Y-this.player.y)/450,0,.24));
    const r=regions[current];
-   const contentPoints=current===2&&!this.room?townExperienceHotspots.map(point=>({...point,x:r.x+point.offset,kind:'content'})):[{id:r.id,x:r.x+(r.hotspot?.offset??r.anchor),y:r.hotspot?.y??MOBILE_HOTSPOT_Y,kind:'content',icon:r.icon}];
+   const contentPoints=current===2&&!this.room
+    ?townExperienceHotspots.map(point=>({...point,x:r.x+point.offset,kind:'content'}))
+    :this.room&&current===3
+     ?libraryHotspotsFor(controls.projectCount??0).map(point=>({...point,x:r.x+point.offset,kind:'content'}))
+     :[{id:r.id,x:r.x+(r.hotspot?.offset??r.anchor),y:r.hotspot?.y??MOBILE_HOTSPOT_Y,kind:'content',icon:r.icon}];
    const closest=contentPoints.reduce((best,point)=>{const distance=Math.abs(this.player.x-point.x);return !best||distance<best.distance?{...point,distance}:best;},null);
    this.near=closest?.distance<260?closest.id:null;
    if(current===2&&Math.abs(this.player.x-LIBRARY_DOOR_X)<240)this.near='library-door';

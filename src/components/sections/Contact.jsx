@@ -1,23 +1,17 @@
 import { useEffect, useState } from 'react';
 import { safeUrl } from '../../journey/data/content';
 
-const contactSlogans = [
-  'I turn scattered signals into working systems.',
-  'I build software that survives real users.',
-  'I make AI feel sharp, useful, and fast.',
-  'I connect algorithms with human problems.'
-];
-
 export default function Contact({ profile, loading, error }) {
   const [activeSlogan, setActiveSlogan] = useState(0);
+  const contactSlogans = profile.contact_slogans || [];
 
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setActiveSlogan((current) => (current + 1) % contactSlogans.length);
+      setActiveSlogan((current) => (current + 1) % (contactSlogans.length || 1));
     }, 3200);
 
     return () => window.clearInterval(timer);
-  }, []);
+  }, [contactSlogans.length]);
 
   return (
     <section id="contact" className="contact-section">
@@ -75,7 +69,7 @@ export default function Contact({ profile, loading, error }) {
 
         <div className="contact-slogan-panel" aria-live="polite">
           <div key={activeSlogan} className="contact-slogan-text">
-            {contactSlogans[activeSlogan]}
+            {contactSlogans[activeSlogan % (contactSlogans.length || 1)]}
           </div>
         </div>
       </div>
