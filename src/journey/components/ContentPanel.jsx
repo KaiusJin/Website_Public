@@ -1,20 +1,20 @@
 import {useState} from 'react';
-import {safeUrl,experienceTables} from '../data/content';
+import {safeUrl,experienceTables} from '../../data/content';
 import Icon from './Icon';
 import {resolveProfile,dateRange} from '../../data/profile';
-const External=({href,children,...props})=>{const url=safeUrl(href,{email:true});return url?<a href={url} target={url.startsWith('mailto:')?undefined:'_blank'} rel="noopener noreferrer" {...props}>{children}<Icon name="external" size={15}/></a>:null;};
-function Record({item:r,t,type,hideTitle=false,hideType=false,titleFirst=false,skillRecord=false,experience=false}){
- const meta=r.organization||r.role||(hideType?'':type===t.skills?'':type),date=r.year||dateRange(r,t.present);
+const External=({href,children})=>{const url=safeUrl(href,{email:true});return url?<a href={url} target={url.startsWith('mailto:')?undefined:'_blank'} rel="noopener noreferrer">{children}<Icon name="external" size={15}/></a>:null;};
+function Record({item:r,t,section}){
+ const project=section==='projects',experience=experienceTables.includes(section),type=t[section];
+ const meta=r.organization||r.role||(project||section==='skills'?'':type),date=r.year||dateRange(r,t.present);
  const website=experience?safeUrl(r.link):null;
- const titleNode=!hideTitle&&<h3>{website?<a className="experience-name-link" href={website} target="_blank" rel="noopener noreferrer" aria-label={`${t.website}: ${r.title}`}><span>{r.title}</span><Icon name="external" size={18}/></a>:r.title||r.category}</h3>;
+ const titleNode=<h3>{website?<a className="experience-name-link" href={website} target="_blank" rel="noopener noreferrer" aria-label={`${t.website}: ${r.title}`}><span>{r.title}</span><Icon name="external" size={18}/></a>:r.title||r.category}</h3>;
  const metaNode=(meta||date)&&<div className="record-meta">{meta&&<span>{meta}</span>}{date&&<span>{date}</span>}</div>;
- return <article className={`journal-record${titleFirst?' project-record':''}${skillRecord?' skill-record':''}`}>
-  {titleFirst?<div className="record-title-row">{titleNode}{metaNode}</div>:<>{metaNode}{titleNode}</>}
+ return <article className={`journal-record${project?' project-record':''}${section==='skills'?' skill-record':''}`}>
+  {project?<div className="record-title-row">{titleNode}{metaNode}</div>:<>{metaNode}{titleNode}</>}
   {safeUrl(r.image_url)&&<img className="record-image" src={safeUrl(r.image_url)} alt={r.image_alt||r.title} loading="lazy"/>}
-  {r.description&&<p>{r.description}</p>}
-  {r.bullets?.length>0&&<ul>{r.bullets.map((b,i)=><li key={i}>{b.text}</li>)}</ul>}
+  {type!==t.awards&&r.bullets?.length>0&&<ul>{r.bullets.map((b,i)=><li key={i}>{b.text}</li>)}</ul>}
   {r.skills?.length>0&&<div className="record-tags">{r.skills.map((s,i)=><span key={i}>{s.tag}</span>)}</div>}
-  {(safeUrl(r.github_link)||(!experience&&safeUrl(r.link)))&&<div className="record-links"><External href={r.github_link}>{t.source}</External>{!experience&&<External href={r.link}>{r.link_text||(type===t.awards?t.certificate:t.website)}</External>}</div>}
+  {(safeUrl(r.github_link)||(!experience&&safeUrl(r.link)))&&<div className="record-links"><External href={r.github_link}>{t.source}</External>{!experience&&<External href={r.link}>{type===t.awards?t.certificate:(r.link_text||t.website)}</External>}</div>}
  </article>;
 }
 function Personal({entries,t}){
@@ -32,16 +32,9 @@ export default function ContentPanel({section,content,lang,t,onPersonal,onRestar
  if(failedTables.includes(sourceTable))return <div className="journal-empty"><p role="alert">{t.dataError}</p><button className="journey-primary" onClick={retry}>{t.retry}</button></div>;
  if((section==='about'||section==='contact')&&!profile)return <p>{t.noItems}</p>;
  if(section==='about')return <><span className="record-meta">{journey.focus}</span><h3 className="profile-heading">{journey.heading}</h3><p className="journal-lead">{journey.intro}</p><p>{journey.bio}</p><div className="profile-facts"><div><small>{lang==='en'?'EDUCATION':'教育'}</small><strong>{journey.education_school}</strong><span>{journey.education_field}</span></div><div><small>{lang==='en'?'BASED IN':'所在城市'}</small><strong>{profile.location}</strong><span>{journey.location_detail}</span></div></div><button className="journal-text-button" onClick={onPersonal}>{t.personal}<Icon name="arrow"/></button></>;
- if(section==='contact')return <><h3 className="profile-heading">{journey.contact_heading}</h3><p className="journal-lead">{journey.contact_intro}</p><div className="contact-stamps"><External href={profile.email?`mailto:${profile.email}`:null}><Icon name="letter"/>{t.email}</External><External href={profile.github}>{t.github}</External><External href={profile.linkedin}>{t.linkedin}</External>{profile.resume_url&&<External href={profile.resume_url}>{t.resume}</External>}</div><p>{journey.contact_outro}</p><button className="journal-text-button" onClick={onRestart}>{t.replay}<Icon name="arrow"/></button></>;
+ if(section==='contact')return <><h3 className="profile-heading">{journey.contact_heading}</h3><p className="journal-lead">{journey.contact_intro}</p><div className="contact-stamps"><External href={profile.email?`mailto:${profile.email}`:null}><Icon name="letter"/>{t.email}</External><External href={profile.github}>{t.github}</External><External href={profile.linkedin}>{t.linkedin}</External></div><p>{journey.contact_outro}</p><button className="journal-text-button" onClick={onRestart}>{t.replay}<Icon name="arrow"/></button></>;
 
  if(section==='personal')return <Personal entries={data.personal_entries} t={t}/>;
- if(section==='project-detail'){
-  const project=data.projects.find(item=>item.id===projectId);
-  return project?<Record item={project} t={t} type={t.projects} hideType titleFirst/>:<p>{t.noItems}</p>;
- }
- if(section==='other-projects'){
-  const projects=data.projects.slice(4);
-  return projects.length?projects.map(item=><Record key={item.id} item={item} t={t} type={t.projects} hideType titleFirst/>):<p>{t.noOtherProjects}</p>;
- }
- return <>{data[section]?.length?data[section].map(item=><Record key={item.id} item={item} t={t} type={t[section]} hideType={section==='projects'} titleFirst={section==='projects'} skillRecord={section==='skills'} experience={experienceTables.includes(section)}/>):<p>{t.noItems}</p>}{section==='awards'&&profile?.resume_url&&<div className="record-links"><External href={profile.resume_url}>{t.resume}</External></div>}</>;
+ const items=section==='project-detail'?data.projects.filter(item=>item.id===projectId):section==='other-projects'?data.projects.slice(4):data[sourceTable]||[];
+ return <>{items.length?items.map(item=><Record key={item.id} item={item} t={t} section={sourceTable}/>):<p>{section==='other-projects'?t.noOtherProjects:t.noItems}</p>}</>;
 }

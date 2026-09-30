@@ -1,85 +1,46 @@
-import { useState, useEffect } from 'react';
-import { scrollToElementWithOffset } from '../../utils/smoothScroll';
+import { safeUrl } from "../../data/content";
 
-const greetings = [
-  { prefix: "Hi, I'm ", suffix: "." },
-  { prefix: "你好，我是 ", suffix: "。" },
-  { prefix: "Bonjour, je suis ", suffix: "." },
-  { prefix: "こんにちは、", suffix: " です。" },
-  { prefix: "안녕하세요, ", suffix: " 입니다." }
-];
-
-export default function Hero({ profile }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isFading, setIsFading] = useState(false);
-
-  useEffect(() => {
-    let transitionTimeout;
-    const interval = setInterval(() => {
-      setIsFading(true);
-      transitionTimeout = setTimeout(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % greetings.length);
-        setIsFading(false);
-      }, 500);
-    }, 3500);
-
-    return () => {
-      clearInterval(interval);
-      clearTimeout(transitionTimeout);
-    };
-  }, []);
-
-  const handleScrollTo = (id) => {
-    scrollToElementWithOffset(id, 92);
-  };
-
-  const currentGreeting = greetings[currentIndex];
-
+export default function Hero({ profile, loading, error }) {
   return (
-    <section id="hero" className="hero-section">
-      <div className="hero-glow"></div>
-      
-      {profile.hero_badge && <div className="hero-badge">
-        <i className="fas fa-graduation-cap"></i>
-        <span>{profile.hero_badge}</span>
-      </div>}
-      
-      {profile.name && <h1
-        className="hero-title"
-        style={{ 
-          transition: 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1)', 
-          opacity: isFading ? 0 : 1,
-          whiteSpace: 'nowrap'
-        }}
-      >
-        {currentGreeting.prefix}<span>{profile.name}</span>{currentGreeting.suffix}
-      </h1>}
-      
-      {profile.intro && <p className="hero-subtitle">{profile.intro}</p>}
-      
-      <div className="hero-tags">
-        {(profile.hero_tags || []).map(tag => <span key={tag}>{tag}</span>)}
-      </div>
-      
-      <div className="hero-actions">
-        <a href="/journey" className="btn btn-secondary">Explore my journey <i className="fas fa-moon" /></a>
-        <button 
-          onClick={() => handleScrollTo('project')} 
-          className="btn btn-primary"
-        >
-          View Projects <i className="fas fa-arrow-right"></i>
-        </button>
-        <button 
-          onClick={() => handleScrollTo('contact')} 
-          className="btn btn-secondary"
-        >
-          Contact Me
-        </button>
-      </div>
-
-      <div className="hero-scroll-indicator" onClick={() => handleScrollTo('about')}>
-        <span>scroll to see more</span>
-        <i className="fas fa-chevron-down"></i>
+    <section id="hero" className="hero-section" aria-labelledby="hero-title">
+      <div className="hero-layout">
+        <div className="hero-identity">
+          {loading ? (
+            <div className="name-skeleton" aria-hidden="true" />
+          ) : (
+            profile.name && (
+              <h1 id="hero-title">
+                {profile.name}
+                <span className="name-period" aria-hidden="true">
+                  .
+                </span>
+              </h1>
+            )
+          )}
+          {profile.hero_badge && (
+            <p className="hero-discipline">{profile.hero_badge}</p>
+          )}
+        </div>
+        <div className="hero-introduction">
+          {loading && <p role="status">Loading profile…</p>}
+          {error && <p role="alert">Profile could not be loaded.</p>}
+          {profile.intro && <p className="hero-intro">{profile.intro}</p>}
+          <div className="hero-links">
+            <a href="#project" className="text-link">
+              View projects <span aria-hidden="true">↓</span>
+            </a>
+            {safeUrl(profile.github) && (
+              <a
+                href={safeUrl(profile.github)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="muted-link"
+              >
+                GitHub <span aria-hidden="true">↗</span>
+              </a>
+            )}
+          </div>
+        </div>
       </div>
     </section>
   );

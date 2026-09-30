@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {joystickVector,resolveAxes} from '../src/journey/game/motion.js';
-import {safeUrl} from '../src/journey/data/content.js';
+import {safeUrl} from '../src/data/content.js';
 import {regions,REGION_WIDTH,townExperienceHotspots,libraryProjectHotspots,libraryOtherHotspot,libraryHotspotsFor} from '../src/journey/data/regions.js';
 import {copy} from '../src/journey/i18n/copy.js';
 test('joystick dead zone avoids drift; extreme diagonal gestures remain bounded',()=>{

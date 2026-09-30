@@ -1,44 +1,18 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { loadContent } from '../data/content';
 
 export function useCMSData(tableName) {
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        const abortController = new AbortController();
-        let active = true;
-
-        async function fetchData() {
-            setLoading(true);
-            setError(null);
-            try {
-                const { data: items, error: supabaseError } = await supabase
-                    .from(tableName)
-                    .select('*')
-                    .order('order', { ascending: true })
-                    .abortSignal(abortController.signal);
-
-                if (supabaseError) throw supabaseError;
-                if (!active) return;
-                setData(items || []);
-            } catch (err) {
-                if (!active) return;
-                console.error(`Error fetching from ${tableName}:`, err);
-                setData([]);
-                setError(err);
-            } finally {
-                if (active) setLoading(false);
-            }
-        }
-
-        fetchData();
-        return () => {
-            active = false;
-            abortController.abort();
-        };
-    }, [tableName]);
-
-    return { data, loading, error };
+  const [state, setState] = useState({ data: [], loading: true, error: null });
+  useEffect(() => {
+    const abort = new AbortController();
+    let active = true;
+    setState(previous => ({ ...previous, loading: true, error: null }));
+    loadContent(supabase, tableName, abort.signal).then(
+      data => { if (active) setState({ data, loading: false, error: null }); },
+      error => { if (active) setState({ data: [], loading: false, error }); },
+    );
+    return () => { active = false; abort.abort(); };
+  }, [tableName]);
+  return state;
 }

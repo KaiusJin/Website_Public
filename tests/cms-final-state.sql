@@ -20,18 +20,13 @@ expected_profile_columns (column_name, data_type) as (
   values
     ('name', 'text'),
     ('hero_badge', 'text'),
-    ('hero_tags', 'jsonb'),
-    ('heading', 'text'),
     ('intro', 'text'),
     ('bio', 'text'),
     ('education', 'text'),
-    ('focus_areas', 'text'),
-    ('contact_slogans', 'jsonb'),
     ('location', 'text'),
     ('email', 'text'),
     ('github', 'text'),
     ('linkedin', 'text'),
-    ('resume_url', 'text'),
     ('journey_en', 'jsonb'),
     ('journey_zh', 'jsonb')
 ),
@@ -89,11 +84,9 @@ checks (check_name, passed) as (
 
   union all
 
-  select 'One profile row has Classic arrays and Journey locale objects',
+  select 'One profile row retains Journey locale objects',
     count(*) = 1 and coalesce(bool_and(
       name <> ''
-      and jsonb_typeof(hero_tags) = 'array'
-      and jsonb_typeof(contact_slogans) = 'array'
       and jsonb_typeof(journey_en) = 'object'
       and jsonb_typeof(journey_zh) = 'object'
       and journey_en ?& array[
@@ -119,6 +112,35 @@ checks (check_name, passed) as (
   where n.nspname = 'public' and not t.tgisinternal
     and c.relname in ('work_experiences', 'club_experiences', 'volunteer_experiences', 'skills')
     and t.tgname like '%icon%'
+
+  union all
+
+  select 'Awards retain credential fields and omit retired text fields',
+    (select count(*) = 4 from information_schema.columns
+      where table_schema = 'public' and table_name = 'awards'
+        and column_name in ('title', 'organization', 'year', 'link'))
+    and not exists (select 1 from information_schema.columns
+      where table_schema = 'public' and table_name = 'awards'
+        and column_name in ('description', 'bullets', 'link_text'))
+
+  union all
+
+  select 'Experience links retain URLs and omit custom labels',
+    (select count(*) = 3 from information_schema.columns
+      where table_schema = 'public'
+        and table_name in ('work_experiences', 'club_experiences', 'volunteer_experiences')
+        and column_name = 'link')
+    and not exists (select 1 from information_schema.columns
+      where table_schema = 'public'
+        and table_name in ('work_experiences', 'club_experiences', 'volunteer_experiences')
+        and column_name = 'link_text')
+
+  union all
+
+  select 'Retired Classic profile fields are absent',
+    not exists (select 1 from information_schema.columns
+      where table_schema = 'public' and table_name = 'site_profile'
+        and column_name in ('resume_url', 'heading', 'hero_tags', 'focus_areas', 'contact_slogans'))
 
   union all
 

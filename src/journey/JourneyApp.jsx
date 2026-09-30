@@ -3,7 +3,7 @@ import {createJourneyGame} from './game/createJourneyGame';
 import {keyboardCommand} from './game/facing';
 import {regions,sceneText,MOBILE_HOTSPOT_Y,libraryProjectHotspots,libraryOtherHotspot} from './data/regions';
 import {copy,initialLanguage} from './i18n/copy';
-import {experienceTables} from './data/content';
+import {experienceTables} from '../data/content';
 import useJourneyContent from './data/useJourneyContent';
 import Icon from './components/Icon';
 import Modal from './components/Modal';

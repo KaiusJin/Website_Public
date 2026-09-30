@@ -1,160 +1,97 @@
-import { useState, useEffect } from 'react';
-import NavBar from './components/NavBar';
-import Hero from './components/sections/Hero';
-import About from './components/sections/About';
-import Projects from './components/sections/Projects';
-import AllProjects from './components/sections/AllProjects';
-import Skills from './components/sections/Skills';
-import Experience from './components/sections/Experience';
-import Awards from './components/sections/Awards';
-import Contact from './components/sections/Contact';
-import { useCMSData } from './hooks/useCMSData';
-import { resolveProfile } from './data/profile';
+import { useState, useEffect, useRef } from "react";
+import NavBar from "./components/NavBar";
+import Hero from "./components/sections/Hero";
+import About from "./components/sections/About";
+import Projects from "./components/sections/Projects";
+import AllProjects from "./components/sections/AllProjects";
+import Experience from "./components/sections/Experience";
+import Contact from "./components/sections/Contact";
+import { useCMSData } from "./hooks/useCMSData";
+import { resolveProfile } from "./data/profile";
 
-function App() {
-  const profileContent = useCMSData('site_profile');
-  const profile = profileContent.loading || profileContent.error ? {} : resolveProfile(profileContent.data) ?? {};
-  const [activeSection, setActiveSection] = useState('hero');
-  const [currentPage, setCurrentPage] = useState('home');
-  const [scrollTarget, setScrollTarget] = useState(null);
-
-  // Handle layout-stable scroll targeting (ResizeObserver prevents page-load race conditions)
-  useEffect(() => {
-    if (currentPage !== 'home' || !scrollTarget) return;
-
-    const el = document.getElementById(scrollTarget);
-    if (!el) return;
-
-    const handleScroll = () => {
-      const navbar = document.querySelector('.navbar-container');
-      const navbarHeight = navbar ? navbar.offsetHeight : 60;
-      const offset = navbarHeight + 32; // Dynamic offset with clean margin
-
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = el.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'auto'
-      });
-    };
-
-    // Run initially
-    handleScroll();
-
-    // Observe changes in document height/layout to adjust scroll position as sections load
-    const resizeObserver = new ResizeObserver(() => {
-      handleScroll();
-    });
-
-    const contentEl = document.querySelector('.content');
-    if (contentEl) {
-      resizeObserver.observe(contentEl);
-    }
-
-    // Disconnect scroll locking on manual user interaction
-    const stopObserver = () => {
-      resizeObserver.disconnect();
-      window.removeEventListener('wheel', stopObserver);
-      window.removeEventListener('touchmove', stopObserver);
-      setScrollTarget(null);
-    };
-
-    window.addEventListener('wheel', stopObserver, { passive: true });
-    window.addEventListener('touchmove', stopObserver, { passive: true });
-
-    // Safety timeout to release observer lock after 1.5 seconds
-    const timeout = setTimeout(stopObserver, 1500);
-
-    return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener('wheel', stopObserver);
-      window.removeEventListener('touchmove', stopObserver);
-      clearTimeout(timeout);
-    };
-  }, [currentPage, scrollTarget]);
-
-
+export default function App() {
+  const profileContent = useCMSData("site_profile");
+  const profile =
+    profileContent.loading || profileContent.error
+      ? {}
+      : (resolveProfile(profileContent.data) ?? {});
+  const [activeSection, setActiveSection] = useState("hero");
+  const isArchive = typeof window !== "undefined" && /^\/projects\/?$/.test(window.location.pathname);
+  const navigating = useRef(false);
 
   useEffect(() => {
-    if (currentPage !== 'home') return;
-
-    const sectionIds = ['hero', 'about', 'skills', 'project', 'experience', 'awards', 'contact'];
-
-    const observerOptions = {
-      root: null,
-      rootMargin: '-40% 0px -50% 0px', // Trigger when section enters screen center
-      threshold: 0
+    if (isArchive) return;
+    const sections = ["hero", "about", "experience", "project", "contact"]
+      .map((id) => document.getElementById(id)).filter(Boolean);
+    const updateActiveSection = () => {
+      if (navigating.current) return;
+      const atBottom = window.scrollY > 0 &&
+        window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+      const current = atBottom ? sections.at(-1) :
+        sections.findLast((section) => section.getBoundingClientRect().top <= window.innerHeight * 0.3);
+      setActiveSection(current?.id || "hero");
     };
-
-    const observerCallback = (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-
+    const releaseNavigation = () => { navigating.current = false; };
+    const releaseEvents = ["scrollend", "wheel", "pointerdown", "keydown"];
+    updateActiveSection();
+    window.addEventListener("scroll", updateActiveSection, { passive: true });
+    window.addEventListener("resize", updateActiveSection);
+    releaseEvents.forEach((event) => window.addEventListener(event, releaseNavigation, { passive: true }));
     return () => {
-      sectionIds.forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) observer.unobserve(el);
-      });
+      releaseNavigation();
+      window.removeEventListener("scroll", updateActiveSection);
+      window.removeEventListener("resize", updateActiveSection);
+      releaseEvents.forEach((event) => window.removeEventListener(event, releaseNavigation));
     };
-  }, [currentPage]);
-
+  }, [isArchive]);
   return (
     <div id="main-portfolio">
-      {currentPage === 'home' ? (
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
+      {!isArchive ? (
         <>
-          <NavBar activeSection={activeSection} />
-
-          <main className="content">
-            <Hero profile={profile} />
-            <About profile={profile} loading={profileContent.loading} error={profileContent.error} />
-            <Skills />
-            <Projects onViewAll={() => {
-              setCurrentPage('all-projects');
-            }} />
+          <NavBar activeSection={activeSection} onNavigate={(id) => {
+            navigating.current = true;
+            setActiveSection(id);
+          }} />
+          <main className="content" id="main-content">
+            <Hero
+              profile={profile}
+              loading={profileContent.loading}
+              error={profileContent.error}
+            />
+            <About
+              profile={profile}
+              loading={profileContent.loading}
+              error={profileContent.error}
+            />
             <Experience />
-            <Awards />
-            <Contact profile={profile} loading={profileContent.loading} error={profileContent.error} />
+            <Projects />
+            <Contact
+              profile={profile}
+              loading={profileContent.loading}
+              error={profileContent.error}
+            />
           </main>
         </>
       ) : (
-        <AllProjects onBack={() => {
-          setCurrentPage('home');
-          setScrollTarget('project');
-        }} />
+        <AllProjects />
       )}
-
       <footer className="site-footer">
-        <div className="site-footer-inner">
-          <p>© 2026 Kaius Jin. Built at Waterloo.</p>
-          <div className="webring-widget" aria-label="Waterloo CS Webring">
-            <a href="https://cs.uwatering.com/#https://kaiusjin.com?nav=prev" aria-label="Previous Waterloo CS Webring site">
-              ←
-            </a>
-            <a href="https://cs.uwatering.com/#https://kaiusjin.com" target="_blank" rel="noopener noreferrer" aria-label="Waterloo CS Webring">
-              <img src="https://cs.uwatering.com/icon.black.svg" alt="CS Webring" />
-            </a>
-            <a href="https://cs.uwatering.com/#https://kaiusjin.com?nav=next" aria-label="Next Waterloo CS Webring site">
-              →
-            </a>
-          </div>
+        <span>© {new Date().getFullYear()} Kaius Jin</span>
+        <div className="webring-widget">
+          <a href="https://cs.uwatering.com/#https://kaiusjin.com?nav=prev" aria-label="Previous Waterloo CS Webring site">←</a>
+          <a
+            href="https://cs.uwatering.com/#https://kaiusjin.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="https://cs.uwatering.com/icon.black.svg" alt="Waterloo CS Webring" width="24" />
+          </a>
+          <a href="https://cs.uwatering.com/#https://kaiusjin.com?nav=next" aria-label="Next Waterloo CS Webring site">→</a>
         </div>
       </footer>
     </div>
   );
 }
-
-export default App;

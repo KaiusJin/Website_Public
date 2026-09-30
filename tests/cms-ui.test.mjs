@@ -52,8 +52,29 @@ test('classic renders CMS profile, project dates, categorized experience and sav
   data.skills = [{id:'skills',category:'CMS SKILLS',category_icon:'fas fa-microchip',skills:[]}];
   globalThis.__cmsRows = data;
   const html = await render('/src/App.jsx', {});
-  for (const text of ['CMS NAME','CMS BADGE','CMS TAG','CMS HEADING','CMS INTRO','CMS BIO','CMS CITY','CMS SCHOOL','CMS FOCUS','CMS SLOGAN','mailto:cms@example.test','https://example.test/resume.pdf','Jan 2025 — Present','Clubs &amp; Design Teams','Volunteer Experience','fas fa-microchip','fas fa-server']) assert.ok(html.includes(text), text);
+  for (const text of ['CMS NAME','CMS BADGE','CMS INTRO','CMS BIO','CMS CITY','CMS SCHOOL','mailto:cms@example.test','Jan 2025 — Present','Clubs &amp; Design Teams','Volunteer Experience','fas fa-microchip','fas fa-server']) assert.ok(html.includes(text), text);
   assert.ok(!html.includes('kaius.jin@outlook.com'));
+});
+
+test('project archive has a separate document URL from the home project anchor', async () => {
+  globalThis.__cmsRows = emptyData();
+  globalThis.__cmsRows.projects = Array.from({length: 3}, (_, index) => ({id: index, title: `Project ${index + 1}`}));
+  try {
+    globalThis.window = {location: {pathname: '/', hash: '#project'}};
+    const home = await render('/src/App.jsx', {});
+    assert.ok(home.includes('href="/projects"'));
+    assert.ok(home.includes('id="project"'));
+    assert.ok(!home.includes('Project archive navigation'));
+    for (const pathname of ['/projects', '/projects/']) {
+      globalThis.window = {location: {pathname, hash: ''}};
+      const archive = await render('/src/App.jsx', {});
+      assert.ok(archive.includes('Project archive navigation'));
+      assert.ok(archive.includes('Project 3'));
+      assert.ok(archive.includes('href="/#project"'));
+      assert.ok(!archive.includes('id="project"'));
+      assert.equal((archive.match(/id="main-content"/g) || []).length, 1);
+    }
+  } finally { delete globalThis.window; }
 });
 
 test('cleared and missing profile fields do not resurrect static copy', async () => {
@@ -102,7 +123,7 @@ test('journey skill cards omit the redundant Skills meta label', async () => {
 
 test('library project entries show one project, while the map keeps the full list', async () => {
   const data = emptyData();
-  data.projects = Array.from({length: 6}, (_, index) => ({id: `project-${index}`, title: `Project ${index + 1}`, description: `Detail ${index + 1}`}));
+  data.projects = Array.from({length: 6}, (_, index) => ({id: `project-${index}`, title: `Project ${index + 1}`, bullets: [{text: `Detail ${index + 1}`}]}));
   const detail = await panel('project-detail', data, [], {projectId: 'project-1'});
   assert.ok(detail.includes('Detail 2'));
   assert.ok(!detail.includes('Detail 1'));
@@ -132,5 +153,94 @@ test('experience website links use the organization name in both frontends', asy
     assert.ok(html.includes('No Website'));
     assert.ok(!html.includes('Legacy website label'));
     assert.ok(!html.includes('Visit Official Website'));
+  }
+});
+
+test('awards use the reduced schema and a fixed credential link label in both sites', async () => {
+  const data = emptyData();
+  data.awards = [{id:'award',title:'Example award',organization:'Example issuer',year:'2026',link:'https://example.test/credential',description:'Retired description',bullets:[{text:'Retired highlight'}],link_text:'Retired label'}];
+  globalThis.__cmsRows = data;
+  const classic = await render('/src/components/sections/Awards.jsx', {});
+  const journey = await panel('awards', data);
+  for (const html of [classic, journey]) {
+    for (const text of ['Example award','Example issuer','2026','https://example.test/credential']) assert.ok(html.includes(text), text);
+    for (const text of ['Retired description','Retired highlight','Retired label']) assert.ok(!html.includes(text), text);
+  }
+});
+
+
+test('retired résumé links are ignored in the main site and Journey even in a cached profile', async () => {
+  const data = emptyData();
+  data.site_profile = [{name:'Profile',resume_url:'https://example.test/retired-resume.pdf',contact_slogans:['Retired slogan'],journey_en:{contact_heading:'Contact'}}];
+  globalThis.__cmsRows = data;
+  for (const html of [await render('/src/App.jsx', {}), await panel('contact', data), await panel('awards', data)]) {
+    assert.ok(!html.includes('retired-resume.pdf'));
+    assert.ok(!html.includes('Retired slogan'));
+  }
+});
+
+test('Classic only renders interactive previews for featured projects and ignores cover images', async () => {
+  const project = {id:'degree',title:'Degree Explorer',github_link:'https://github.com/KaiusJin/UWDegreeExplorer',image_url:'https://example.test/cover.png'};
+  const featured = await render('/src/components/sections/ProjectRow.jsx', {project,previewType:'degree'});
+  assert.ok(featured.includes('UW Degree Explorer interactive preview'));
+  for (const row of [project, {...project,github_link:'https://github.com/example/other'}]) {
+    const html = await render('/src/components/sections/ProjectRow.jsx', {project:row});
+    assert.ok(html.includes('Degree Explorer'));
+    assert.ok(!html.includes('<figure'));
+    assert.ok(!html.includes('interactive preview'));
+    assert.ok(!html.includes('project-typographic-cover'));
+    assert.ok(!html.includes('<img'));
+  }
+  assert.ok(!featured.includes('https://example.test/cover.png'));
+});
+
+test('Classic keeps previews in their fixed positions when CMS projects are replaced or reordered', async () => {
+  const data = emptyData();
+  const projects = [
+    {id:'replacement-a',title:'Replacement A',github_link:'https://github.com/example/a',image_url:'https://example.test/a.png'},
+    {id:'replacement-b',title:'Replacement B',github_link:null},
+    {id:'degree',title:'Third project',github_link:'https://github.com/KaiusJin/UWDegreeExplorer'},
+  ];
+  for (const rows of [projects, [...projects].reverse()]) {
+    data.projects = rows;
+    globalThis.__cmsRows = data;
+    for (const file of ['Projects', 'AllProjects']) {
+      const html = await render(`/src/components/sections/${file}.jsx`, {});
+      const articles = html.match(/<article\b[\s\S]*?<\/article>/g);
+      assert.equal(articles.length, file === 'Projects' ? 2 : 3);
+      assert.ok(articles[0].includes(rows[0].title));
+      assert.ok(articles[0].includes('UW Degree Explorer interactive preview'));
+      assert.ok(articles[1].includes(rows[1].title));
+      assert.ok(articles[1].includes('WeCanFindIntern interactive preview'));
+      if (articles[2]) assert.ok(!articles[2].includes('<figure'));
+      assert.ok(!html.includes('<img'));
+    }
+  }
+});
+
+test('Journey project covers and highlights still render, without the nonexistent description field', async () => {
+  const data = emptyData();
+  data.projects = [{id:'project',title:'Project',image_url:'https://example.test/cover.png',image_alt:'Cover description',bullets:[{text:'A real highlight'}],description:'Obsolete column'}];
+  const html = await panel('project-detail', data, [], {projectId:'project'});
+  assert.ok(html.includes('src="https://example.test/cover.png"'));
+  assert.ok(html.includes('alt="Cover description"'));
+  assert.ok(html.includes('A real highlight'));
+  assert.ok(!html.includes('Obsolete column'));
+});
+
+test('Classic project slogans always use the first saved bullet, including previously hardcoded projects', async () => {
+  for (const repo of ['UWDegreeExplorer', 'WeCanFindIntern', 'Other']) {
+    const project = {title:'Project',github_link:`https://github.com/KaiusJin/${repo}`,bullets:[{text:'Edited CMS slogan'},{text:'Existing highlight'}]};
+    const html = await render('/src/components/sections/ProjectRow.jsx',{project});
+    assert.ok(html.includes('<p class="project-summary">Edited CMS slogan</p>'));
+    assert.ok(html.includes('<li>Existing highlight</li>'));
+    assert.ok(!html.includes('<li>Edited CMS slogan</li>'));
+    project.bullets[0].text = '';
+    const cleared = await render('/src/components/sections/ProjectRow.jsx',{project});
+    assert.ok(!cleared.includes('class="project-summary"'));
+    assert.ok(cleared.includes('<li>Existing highlight</li>'));
+    project.bullets = null;
+    const empty = await render('/src/components/sections/ProjectRow.jsx',{project});
+    assert.ok(!empty.includes('class="project-summary"'));
   }
 });

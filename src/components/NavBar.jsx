@@ -1,47 +1,32 @@
-import { scrollToElementWithOffset } from '../utils/smoothScroll';
-
-export default function NavBar({ activeSection }) {
-  const navItems = [
-    { label: 'About', id: 'about' },
-    { label: 'Skills', id: 'skills' },
-    { label: 'Projects', id: 'project' },
-    { label: 'Experience', id: 'experience' },
-    { label: 'Awards', id: 'awards' },
-    { label: 'Contact', id: 'contact' }
-  ];
-
-  const handleNavClick = (e, id) => {
-    e.preventDefault();
-    const navbar = document.querySelector('.navbar-container');
-    const navbarHeight = navbar ? navbar.offsetHeight : 60;
-
-    scrollToElementWithOffset(id, navbarHeight + 32);
+export default function NavBar({ activeSection, onNavigate }) {
+  const selectSection = (event, id) => {
+    if (!event.defaultPrevented && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) onNavigate(id);
   };
-
   return (
-    <nav className="navbar-container" role="navigation" aria-label="Main Navigation">
-      <div className="navbar-content">
-        <a
-          href="#hero"
-          onClick={(e) => handleNavClick(e, 'hero')}
-          className="navbar-logo"
-        >
-          Kaius <span>Jin</span>
+    <header className="site-header">
+      <nav className="navbar-container" aria-label="Main navigation">
+        <a href="#hero" className="navbar-logo" aria-label="Kaius Jin — home" onClick={(event) => selectSection(event, 'hero')}>
+          Kaius Jin<span className="logo-period">.</span>
         </a>
-
         <div className="navbar-links">
-          {navItems.map((item) => (
+          {[
+            ['About', 'about'],
+            ['Experience', 'experience'],
+            ['Project', 'project'],
+            ['Contact', 'contact'],
+          ].map(([label, id]) => (
             <a
-              key={item.id}
-              href={`#${item.id}`}
-              className={activeSection === item.id ? 'active' : ''}
-              onClick={(e) => handleNavClick(e, item.id)}
+              key={id}
+              href={`#${id}`}
+              onClick={(event) => selectSection(event, id)}
+              aria-current={activeSection === id ? 'location' : undefined}
             >
-              {item.label}
+              {label}
             </a>
           ))}
+          <a href="/journey">Journey</a>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 }

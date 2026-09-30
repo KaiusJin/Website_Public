@@ -1,77 +1,78 @@
-import { useState } from 'react';
-import { dateRange } from '../../data/profile';
+import ProjectPreview from "./ProjectPreview";
+import { dateRange } from "../../data/profile";
+import { safeUrl } from "../../data/content";
 
-const fallbackImage = "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80";
-
-export default function ProjectRow({ project: p, index }) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const imageUrl = p.image_url || fallbackImage;
-  const isEven = index % 2 === 0;
-
-  // Use the first bullet as the primary description text
-  const primaryDescription = p.bullets && p.bullets[0] ? p.bullets[0].text : '';
-  const remainingBullets = p.bullets ? p.bullets.slice(1) : [];
+export default function ProjectRow({ project, previewType }) {
+  const website = safeUrl(project.link);
+  const github = safeUrl(project.github_link);
+  const bullets = project.bullets || [];
+  const summary = bullets[0]?.text;
+  const details = bullets.slice(1).filter((bullet) => bullet.text);
+  const interactive = Boolean(previewType);
 
   return (
-    <div className={`project-row-item ${isEven ? 'row-normal' : 'row-reversed'}`}>
-      {/* Visual Image Side */}
-      <div className="project-visual-side">
-        <div className="project-image-card">
-          <img src={imageUrl} alt={p.image_alt || p.title} loading="lazy" />
-        </div>
-      </div>
-
-      {/* Description & Details Side */}
+    <article className={`project-row-item${interactive ? "" : " project-row-text"}`}>
       <div className="project-details-side">
-        <span className="project-label">Featured Project</span>
-        <h3 className="project-title">{p.title}</h3>
-        {dateRange(p) && <p className="project-date">{dateRange(p)}</p>}
-        
-        <div className="project-description-box">
-          <p className="project-summary">{primaryDescription}</p>
-          
-          {remainingBullets.length > 0 && (
-            <button 
-              onClick={() => setIsExpanded(!isExpanded)} 
-              className="btn-read-more"
-              aria-expanded={isExpanded}
+        <h3 className="project-title">
+          {website || github ? (
+            <a
+              href={website || github}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              {isExpanded ? 'Show Less Details' : 'Read More Detail'}
-              <i className={`fas ${isExpanded ? 'fa-chevron-up' : 'fa-chevron-down'}`} style={{ marginLeft: '6px' }}></i>
-            </button>
+              {project.title}
+            </a>
+          ) : (
+            project.title
           )}
-
-          {/* Collapsible bullet points */}
-          <div className={`collapsible-bullets-wrapper ${isExpanded ? 'expanded' : ''}`}>
-            <ul className="project-bullet-list">
-              {remainingBullets.map((b, idx) => (
-                <li key={idx} style={{ '--bullet-delay': `${idx * 55}ms` }}>{b.text}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Tech Badges */}
-        <div className="project-tags">
-          {(p.skills || []).map((s, idx) => (
-            <span key={idx} className="project-tag-badge">{s.tag}</span>
+        </h3>
+        {dateRange(project) && (
+          <p className="project-date">{dateRange(project)}</p>
+        )}
+        {summary && <p className="project-summary">{summary}</p>}
+        {details.length > 0 && (
+          <ul className="project-highlights">
+            {details.map((bullet, i) => (
+              <li key={i}>{bullet.text.replace(/\bGithub\b/g, "GitHub")}</li>
+            ))}
+          </ul>
+        )}
+        <div className="project-tags" aria-label="Technologies">
+          {(project.skills || []).map((skill, i) => (
+            <span key={i}>
+              {skill.tag === "Typesctipt" ? "TypeScript" : skill.tag}
+            </span>
           ))}
         </div>
-
-        {/* Action Links */}
         <div className="project-links">
-          {p.github_link && (
-            <a href={p.github_link} target="_blank" rel="noopener noreferrer" className="project-link-btn" title="View Source Code">
-              <i className="fab fa-github"></i> Source Code
+          {website && (
+            <a
+              className="text-link"
+              href={website}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {project.link_text || "Visit project"}{" "}
+              <span aria-hidden="true">↗</span>
             </a>
           )}
-          {p.link && (
-            <a href={p.link} target="_blank" rel="noopener noreferrer" className="project-link-btn" style={{ marginLeft: '16px' }} title="Visit Demo">
-              <i className="fas fa-external-link-alt"></i> {p.link_text || 'Live Demo'}
+          {github && (
+            <a
+              className="muted-link"
+              href={github}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Source code <span aria-hidden="true">↗</span>
             </a>
           )}
         </div>
       </div>
-    </div>
+      {interactive && (
+        <figure className="project-visual-side">
+          <ProjectPreview type={previewType} />
+        </figure>
+      )}
+    </article>
   );
 }
