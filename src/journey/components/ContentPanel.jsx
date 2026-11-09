@@ -7,21 +7,25 @@ function Record({item:r,t,section}){
  const project=section==='projects',experience=experienceTables.includes(section),type=t[section];
  const meta=r.organization||r.role||(project||section==='skills'?'':type),date=r.year||dateRange(r,t.present);
  const website=experience?safeUrl(r.link):null;
+ const image=safeUrl(r.image_url);
  const titleNode=<h3>{website?<a className="experience-name-link" href={website} target="_blank" rel="noopener noreferrer" aria-label={`${t.website}: ${r.title}`}><span>{r.title}</span><Icon name="external" size={18}/></a>:r.title||r.category}</h3>;
  const metaNode=(meta||date)&&<div className="record-meta">{meta&&<span>{meta}</span>}{date&&<span>{date}</span>}</div>;
  return <article className={`journal-record${project?' project-record':''}${section==='skills'?' skill-record':''}`}>
   {project?<div className="record-title-row">{titleNode}{metaNode}</div>:<>{metaNode}{titleNode}</>}
-  {safeUrl(r.image_url)&&<img className="record-image" src={safeUrl(r.image_url)} alt={r.image_alt||r.title} loading="lazy"/>}
-  {type!==t.awards&&r.bullets?.length>0&&<ul>{r.bullets.map((b,i)=><li key={i}>{b.text}</li>)}</ul>}
+  {image&&<img className="record-image" src={image} alt={r.image_alt||r.title} loading="lazy"/>}
+  {r.bullets?.length>0&&<ul>{r.bullets.map((b,i)=><li key={i}>{b.text}</li>)}</ul>}
   {r.skills?.length>0&&<div className="record-tags">{r.skills.map((s,i)=><span key={i}>{s.tag}</span>)}</div>}
-  {(safeUrl(r.github_link)||(!experience&&safeUrl(r.link)))&&<div className="record-links"><External href={r.github_link}>{t.source}</External>{!experience&&<External href={r.link}>{type===t.awards?t.certificate:(r.link_text||t.website)}</External>}</div>}
+  {(safeUrl(r.github_link)||(!experience&&safeUrl(r.link)))&&<div className="record-links"><External href={r.github_link}>{t.source}</External>{!experience&&<External href={r.link}>{section==='awards'?t.certificate:(r.link_text||t.website)}</External>}</div>}
  </article>;
 }
 function Personal({entries,t}){
  const [filter,setFilter]=useState('all');const categories=['all','photography','travel','daily','music'];
  const items=entries.filter(e=>filter==='all'||e.kind===filter);
  return <><p className="journal-lead">{t.notesIntro}</p><div className="journal-filters" aria-label={t.personal}>{categories.map(c=><button key={c} className={filter===c?'active':''} aria-pressed={filter===c} onClick={()=>setFilter(c)}>{t[c]}</button>)}</div>
-  {items.length?items.map(item=><article className="journal-record" key={item.id}><div className="record-meta"><span>{t[item.kind]}</span><span>{item.date}</span></div><h3>{item.title}</h3>{item.body&&<p style={{whiteSpace:'pre-line'}}>{item.body}</p>}<div className="photo-grid">{(item.images||[]).map((photo,i)=>safeUrl(photo.url)&&<figure key={i}><a href={safeUrl(photo.url)} target="_blank" rel="noopener noreferrer" aria-label={photo.alt||t.photo}><img src={safeUrl(photo.url)} alt={photo.alt||''} loading="lazy"/></a>{photo.caption&&<figcaption>{photo.caption}</figcaption>}</figure>)}</div><div className="record-links"><External href={item.external_url}>{t.website}</External></div></article>):<div className="journal-empty"><Icon name={filter==='music'?'music':'camera'} size={42}/><h3>{t.emptyNotes}</h3><p>{t.emptyNotesBody}</p></div>}</>;
+  {items.length?items.map(item=><article className="journal-record" key={item.id}><div className="record-meta"><span>{t[item.kind]}</span><span>{item.date}</span></div><h3>{item.title}</h3>{item.body&&<p style={{whiteSpace:'pre-line'}}>{item.body}</p>}<div className="photo-grid">{(item.images||[]).map((photo,i)=>{
+   const url=safeUrl(photo.url);
+   return url&&<figure key={i}><a href={url} target="_blank" rel="noopener noreferrer" aria-label={photo.alt||t.photo}><img src={url} alt={photo.alt||''} loading="lazy"/></a>{photo.caption&&<figcaption>{photo.caption}</figcaption>}</figure>;
+  })}</div><div className="record-links"><External href={item.external_url}>{t.website}</External></div></article>):<div className="journal-empty"><Icon name={filter==='music'?'music':'camera'} size={42}/><h3>{t.emptyNotes}</h3><p>{t.emptyNotesBody}</p></div>}</>;
 }
 export default function ContentPanel({section,content,lang,t,onPersonal,onRestart,projectId}){
  const {data,loading,failedTables,retry}=content;

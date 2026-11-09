@@ -1,6 +1,7 @@
 import { safeUrl } from "../../data/content";
 
 export default function Hero({ profile, loading, error }) {
+  const github = safeUrl(profile.github);
   return (
     <section id="hero" className="hero-section" aria-labelledby="hero-title">
       <div className="hero-layout">
@@ -29,9 +30,9 @@ export default function Hero({ profile, loading, error }) {
             <a href="#project" className="text-link">
               View projects <span aria-hidden="true">↓</span>
             </a>
-            {safeUrl(profile.github) && (
+            {github && (
               <a
-                href={safeUrl(profile.github)}
+                href={github}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="muted-link"

@@ -23,17 +23,19 @@ export default function Contact({ profile, loading, error }) {
               ["GitHub", profile.github],
               ["LinkedIn", profile.linkedin],
             ].map(
-              ([label, href]) =>
-                safeUrl(href) && (
+              ([label, href]) => {
+                const url = safeUrl(href);
+                return url && (
                   <a
                     key={label}
-                    href={safeUrl(href)}
+                    href={url}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     {label} <span aria-hidden="true">↗</span>
                   </a>
-                ),
+                );
+              },
             )}
           </div>
         </div>

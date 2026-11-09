@@ -29,7 +29,7 @@ export function createAmbience(scene){
  const clouds=Array.from({length:4},(_,i)=>scene.add.image(0,85+(i%3)*43,'journey-cloud-wisp').setDisplaySize(680+(i%2)*190,180).setDepth(1));
  const mist=Array.from({length:3},(_,i)=>scene.add.image(0,565+i*38,'journey-cloud-wisp').setDisplaySize(1250,175).setDepth(3));
  const leaves=Array.from({length:5},(_,i)=>scene.add.image(0,810,'journey-soft-leaves').setOrigin(.5,1).setDisplaySize(180+(i%2)*40,130+(i%3)*15).setDepth(7));
- const particles=Array.from({length:18},(_,i)=>scene.add.ellipse(0,0,i%3===0?4:2,i%3===0?2:2,i%3===0?0xe9d8b2:0xffe9b7,.4).setDepth(i%2?4:7));
+ const particles=Array.from({length:18},(_,i)=>scene.add.ellipse(0,0,i%3===0?4:2,2,i%3===0?0xe9d8b2:0xffe9b7,.4).setDepth(i%2?4:7));
  return {
   update({region,cameraX,playerY,time,paused}){
    const origin=region*2400,offset=cameraX-origin,p=ambienceProfile(region);

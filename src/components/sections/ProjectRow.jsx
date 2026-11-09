@@ -5,6 +5,7 @@ import { safeUrl } from "../../data/content";
 export default function ProjectRow({ project, previewType }) {
   const website = safeUrl(project.link);
   const github = safeUrl(project.github_link);
+  const date = dateRange(project);
   const bullets = project.bullets || [];
   const summary = bullets[0]?.text;
   const details = bullets.slice(1).filter((bullet) => bullet.text);
@@ -26,8 +27,8 @@ export default function ProjectRow({ project, previewType }) {
             project.title
           )}
         </h3>
-        {dateRange(project) && (
-          <p className="project-date">{dateRange(project)}</p>
+        {date && (
+          <p className="project-date">{date}</p>
         )}
         {summary && <p className="project-summary">{summary}</p>}
         {details.length > 0 && (
