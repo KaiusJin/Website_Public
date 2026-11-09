@@ -9,17 +9,21 @@ pnpm-debug.log*
 # Node modules
 node_modules/
 
-# Build output
+# Build output and tool caches
 dist/
 dist-ssr/
+.vite/
+.cache/
+.eslintcache
+*.tsbuildinfo
 *.local
 
-# Environment variables
+# Local environment values; keep credential-free templates versionable
 .env
-.env.local
-.env.production
-.env.development
-.env.any_context
+.env.*
+!.env.example
+!.env.sample
+!.env.template
 
 # OS files
 .DS_Store
@@ -34,8 +38,20 @@ Thumbs.db
 *.sln
 *.sw?
 
+# Local working files and image-processing environments
 .local/
-supabase/.temp/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
 
-# Archived local snapshots and task records
-/archive
+# Temporary files and editor backups
+/tmp/
+/temp/
+*.tmp
+*.bak
+*~
+
+# Local archive and database documentation/CLI state
+/archive/
+/supabase/
