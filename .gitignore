@@ -36,3 +36,6 @@ Thumbs.db
 
 .local/
 supabase/.temp/
+
+# Archived local snapshots and task records
+/archive
